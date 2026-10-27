@@ -23,6 +23,8 @@ def main():
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--timeout', type=int, default=300)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--reference-attention', choices=('flash', 'math'), default='flash')
+    parser.add_argument('--native-past', action='store_true', help='propagate native KV separately from reference KV')
     parser.add_argument('--worker', action='store_true', help=argparse.SUPPRESS)
     args = parser.parse_args()
     if min(args.context, args.steps, args.timeout) < 1:
@@ -35,7 +37,8 @@ def main():
         from .sweep import timed_command
         process = timed_command([sys.executable, '-m', 'tools.thor.teacher_forced', '--worker',
                                  '--context', str(args.context), '--steps', str(args.steps),
-                                 '--seed', str(args.seed), '--output', str(args.output.resolve())], args.timeout)
+                                 '--seed', str(args.seed), '--reference-attention', args.reference_attention,
+                                 *(['--native-past'] if args.native_past else []), '--output', str(args.output.resolve())], args.timeout)
         result = json.loads(args.output.read_text())
         result['process'] = process
         if process['returncode'] != 0:
@@ -46,23 +49,38 @@ def main():
         return 0 if result['status'] == 'PASS' else 1
     import torch
     from .model_bench import ModelAdapter
-    from .model_check import errors
+    from .model_check import errors, attention_context
     try:
         with torch.inference_mode():
             adapter = ModelAdapter('native', args.context, args.seed,
-                                   cache_capacity=args.context + args.steps + 1)
-            result['metadata'] = adapter.metadata | {'measurement_scope': 'teacher_forced_reference_KV',
+                                   cache_capacity=args.context + args.steps + 1, reference_attention=args.reference_attention)
+            result['metadata'] = adapter.metadata | {'measurement_scope': 'teacher_forced_native_KV' if args.native_past else 'teacher_forced_reference_KV',
+                                                     'same_cache_replay': False,
                                                      'timing_measured': False}
             adapter.reset()
+            native_cache = [t.clone() for t in adapter.model.stacked_kv_cache] if args.native_past else None
+            reference_cache = [t.clone() for t in adapter.model.stacked_kv_cache] if args.native_past else None
             for step in range(args.steps):
                 adapter.context = args.context + step
                 adapter.position.fill_(adapter.context)
                 adapter.state.seq_len = adapter.context + 1
+                if args.native_past:
+                    for tensor, cache in zip(adapter.model.stacked_kv_cache, native_cache):
+                        tensor.copy_(cache)
                 logits = adapter.run().clone()
                 hidden = adapter.last_hidden.clone()
                 kv = [tensor[:, 0, adapter.context].clone() for tensor in adapter.model.stacked_kv_cache]
+                if args.native_past:
+                    for cache, current in zip(native_cache, kv):
+                        cache[:, 0, adapter.context].copy_(current)
+                    for tensor, cache in zip(adapter.model.stacked_kv_cache, reference_cache):
+                        tensor.copy_(cache)
                 adapter.engine = 'torch'
-                reference = adapter.run().clone()
+                with attention_context(args.reference_attention):
+                    reference = adapter.run().clone()
+                if args.native_past:
+                    for cache, tensor in zip(reference_cache, adapter.model.stacked_kv_cache):
+                        cache[:, 0, adapter.context].copy_(tensor[:, 0, adapter.context])
                 adapter.engine = 'native'
                 metrics = {'logits': errors(logits, reference, nrmse_limit=adapter.logit_limit),
                            'hidden': errors(hidden, adapter.last_hidden),

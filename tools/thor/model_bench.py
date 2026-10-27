@@ -21,7 +21,7 @@ from .sweep import source_hash
 
 class ModelAdapter:
     @torch.inference_mode()
-    def __init__(self, engine='native', context=128, seed=1, cache_capacity=0):
+    def __init__(self, engine='native', context=128, seed=1, cache_capacity=0, reference_attention=None):
         if engine not in ('native', 'torch', 'torch_graph', 'pyvm'):
             raise ValueError('unsupported engine')
         self.engine = engine
@@ -31,7 +31,8 @@ class ModelAdapter:
             raise ValueError('logit NRMSE limit must lie between zero and one')
         model_path = Path(os.environ.get('THOR_MODEL_PATH', str(ROOT / 'local/models/Llama-3.2-1B-Instruct')))
         self.case = load_reference(SimpleNamespace(model=model_path, context=context, seed=seed,
-                                                   ordered_downproj=self.config.ordered_downproj, cache_capacity=cache_capacity))
+                                                   ordered_downproj=self.config.ordered_downproj, cache_capacity=cache_capacity,
+                                                   reference_attention=reference_attention or os.environ.get('THOR_REFERENCE_ATTENTION', 'flash')))
         self.model = self.case.model
         self.position = torch.tensor([[context]], device=self.model.device)
         self.context = context
@@ -89,7 +90,9 @@ class ModelAdapter:
             if build['binary_sha256'] != digest or build['source_hash'] != source_hash():
                 raise RuntimeError('native build manifest does not match the loaded binary/source')
         self.metadata = {'model': model_path.name, 'model_provenance': self.case.provenance,
-                         'precision': 'bf16', 'context': context, 'batch': 1, 'seed': seed,
+                         'precision': 'bf16', 'reference_attention': self.case.reference_attention,
+                         'prefill_attention': self.case.prefill_attention,
+                         'float32_matmul_precision': torch.get_float32_matmul_precision(), 'context': context, 'batch': 1, 'seed': seed,
                          'measurement_scope': 'decode', 'tokens_per_run': 1, 'engine': engine,
                          'variant': f'{engine}:{self.config.name}', 'config': self.config.to_dict(),
                          'power_mode': command(['nvpmodel', '-q']).get('stdout'),

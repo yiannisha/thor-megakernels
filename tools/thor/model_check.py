@@ -62,6 +62,19 @@ def errors(output, reference, atol=.25, rtol=.05, nrmse_limit=.02):
             'normalized_rmse': nrmse, 'atol': atol, 'rtol': rtol, 'nrmse_limit': nrmse_limit}
 
 
+def attention_context(name):
+    """Choose an explicit SDPA backend; math uses FP32 intermediate arithmetic."""
+    import torch
+    from torch.nn.attention import sdpa_kernel, SDPBackend
+    if name not in ('flash', 'math'):
+        raise ValueError('reference attention must be flash or math')
+    if name == 'math' and torch.get_float32_matmul_precision() != 'highest':
+        raise RuntimeError('math oracle requires highest FP32 matmul precision')
+    if name == 'math' and torch.backends.cuda.fp16_bf16_reduction_math_sdp_allowed():
+        raise RuntimeError('math oracle requires FP32 intermediates; reduced-precision math SDPA is enabled')
+    return sdpa_kernel(SDPBackend.MATH if name == 'math' else SDPBackend.FLASH_ATTENTION)
+
+
 def load_reference(args):
     """Load local weights and construct one frozen, matched-cache decode case."""
     import torch
@@ -82,16 +95,20 @@ def load_reference(args):
                     extra_config=ExtraModelConfig(interleave_rope=True, max_len_override=capacity, ordered_downproj=getattr(args, 'ordered_downproj', False))).eval()
         inputs = torch.randint(32, model.config.vocab_size, (1, args.context), device=model.device)
         positions = torch.arange(args.context, device=model.device).unsqueeze(0)
-        prefill = model(BatchState(input_ids=inputs, position_ids=positions, seq_len=args.context))
+        with attention_context('flash'):
+            prefill = model(BatchState(input_ids=inputs, position_ids=positions, seq_len=args.context))
         token = prefill.output_ids[:, -1:].clone()
         cached = [tensor.clone() for tensor in model.stacked_kv_cache]
-        output = model(BatchState(input_ids=token, position_ids=torch.tensor([[args.context]], device=model.device),
-                                  seq_len=args.context + 1))
+        reference_attention = getattr(args, 'reference_attention', 'flash')
+        with attention_context(reference_attention):
+            output = model(BatchState(input_ids=token, position_ids=torch.tensor([[args.context]], device=model.device),
+                                      seq_len=args.context + 1))
         ref_hidden = output.hidden_states.flatten().clone()
         ref_logits = model.lm_head.lm_head(model.lm_head.input_norm(output.hidden_states)).flatten().clone()
         ref_cache = [tensor[:, 0, args.context].clone() for tensor in model.stacked_kv_cache]
     return SimpleNamespace(model=model, provenance=provenance, token=token, inputs=inputs,
-                           cached=cached, ref_hidden=ref_hidden, ref_logits=ref_logits, ref_cache=ref_cache)
+                           cached=cached, ref_hidden=ref_hidden, ref_logits=ref_logits, ref_cache=ref_cache,
+                           reference_attention=reference_attention, prefill_attention='flash')
 
 
 def check(args):
@@ -181,6 +198,8 @@ def check(args):
         result = {'status': 'PASS' if passed else 'FAIL', 'model': provenance, 'context': args.context,
                   'seed': args.seed, 'scheduler': args.scheduler, 'precision': 'bf16',
                   'reference': 'repository PyTorch model, same interleaved weights and prefilled KV cache',
+                  'reference_attention': case.reference_attention, 'prefill_attention': case.prefill_attention,
+                  'float32_matmul_precision': torch.get_float32_matmul_precision(),
                   'input_token': int(token.item()), 'reference_greedy_token': reference_token,
                   'diagnostics': diagnostics, 'native_resources': resources, 'queue_shape': list(globs.instructions.shape), 'results': results,
                   'correctness_repeats': args.correctness_repeats,
@@ -200,6 +219,7 @@ def main():
     parser.add_argument('--correctness-repeats', type=int, default=3)
     parser.add_argument('--logit-nrmse-limit', type=float, default=.03)
     parser.add_argument('--match-torch-bf16-epilogues', action='store_true')
+    parser.add_argument('--reference-attention', choices=('flash', 'math'), default=os.environ.get('THOR_REFERENCE_ATTENTION', 'flash'))
     parser.add_argument('--compensated-attention', action='store_true')
     parser.add_argument('--fp32-downproj', action='store_true')
     parser.add_argument('--ordered-downproj', action='store_true')
@@ -222,7 +242,7 @@ def main():
             command = [sys.executable, '-m', 'tools.thor.model_check', '--worker', '--model', str(args.model),
                        '--context', str(args.context), '--seed', str(args.seed), '--scheduler', args.scheduler,
                        '--output', str(child_output), '--correctness-repeats', str(args.correctness_repeats),
-                       '--logit-nrmse-limit', str(args.logit_nrmse_limit)]
+                       '--logit-nrmse-limit', str(args.logit_nrmse_limit), '--reference-attention', args.reference_attention]
             if args.match_torch_bf16_epilogues: command.append('--match-torch-bf16-epilogues')
             if args.compensated_attention: command.append('--compensated-attention')
             if args.fp32_downproj: command.append('--fp32-downproj')
