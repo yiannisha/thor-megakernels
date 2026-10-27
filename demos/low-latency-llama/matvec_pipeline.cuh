@@ -30,7 +30,7 @@ struct matvec_pipeline {
         SCRATCH_BYTES_PER_WARP * Config::NUM_CONSUMER_WARPS;
     static constexpr int USED_SCRATCH_BYTES =
         OUTPUT_PIPELINE_STAGES * SCRATCH_BYTES_PER_STAGE;
-    static_assert((USED_SCRATCH_BYTES + Config::NUM_CONSUMER_WARPS * sizeof(float)) <= Config::SCRATCH_BYTES,
+    static_assert((USED_SCRATCH_BYTES + Config::NUM_CONSUMER_WARPS * (Config::FP64_RMS ? sizeof(double) : sizeof(float))) <= Config::SCRATCH_BYTES - 512,
                   "USED_SCRATCH_BYTES must be less than SCRATCH_BYTES");
 
     // Pages (very naive for now, no fine-grained usage)

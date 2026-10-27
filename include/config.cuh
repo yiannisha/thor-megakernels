@@ -55,6 +55,7 @@ struct default_config {
     static constexpr bool FP32_DOWNPROJ = false;
     static constexpr bool MATCH_TORCH_BF16_EPILOGUES = false;
     static constexpr bool COMPENSATED_ATTENTION = false;
+    static constexpr bool FP64_RMS = false;
     static constexpr bool STATIC_REGISTER_ALLOCATION = false;
     static constexpr int CONSUMER_REGISTERS = 104;
     static constexpr int NON_CONSUMER_REGISTERS = 64;
@@ -93,6 +94,9 @@ struct default_config {
 #ifndef MK_MATCH_TORCH_BF16_EPILOGUES
 #define MK_MATCH_TORCH_BF16_EPILOGUES 0
 #endif
+#ifndef MK_FP64_RMS
+#define MK_FP64_RMS 0
+#endif
 #ifndef MK_COMPENSATED_ATTENTION
 #define MK_COMPENSATED_ATTENTION 0
 #endif
@@ -112,6 +116,7 @@ struct thor_config : default_config {
     static constexpr bool FP32_DOWNPROJ = MK_FP32_DOWNPROJ != 0;
     static constexpr bool MATCH_TORCH_BF16_EPILOGUES = MK_MATCH_TORCH_BF16_EPILOGUES != 0;
     static constexpr bool COMPENSATED_ATTENTION = MK_COMPENSATED_ATTENTION != 0;
+    static constexpr bool FP64_RMS = MK_FP64_RMS != 0;
     static_assert(!(FP32_DOWNPROJ && ORDERED_DOWNPROJ), "FP32 finalization replaces column ordering");
     static constexpr bool MATCH_TORCH_BF16_RMS = MK_MATCH_TORCH_BF16_RMS != 0;
     static constexpr int INSTRUCTION_BARRIER_PARTIES_PER_WARP = MK_INSTRUCTION_BARRIER_PARTIES;

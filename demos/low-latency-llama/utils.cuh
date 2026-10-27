@@ -7,26 +7,44 @@ __device__ static inline auto
 rms_norm(const sv_t &rms_scale_smem, const sv_t &activations_smem,
          float rms_norm_eps, void *scratch_memory) {
     using rv_t = kittens::rv_fl<sv_t::length>;
-    rv_t activations_vec, sq_activations_vec, rms_scale_vec;
-
+    rv_t activations_vec, rms_scale_vec;
+    if constexpr (Config::FP64_RMS) kittens::warp::sync();
     kittens::warp::load(activations_vec, activations_smem);
-    kittens::warp::copy(sq_activations_vec, activations_vec);
-    kittens::warp::mul(sq_activations_vec, sq_activations_vec, sq_activations_vec);
-    float partial_sum = kittens::warp::sum(sq_activations_vec);
-
-    float *smem_rms_partial_sums = (float *)scratch_memory;
-    if (kittens::laneid() == 0) {
-        smem_rms_partial_sums[kittens::warpid()] = partial_sum;
+    float variance;
+    if constexpr (Config::FP64_RMS) {
+        static_assert(offsetof(megakernel::instruction_state_t<Config>, scratch) % alignof(double) == 0);
+        double partial = 0.;
+        for (int i = kittens::laneid(); i < sv_t::length; i += 32) {
+            const double value = static_cast<double>(static_cast<float>(activations_smem[i]));
+            partial += value * value;
+        }
+        #pragma unroll
+        for (int offset = 16; offset > 0; offset /= 2)
+            partial += __shfl_down_sync(0xffffffff, partial, offset);
+        auto *partials = static_cast<double *>(scratch_memory);
+        if (kittens::laneid() == 0) partials[kittens::warpid()] = partial;
+        kittens::group<Config::NUM_CONSUMER_WARPS>::sync(0);
+        variance = 0.f;
+        if (kittens::laneid() == 0) {
+            double sum = 0.;
+            #pragma unroll
+            for (int i = 0; i < Config::NUM_CONSUMER_WARPS; ++i) sum += partials[i];
+            variance = static_cast<float>(sum / 2048.0);
+        }
+        variance = __shfl_sync(0xffffffff, variance, 0);
+    } else {
+        rv_t sq_activations_vec;
+        kittens::warp::copy(sq_activations_vec, activations_vec);
+        kittens::warp::mul(sq_activations_vec, sq_activations_vec, sq_activations_vec);
+        float partial_sum = kittens::warp::sum(sq_activations_vec);
+        float *partials = static_cast<float *>(scratch_memory);
+        if (kittens::laneid() == 0) partials[kittens::warpid()] = partial_sum;
+        kittens::group<Config::NUM_CONSUMER_WARPS>::sync(0);
+        float sum = 0.f;
+        #pragma unroll
+        for (int i = 0; i < Config::NUM_CONSUMER_WARPS; ++i) sum += partials[i];
+        variance = sum / 2048.f;
     }
-    kittens::group<Config::NUM_CONSUMER_WARPS>::sync(0);
-
-    float full_sum = 0;
-#pragma unroll
-    for (int i = 0; i < Config::NUM_CONSUMER_WARPS; i++) {
-        full_sum += smem_rms_partial_sums[i];
-    }
-
-    float variance = full_sum / 2048.0f;
     float rms_scale = rsqrtf(variance + rms_norm_eps);
 
     kittens::warp::mul(activations_vec, activations_vec, rms_scale);
