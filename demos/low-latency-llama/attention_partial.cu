@@ -432,7 +432,7 @@ template <typename config, typename globals> struct attention_partial {
                 max_vec_rv diff_scaled_max_vec_reg;
                 norm_vec_rv norm_vec_reg;
                 kittens::warp::neg_infty(max_vec_reg);
-                kittens::warp::zero(last_scaled_max_vec_reg); // just not +-inf
+                kittens::warp::neg_infty(last_scaled_max_vec_reg); // first rescale must be zero
                 kittens::warp::zero(norm_vec_reg);
                 kittens::warp::zero(O_reg);
                 o_sv(&O_smem)[4] = get_O_smem(s);
@@ -506,6 +506,16 @@ template <typename config, typename globals> struct attention_partial {
                     kittens::warp::copy(attn_bf_reg,
                                attn_fl_reg); // Convert to bf16 to do matmul
                     kittens::warp::mma_AB(O_reg, attn_bf_reg, V_reg, O_reg);
+                    if constexpr (config::COMPENSATED_ATTENTION) {
+                        // P = bf16(P) + bf16(P - float(bf16(P))) approximately.
+                        // Preserve the FP32 denominator and recover probability
+                        // bits discarded by the first BF16 tensor-core product.
+                        attn_fl_rt residual;
+                        kittens::warp::copy(residual, attn_bf_reg);
+                        kittens::warp::sub(residual, attn_fl_reg, residual);
+                        kittens::warp::copy(attn_bf_reg, residual);
+                        kittens::warp::mma_AB(O_reg, attn_bf_reg, V_reg, O_reg);
+                    }
                     kittens::warp::sync();
                     s.warp_arrive(V_finished(s, stage));
 

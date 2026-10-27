@@ -36,6 +36,13 @@ class ConfigTests(unittest.TestCase):
         self.assertIn("-DMK_FP32_DOWNPROJ=1", variant.defines())
         self.assertNotEqual(cache_key(Config(), {}, "s"), cache_key(variant, {}, "s"))
 
+    def test_compensated_attention_is_explicit_and_cached(self):
+        variant = replace(Config(), compensated_attention=True)
+        self.assertFalse(variant.validate(DEVICE))
+        self.assertTrue(replace(Config(), compensated_attention=1).validate(DEVICE))
+        self.assertIn('-DMK_COMPENSATED_ATTENTION=1', variant.defines())
+        self.assertNotEqual(cache_key(Config(), {}, 's'), cache_key(variant, {}, 's'))
+
     def test_cache_tracks_toolchain_and_sources(self):
         key = cache_key(Config(), {'nvcc': 'a'}, 'source')
         self.assertNotEqual(key, cache_key(Config(), {'nvcc': 'b'}, 'source'))

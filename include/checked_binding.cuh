@@ -72,6 +72,7 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
         result["service_register_target"] = Config::NON_CONSUMER_REGISTERS;
         result["ordered_downproj"] = Config::ORDERED_DOWNPROJ;
         result["fp32_downproj"] = Config::FP32_DOWNPROJ;
+        result["compensated_attention"] = Config::COMPENSATED_ATTENTION;
         result["match_torch_bf16_epilogues"] = Config::MATCH_TORCH_BF16_EPILOGUES;
         result["match_torch_bf16_rms"] = Config::MATCH_TORCH_BF16_RMS;
         result["consumer_warps"] = Config::NUM_CONSUMER_WARPS;

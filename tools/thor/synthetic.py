@@ -21,7 +21,7 @@ def reset_isolated_barriers(barriers, op, fp32_downproj):
 
 
 def fixture(op='qkv', iterations=4, seed=1, context=128, partitions=3, partial_index=1,
-            branch='q', rotary=False, empty_first=False):
+            branch='q', rotary=False, empty_first=False, negative_scores=False):
     import torch
     from megakernels.demos.latency.instructions import Globals
     from megakernels.instructions import NoOp
@@ -33,10 +33,12 @@ def fixture(op='qkv', iterations=4, seed=1, context=128, partitions=3, partial_i
     if not torch.cuda.is_available():
         raise RuntimeError('CUDA torch required')
     config = Config(**json.loads(os.environ.get('THOR_CONFIG', '{}')))
-    if config != Config(name=config.name, match_torch_bf16_rms=config.match_torch_bf16_rms, ordered_downproj=config.ordered_downproj, register_mode=config.register_mode, fp32_downproj=config.fp32_downproj, match_torch_bf16_epilogues=config.match_torch_bf16_epilogues, weight_stages=config.weight_stages, page_count=config.page_count):
+    if config != Config(name=config.name, match_torch_bf16_rms=config.match_torch_bf16_rms, ordered_downproj=config.ordered_downproj, register_mode=config.register_mode, fp32_downproj=config.fp32_downproj, match_torch_bf16_epilogues=config.match_torch_bf16_epilogues, weight_stages=config.weight_stages, page_count=config.page_count, compensated_attention=config.compensated_attention):
         raise ValueError('synthetic fixture currently requires the verified default build (20 workers, 16 warps, static cap 96)')
     if op not in ('qkv', 'o_proj', 'down', 'upgate', 'lm_head', 'noop', 'attention', 'partial', 'reduce') or not 0 <= iterations <= 8:
         raise ValueError('unsupported opcode or iterations outside 0..8')
+    if negative_scores and op not in ('attention', 'partial'):
+        raise ValueError('negative-score stress case requires attention/partial')
     if iterations == 0 and op not in ('qkv', 'o_proj', 'down', 'upgate', 'lm_head'):
         raise ValueError('zero-iteration fixture is defined for matvec opcodes only')
     if context < 1 or not 1 <= partitions <= 20 or not 0 <= partial_index < partitions:
@@ -70,6 +72,9 @@ def fixture(op='qkv', iterations=4, seed=1, context=128, partitions=3, partial_i
         skip_attn_reduction=op != 'partial', up_gate_proj_block_size=16, down_proj_block_size=16,
         o_proj_block_size=16, lm_head_block_size=16, matvec_reduction_size=2048,
         qkv_block_size=16, attn_kv_block_size=16, attn_reduction_size=4)
+    if negative_scores:
+        globs.post_ln_rope_q.fill_(8)
+        globs.k_cache.fill_(-8)
     instructions = {'qkv': LayerNorm_QKV_MatVecRopeAppend(0, start_block, start_block + iterations),
                     'o_proj': O_ProjResidual(0, 0, iterations, 0),
                     'down': DownProjResidual(0, 0, iterations, 0),
@@ -129,7 +134,7 @@ class SyntheticAdapter:
                     'page_size': self.config.page_size,
                     'timing_enabled': self.config.timing,
                     'match_torch_bf16_rms': self.config.match_torch_bf16_rms,
-                    'ordered_downproj': self.config.ordered_downproj, 'fp32_downproj': self.config.fp32_downproj, 'match_torch_bf16_epilogues': self.config.match_torch_bf16_epilogues, 'register_mode': self.config.register_mode}
+                    'ordered_downproj': self.config.ordered_downproj, 'fp32_downproj': self.config.fp32_downproj, 'match_torch_bf16_epilogues': self.config.match_torch_bf16_epilogues, 'register_mode': self.config.register_mode, 'compensated_attention': self.config.compensated_attention}
         if any(observed.get(key) != value for key, value in expected.items()):
             raise RuntimeError(f'loaded native binary does not match fixture configuration: {observed}')
 
@@ -272,6 +277,7 @@ def main():
     parser.add_argument('--partial-index', type=int, default=1)
     parser.add_argument('--branch', choices=('q', 'k', 'v'), default='q')
     parser.add_argument('--rotary', action='store_true')
+    parser.add_argument('--negative-scores', action='store_true')
     parser.add_argument('--empty-first', action='store_true')
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--output', type=Path, default=ROOT / 'local/synthetic-result.json')
@@ -287,6 +293,7 @@ def main():
                    '--partial-index', str(args.partial_index), '--branch', args.branch]
         if args.rotary: options.append('--rotary')
         if args.empty_first: options.append('--empty-first')
+        if args.negative_scores: options.append('--negative-scores')
         result = timed_command([sys.executable, '-m', 'tools.thor.synthetic', '--worker', '--op', args.op,
                                 '--iterations', str(args.iterations), '--seed', str(args.seed),
                                 '--output', str(args.output), *options], args.timeout)
@@ -298,7 +305,7 @@ def main():
     import torch
     adapter = SyntheticAdapter(args.op, args.iterations, args.seed, context=args.context,
                                partitions=args.partitions, partial_index=args.partial_index,
-                               branch=args.branch, rotary=args.rotary, empty_first=args.empty_first)
+                               branch=args.branch, rotary=args.rotary, empty_first=args.empty_first, negative_scores=args.negative_scores)
     adapter.reset()
     reference = adapter.reference()
     output = adapter.run()
