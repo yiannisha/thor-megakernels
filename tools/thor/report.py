@@ -106,6 +106,9 @@ def plot(paths, output):
     axes.legend(fontsize=8)
     figure.tight_layout()
     figure.savefig(output)
+    svg = Path(output)
+    if svg.suffix.lower() == '.svg':
+        svg.write_text('\n'.join(line.rstrip() for line in svg.read_text().splitlines()) + '\n')
     plt.close(figure)
 
 
