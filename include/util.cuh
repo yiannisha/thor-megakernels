@@ -25,8 +25,11 @@ __device__ inline unsigned int get_smid() {
 }
 
 __device__ inline unsigned int get_worker_id() {
+#ifdef MK_PHYSICAL_WORKER_IDS
     return get_smid();
-    // return blockIdx.x;
+#else
+    return blockIdx.x;
+#endif
 }
 
 template <template <typename> typename op_dispatcher, typename... ops>
@@ -127,7 +130,7 @@ template <typename config> struct state {
     }
     __device__ inline void next_instruction() {
         __syncwarp();
-        if (kittens::laneid() == 0) {
+        if (kittens::laneid() < config::INSTRUCTION_BARRIER_PARTIES_PER_WARP) {
 #ifdef MK_DEBUG
             printf("Thread %d: arriving at instruction finished %d\n",
                    threadIdx.x, instruction_ring);
@@ -165,6 +168,11 @@ template <typename config> struct state {
         for (int i = 0; i < config::INSTRUCTION_PIPELINE_STAGES_BITS; i++) {
             arrive(page_finished[pid][i], count);
         }
+    }
+
+    __device__ inline void warp_arrive(kittens::semaphore &semaphore) {
+        if (kittens::laneid() < config::INSTRUCTION_BARRIER_PARTIES_PER_WARP)
+            kittens::arrive(semaphore);
     }
 
     __device__ inline void warp_finish_page(int pid, int count) {

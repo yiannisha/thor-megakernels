@@ -40,6 +40,7 @@ def interpret_with_mk(
         globs.attn_out_intermediates,
         globs.silu_out,
         globs.logits,
+        globs.down_partials,
         # scalars
         globs.pos_id,
         globs.attn_scale,

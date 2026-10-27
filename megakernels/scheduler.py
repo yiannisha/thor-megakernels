@@ -1,23 +1,22 @@
+from __future__ import annotations
+
 import heapq
 from dataclasses import dataclass, field, replace
 
-import torch
+from typing import TYPE_CHECKING
 
-from megakernels.instructions import (
-    BaseGlobals,
-    Instruction,
-    NoOp,
-)
-from megakernels.llama import LlamaForCausalLM
+if TYPE_CHECKING:
+    from megakernels.instructions import BaseGlobals, Instruction
+    from megakernels.llama import LlamaForCausalLM
 
 INTS_PER_INSTRUCTION = 32
 TIMING_SLOTS = 128
 
 
-@dataclass
+@dataclass(eq=False)
 class DAG_Node:
     def __hash__(self):
-        return hash(tuple(self.instruction.serialize()))
+        return object.__hash__(self)
 
     instruction: Instruction
     dependencies: list["DAG_Node"]
@@ -95,6 +94,16 @@ def assign_dag_to_sms(schedule: Schedule) -> list[list[Instruction]]:
     nodes = schedule.dag_nodes
     globs = schedule.globs
 
+    if globs.sm_count() <= 0:
+        raise ValueError("active worker count must be positive")
+    node_set = set(nodes)
+    if len(node_set) != len(nodes):
+        raise ValueError("duplicate DAG node")
+    for node in nodes:
+        if any(dep not in node_set for dep in node.dependencies):
+            raise ValueError("dependency missing from schedule")
+        node.children.clear()
+        node.start_time = node.end_time = float("inf")
     for node in nodes:
         node.register_with_parents()
 
@@ -131,7 +140,7 @@ def assign_dag_to_sms(schedule: Schedule) -> list[list[Instruction]]:
         # print(f"assigning instruction {node.instruction} to sm {sm_idx}")
 
         # start_time = max(ready_time, sm_time)
-        start_time = sm_time
+        start_time = max(sm_time, node.earliest_ready_time(globs))
 
         end_time = start_time + node.instruction.cost(globs)
 
@@ -148,12 +157,75 @@ def assign_dag_to_sms(schedule: Schedule) -> list[list[Instruction]]:
                 idx = node_to_idx[child]
                 heapq.heappush(ready_heap, (-child.instruction.cost(globs), idx))
 
+    if sum(map(len, sm_queues)) != len(nodes):
+        raise ValueError("dependency graph contains a cycle")
+    validate_queues(schedule, sm_queues)
     return sm_queues
+
+
+def validate_queues(schedule: Schedule, queues: list[list[Instruction]]) -> None:
+    """Validate DAG coverage and progress with queue-order edges added.
+
+    This proves only the supplied dependency model; opcode-specific global barrier
+    producers still need to match that model. Padding NoOps must have opcode zero.
+    """
+    if len(queues) != schedule.globs.sm_count() or not queues:
+        raise ValueError("queue count must equal positive active worker count")
+    nodes = schedule.dag_nodes
+    node_set = set(nodes)
+    if len(node_set) != len(nodes):
+        raise ValueError("duplicate DAG node")
+    instruction_nodes = {}
+    for node in nodes:
+        key = id(node.instruction)
+        if key in instruction_nodes:
+            raise ValueError("DAG operations must have distinct instruction objects")
+        instruction_nodes[key] = node
+    edges = {node: set() for node in nodes}
+    for node in nodes:
+        for parent in node.dependencies:
+            if parent not in node_set:
+                raise ValueError("dependency missing from schedule")
+            edges[parent].add(node)
+    seen = set()
+    for queue in queues:
+        previous = None
+        for instruction in queue:
+            node = instruction_nodes.get(id(instruction))
+            if node is None:
+                if instruction.opcode() != 0:
+                    raise ValueError("queue contains an unknown operation")
+                continue
+            if node in seen:
+                raise ValueError("operation assigned more than once")
+            seen.add(node)
+            if previous is not None:
+                edges[previous].add(node)
+            previous = node
+    if seen != node_set:
+        raise ValueError("schedule has unassigned operations")
+    pending = {node: 0 for node in nodes}
+    for children in edges.values():
+        for child in children:
+            pending[child] += 1
+    ready = [node for node in nodes if pending[node] == 0]
+    visited = 0
+    while ready:
+        node = ready.pop()
+        visited += 1
+        for child in edges[node]:
+            pending[child] -= 1
+            if pending[child] == 0:
+                ready.append(child)
+    if visited != len(nodes):
+        raise ValueError("DAG plus worker queue ordering contains a deadlock cycle")
 
 
 def round_robin_assign_to_sms(
     instructions: list[Instruction], sm_count: int
 ) -> list[list[Instruction]]:
+    if sm_count <= 0:
+        raise ValueError("active worker count must be positive")
     sm_queues = [[] for _ in range(sm_count)]
     for i, instruction in enumerate(instructions):
         sm_queues[i % sm_count].append(instruction)
@@ -164,6 +236,8 @@ def round_robin_assign_to_sms(
 def zig_zag_assign_to_sms(
     instructions: list[Instruction], sm_count: int
 ) -> list[list[Instruction]]:
+    if sm_count <= 0:
+        raise ValueError("active worker count must be positive")
     sm_queues = [[] for _ in range(sm_count)]
     for i, instruction in enumerate(instructions):
         base_id = i % (sm_count * 2)
@@ -204,15 +278,37 @@ def wave_assign_to_sms(
 
     sm_heap = [(0, i) for i in range(sm_count)]
     heapq.heapify(sm_heap)
+    nodes_by_instruction = {id(node.instruction): node for node in schedule.dag_nodes}
 
     for wave in waves:
-        sorted_by_biggest_cost = sorted(wave, key=lambda x: x.cost(globs), reverse=True)
-
-        for ins in sorted_by_biggest_cost:
+        # Cost sorting may only choose ready operations. Dependencies can exist
+        # within a same-opcode wave (e.g. ordered reduction columns).
+        nodes = [nodes_by_instruction[id(ins)] for ins in wave]
+        members = set(nodes)
+        pending = {node: len(set(node.dependencies) & members) for node in nodes}
+        children = {node: [] for node in nodes}
+        for node in nodes:
+            for parent in set(node.dependencies) & members:
+                children[parent].append(node)
+        indices = {node: i for i, node in enumerate(nodes)}
+        ready = [(-node.instruction.cost(globs), indices[node]) for node in nodes if pending[node] == 0]
+        heapq.heapify(ready)
+        assigned = 0
+        while ready:
+            _, index = heapq.heappop(ready)
+            node = nodes[index]
+            ins = node.instruction
             sm_cost, sm_idx = heapq.heappop(sm_heap)
             sm_cost += ins.cost(globs)
             heapq.heappush(sm_heap, (sm_cost, sm_idx))
             sm_queues[sm_idx].append(ins)
+            assigned += 1
+            for child in children[node]:
+                pending[child] -= 1
+                if pending[child] == 0:
+                    heapq.heappush(ready, (-child.instruction.cost(globs), indices[child]))
+        if assigned != len(nodes):
+            raise ValueError("dependency cycle within opcode wave")
 
     return sm_queues
 
@@ -255,26 +351,29 @@ def assign_to_sms(
 
     match mode:
         case "rr":
-            return round_robin_assign_to_sms(instructions, sm_count)
+            queues = round_robin_assign_to_sms(instructions, sm_count)
         case "zz":
-            return zig_zag_assign_to_sms(instructions, sm_count)
+            queues = zig_zag_assign_to_sms(instructions, sm_count)
         case "wave":
-            return wave_assign_to_sms(schedule)
+            queues = wave_assign_to_sms(schedule)
         case "dag":
-            return assign_dag_to_sms(schedule)
+            queues = assign_dag_to_sms(schedule)
         case "pool":
-            assert memory_fraction is not None
-            return pool_assign_to_sms(
-                instructions, sm_count, memory_fraction=memory_fraction
-            )
+            if memory_fraction is None:
+                raise ValueError("pool scheduler requires memory_fraction")
+            queues = pool_assign_to_sms(instructions, sm_count, memory_fraction)
         case _:
             raise ValueError(f"Unknown mode: {mode}")
+    if schedule is not None:
+        validate_queues(schedule, queues)
+    return queues
 
 
 def serialize_and_pad(instruction: Instruction):
     serialized = instruction.serialize()
     num_padding = INTS_PER_INSTRUCTION - len(serialized)
-    assert num_padding >= 0
+    if num_padding < 0:
+        raise ValueError("serialized instruction exceeds instruction width")
     return serialized + [0] * num_padding
 
 
@@ -282,7 +381,13 @@ def tensorize_instructions(
     globs: BaseGlobals,
     instruction_queues: list[list[Instruction]],
 ):
+    import torch
+    from megakernels.instructions import NoOp
+
     num_sms = globs.sm_count()
+    if num_sms <= 0 or len(instruction_queues) != num_sms:
+        raise ValueError("queue count must equal positive active worker count")
+    instruction_queues = [list(queue) for queue in instruction_queues]
 
     max_queue_len = max(len(queue) for queue in instruction_queues)
     for queue in instruction_queues:
@@ -295,7 +400,7 @@ def tensorize_instructions(
     device = globs.device
 
     serialized = torch.tensor(flattened, dtype=torch.int32, device=device).view(
-        num_sms, -1, INTS_PER_INSTRUCTION
+        num_sms, max_queue_len, INTS_PER_INSTRUCTION
     )
 
     timings = torch.zeros(

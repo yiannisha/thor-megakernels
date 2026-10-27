@@ -1,0 +1,22 @@
+{
+  "name": "dynamic-registers",
+  "consumer_warps": 16,
+  "consumer_registers": 104,
+  "service_registers": 64,
+  "workers": 20,
+  "backoff_ns": 20,
+  "scheduler": "rr",
+  "timing": false,
+  "arch": "sm_110a",
+  "page_size": 16384,
+  "page_count": 13,
+  "weight_stages": 3,
+  "tile_width": 512,
+  "architecture": "static",
+  "precision": "bf16",
+  "static_registers": 96,
+  "instruction_parties": 32,
+  "match_torch_bf16_rms": true,
+  "ordered_downproj": false,
+  "register_mode": "dynamic"
+}

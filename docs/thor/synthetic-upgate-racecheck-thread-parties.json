@@ -1,0 +1,19 @@
+{
+  "command": [
+    "compute-sanitizer",
+    "--tool",
+    "racecheck",
+    "--error-exitcode",
+    "99",
+    "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+    "-m",
+    "tools.thor.synthetic",
+    "--worker",
+    "--op",
+    "upgate",
+    "--output",
+    "local/synthetic-upgate-thread-barrier-numerics.json"
+  ],
+  "returncode": 0,
+  "output": "========= COMPUTE-SANITIZER\n{\"status\": \"PASS\", \"metadata\": {\"model\": \"synthetic-llama1b-upgate\", \"precision\": \"bf16\", \"context\": 128, \"batch\": 1, \"measurement_scope\": \"kernel\", \"variant\": \"upstream-like\", \"power_mode\": \"observed separately in inventory\", \"concurrent_workload\": \"uncontrolled-existing\", \"seed\": 1, \"iterations\": 4, \"pretrained_weights\": false, \"reference\": \"FP32 accumulation on the same BF16 inputs/weights; BF16 output\", \"tolerance\": {\"atol\": 0.02, \"rtol\": 0.03}, \"timing_scope_note\": \"CUDA event interval includes Python binding enqueue gaps and TMA descriptor setup\", \"native_resources\": {\"physical_sms\": 20, \"consumer_warps\": 16, \"threads_per_cta\": 640, \"instruction_barrier_parties_per_warp\": 32, \"backoff_ns\": 20, \"timing_enabled\": false, \"active_workers\": 20, \"resident_ctas_per_sm\": 1, \"static_smem_bytes\": 10384, \"dynamic_smem_bytes\": 214015, \"registers_per_thread\": 96, \"local_bytes_per_thread\": 176}}, \"correctness\": {\"passed\": true, \"max_absolute_error\": 0.0, \"mean_absolute_error\": 0.0, \"max_relative_error\": 0.0, \"mean_relative_error\": 0.0}}\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n"
+}

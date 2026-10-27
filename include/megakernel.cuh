@@ -1,6 +1,7 @@
 #pragma once
 
 #include "kittens.cuh"
+#include <cooperative_groups.h>
 #include "config.cuh"
 #include "util.cuh"
 #include "controller/controller.cuh"
@@ -18,7 +19,7 @@ __device__ inline void mk_internal(const globals &g) {
 #ifdef MK_DEBUG
     if (threadIdx.x == 0)
         printf("Thread %d: Kernel launched\n", threadIdx.x);
-    group<config::NUM_WARPS>::sync(15);
+    kittens::group<config::NUM_WARPS>::sync(15);
 #endif
     __shared__ alignas(128) instruction_state_t<config>
         instruction_state[config::INSTRUCTION_PIPELINE_STAGES];
@@ -44,7 +45,7 @@ __device__ inline void mk_internal(const globals &g) {
 #ifdef MK_DEBUG
     if (threadIdx.x == 0)
         printf("Thread %d: Pre-MKS creation\n", threadIdx.x);
-    group<config::NUM_WARPS>::sync(15);
+    kittens::group<config::NUM_WARPS>::sync(15);
 #endif
     state<config> mks{instruction_state,
                       instruction_arrived,
@@ -68,7 +69,7 @@ __device__ inline void mk_internal(const globals &g) {
 #ifdef MK_DEBUG
     if (threadIdx.x == 0)
         printf("Thread %d: Created MKS\n", threadIdx.x);
-    group<config::NUM_WARPS>::sync(15);
+    kittens::group<config::NUM_WARPS>::sync(15);
 #endif
 
     // Zero initial timings memory.
@@ -80,9 +81,10 @@ __device__ inline void mk_internal(const globals &g) {
     }
 
     if (threadIdx.x < config::INSTRUCTION_PIPELINE_STAGES) {
-        init_semaphore(instruction_arrived[threadIdx.x], 1);
+        init_semaphore(instruction_arrived[threadIdx.x],
+                       config::INSTRUCTION_BARRIER_PARTIES_PER_WARP);
         init_semaphore(instruction_finished[threadIdx.x],
-                       config::NUM_WARPS - 1);
+                       (config::NUM_WARPS - 1) * config::INSTRUCTION_BARRIER_PARTIES_PER_WARP);
     }
     if (threadIdx.x < config::NUM_PAGES) {
         for (int i = 0; i < config::INSTRUCTION_PIPELINE_STAGES_BITS; i++) {
@@ -116,10 +118,12 @@ __device__ inline void mk_internal(const globals &g) {
 #endif
 
     if (kittens::warpid() < config::NUM_CONSUMER_WARPS) {
-        kittens::warpgroup::increase_registers<config::CONSUMER_REGISTERS>();
+        if constexpr (!config::STATIC_REGISTER_ALLOCATION)
+            kittens::warpgroup::increase_registers<config::CONSUMER_REGISTERS>();
         ::megakernel::consumer::main_loop<config, globals, ops...>(g, mks);
     } else {
-        kittens::warpgroup::decrease_registers<config::NON_CONSUMER_REGISTERS>();
+        if constexpr (!config::STATIC_REGISTER_ALLOCATION)
+            kittens::warpgroup::decrease_registers<config::NON_CONSUMER_REGISTERS>();
         switch (kittens::warpgroup::warpid()) {
         case 0:
             ::megakernel::loader::main_loop<config, globals, ops...>(g, mks);
@@ -167,6 +171,10 @@ template <typename config, typename globals, typename... ops>
 __launch_bounds__(config::NUM_THREADS, 1)
     __cluster_dims__(config::CLUSTER_BLOCKS) __global__
     void mk(const __grid_constant__ globals g) {
+    if constexpr (requires { config::COOPERATIVE_LAUNCH; }) {
+        if constexpr (config::COOPERATIVE_LAUNCH)
+            cooperative_groups::this_grid().sync();
+    }
     megakernel_wrapper<config, globals, ops...>::run(g);
 }
 

@@ -84,7 +84,7 @@ class PyTorchGenerator(Generator):
             decode_inp = BatchState(
                 input_ids=output_tokens[:, input_token_pos : input_token_pos + 1],
                 position_ids=position_ids,
-                seq_len=starting_seq_len + i + 1,
+                seq_len=starting_seq_len + i,
             )
             decode_output: BatchState = self.model(decode_inp)
             assert decode_output.output_ids is not None

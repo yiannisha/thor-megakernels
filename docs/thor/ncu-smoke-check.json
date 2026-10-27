@@ -1,0 +1,12 @@
+{
+  "command": [
+    "ncu",
+    "--set",
+    "basic",
+    "--launch-count",
+    "1",
+    "local/thor-smoke"
+  ],
+  "returncode": 1,
+  "output": "==PROF== Connected to process 1542950 (/home/thor-guest/ml-perf/Megakernels/local/thor-smoke)\n==ERROR== ERR_NVGPUCTRPERM - The user does not have permission to access NVIDIA GPU Performance Counters on the target device 0. For instructions on enabling permissions and to get more information see https://developer.nvidia.com/ERR_NVGPUCTRPERM\nPASS 36 VM cases; physical_sms=20 resident_ctas_per_sm=1 static_smem=10384 dynamic_smem=214015 registers=25\n==PROF== Disconnected from process 1542950\n"
+}

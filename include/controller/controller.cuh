@@ -102,6 +102,9 @@ __device__ void main_loop(const globals &g, ::megakernel::state<config> &kvms) {
             kvms.record(TEVENT_PAGE_ALLOC_DONE);
         }
 
+        // Order distributed page-map writes before lane 0 publishes the slot.
+        __syncwarp();
+
         // Step 3. Construct semaphores
         int opcode = kvms.instruction()[0];
         if (opcode == 0) {
@@ -123,10 +126,13 @@ __device__ void main_loop(const globals &g, ::megakernel::state<config> &kvms) {
             num_semaphores[kvms.instruction_ring] = shfl_val;
         }
 
+        __syncwarp();
         if (laneid == 0) {
             kvms.record(TEVENT_SEMS_SETUP);
             // Step 4. Let the rest of the world know that next instruction is
             // ready to roll!
+        }
+        if (laneid < config::INSTRUCTION_BARRIER_PARTIES_PER_WARP) {
             arrive(kvms.instruction_arrived[kvms.instruction_ring], 1);
         }
     }
@@ -158,9 +164,11 @@ __device__ void main_loop(const globals &g, ::megakernel::state<config> &kvms) {
             kvms.record(TEVENT_CONTROLLER_END);
 
         // technically don't need to reset, whatevs?
-        store_timings_and_reset<config, globals>(
-            &kvms.all_instructions[instruction_ring].timings[0],
-            instruction_index, g);
+        if constexpr (config::TIMING_RECORD_ENABLED) {
+            store_timings_and_reset<config, globals>(
+                &kvms.all_instructions[instruction_ring].timings[0],
+                instruction_index, g);
+        }
     }
 }
 

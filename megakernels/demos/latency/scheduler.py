@@ -14,7 +14,7 @@ from megakernels.demos.latency.instructions import (
 )
 from megakernels.instructions import NoOp
 from megakernels.llama import LlamaForCausalLM
-from megakernels.scheduler import DAG_Node, ScheduleBuilder
+from megakernels.scheduler import DAG_Node, ScheduleBuilder, INTS_PER_INSTRUCTION
 from megakernels.utils import assert_div, get_sm_count
 
 
@@ -60,7 +60,7 @@ def make_globals(
         device=device,
     )
 
-    return Globals(
+    result = Globals(
         # model params
         qkv_proj_weights=stacked_params.qkv_proj,
         o_proj_weights=stacked_params.o_proj,
@@ -89,6 +89,7 @@ def make_globals(
         ),
         silu_out=make_buffer(config.intermediate_size),
         logits=make_buffer(config.vocab_size),
+        down_partials=make_buffer([4, config.hidden_size], buffer_dtype=torch.float32),
         # scalars
         pos_id=0,
         attn_scale=1 / math.sqrt(config.head_dim),
@@ -113,6 +114,8 @@ def make_globals(
         device=device,
         barriers=barriers,
     )
+    result.ordered_downproj = getattr(model.extra_config, 'ordered_downproj', False)
+    return result
 
 
 def schedule_qkv(
@@ -154,12 +157,12 @@ def schedule_upgate(globs: Globals, layer_idx: int):
     assert blocks_per_sm > 1
 
     for sm_idx in range(sm_count):
-        instructions.append(
-            LayerNormDoubleMatVecSiLU(
-                layer_idx=layer_idx,
-                block_idxs=list(range(sm_idx, num_up_gate_blocks, sm_count)),
-            )
-        )
+        blocks = list(range(sm_idx, num_up_gate_blocks, sm_count))
+        # opcode, layer and list length occupy three instruction words.
+        capacity = INTS_PER_INSTRUCTION - 3
+        for start in range(0, len(blocks), capacity):
+            instructions.append(LayerNormDoubleMatVecSiLU(
+                layer_idx=layer_idx, block_idxs=blocks[start:start + capacity]))
 
     return instructions
 
@@ -320,6 +323,9 @@ def make_dag_layer(
             k_start_block = k_start_dim // globs.qkv_block_size
             v_start_block = v_start_dim // globs.qkv_block_size
 
+            # Attention also polls the four Q heads associated with this KV head.
+            q_start_block = kv_head_idx * 4 * dims_per_block
+            block_indices.extend(range(q_start_block, q_start_block + 4 * dims_per_block))
             block_indices.extend(
                 list(range(k_start_block, k_start_block + dims_per_block))
             )
@@ -374,7 +380,13 @@ def make_dag_layer(
     downproj_instructions = schedule_downproj(globs, layer_idx)
     downproj_nodes: list[DAG_Node] = []
     for ins in downproj_instructions:
-        downproj_nodes.append(DAG_Node(ins, upgate_nodes))
+        # Runtime's optional ordered BF16 reduction waits for the previous
+        # complete column wave. Include those producers in the DAG so queue
+        # validation catches any consumer scheduled ahead of its producers.
+        previous_column = [node for node in downproj_nodes
+                           if getattr(globs, 'ordered_downproj', False) and
+                           node.instruction.reduction_block_idx == ins.reduction_block_idx - 1]
+        downproj_nodes.append(DAG_Node(ins, upgate_nodes + previous_column))
 
     new_nodes.extend(downproj_nodes)
 

@@ -58,3 +58,5 @@ class ExtraModelConfig:
     max_len_override: int | None = None
 
     max_batch_size: int = 1
+
+    ordered_downproj: bool = False

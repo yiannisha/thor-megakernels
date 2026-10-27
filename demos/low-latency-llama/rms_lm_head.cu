@@ -29,11 +29,9 @@ template <typename Config, typename Globals> struct rms_lm_head {
         static __device__ inline void gmem_wait(const Globals &g,
                                                 megakernel::state<Config> &s) {
             parsed_instruction inst{s};
-            while (*(volatile int *)&g.Bar[{globals::num_layers - 1,
-                                            OPCODE_DownProjResidual - 1, 0}] <
-                   EXPECTED_ARRIVAL_COUNT) {
-                __nanosleep(Config::GMEM_SPIN_LOOP_SLEEP_NANOS);
-            }
+            megakernel::gmem_wait<Config>([&] { return (gmem_load_acquire(&g.Bar[{globals::num_layers - 1,
+                                            OPCODE_DownProjResidual - 1, 0}]) <
+                   EXPECTED_ARRIVAL_COUNT); });
         }
 
         static __device__ inline void

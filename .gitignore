@@ -9,3 +9,5 @@ __pycache__/
 *.ptx
 *.cubin
 *.fatbin
+
+*.so.build.json

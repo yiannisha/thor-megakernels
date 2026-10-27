@@ -1,0 +1,6 @@
+# Keep JIT compiler/bindings within the installed driver's CUDA 13.2 level.
+cuda-python==13.2.0
+cuda-bindings==13.2.0
+nvidia-cuda-nvcc==13.2.86
+nvidia-cuda-crt==13.2.86
+nvidia-nvvm==13.2.86

@@ -1,0 +1,294 @@
+{
+  "schema_version": "thor.autoregressive.v1",
+  "status": "PASS",
+  "protocol": {
+    "engine": "native",
+    "context": 1024,
+    "decode_steps": 2,
+    "warmups": 1,
+    "repeats": 1,
+    "batches": 1,
+    "seed": 1,
+    "output": "docs/thor/native-autoregressive-smoke.json"
+  },
+  "summary": {
+    "request_mean_tpot_ms": {
+      "p50_ms": 14.151113005937077,
+      "p95_ms": 14.151113005937077,
+      "p99_ms": 14.151113005937077,
+      "mean_ms": 14.151113005937077,
+      "min_ms": 14.151113005937077,
+      "max_ms": 14.151113005937077
+    }
+  },
+  "trials": [
+    {
+      "batch_index": 0,
+      "requests": [
+        {
+          "decode_total_ms": 28.302226011874154,
+          "tpot_ms": 14.151113005937077,
+          "generated_tokens": [
+            83,
+            13,
+            11372
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "metadata": {
+    "model": "Llama-3.2-1B-Instruct",
+    "model_provenance": {
+      "path": "/home/thor-guest/ml-perf/Megakernels/local/models/Llama-3.2-1B-Instruct",
+      "config": {
+        "architectures": [
+          "LlamaForCausalLM"
+        ],
+        "attention_bias": false,
+        "attention_dropout": 0.0,
+        "bos_token_id": 128000,
+        "eos_token_id": [
+          128001,
+          128008,
+          128009
+        ],
+        "head_dim": 64,
+        "hidden_act": "silu",
+        "hidden_size": 2048,
+        "initializer_range": 0.02,
+        "intermediate_size": 8192,
+        "max_position_embeddings": 131072,
+        "mlp_bias": false,
+        "model_type": "llama",
+        "num_attention_heads": 32,
+        "num_hidden_layers": 16,
+        "num_key_value_heads": 8,
+        "pretraining_tp": 1,
+        "rms_norm_eps": 1e-05,
+        "rope_scaling": {
+          "factor": 32.0,
+          "high_freq_factor": 4.0,
+          "low_freq_factor": 1.0,
+          "original_max_position_embeddings": 8192,
+          "rope_type": "llama3"
+        },
+        "rope_theta": 500000.0,
+        "tie_word_embeddings": true,
+        "torch_dtype": "bfloat16",
+        "transformers_version": "4.45.0.dev0",
+        "use_cache": true,
+        "vocab_size": 128256
+      },
+      "config_sha256": "2febf68cea25bf4611be02b7536f2488a5ba523bb1134986e3610152abe74fdb",
+      "download_revision": "9213176726f574b556790deb65791e0c5aa438b6",
+      "tensor_count": 146,
+      "weights": [
+        {
+          "file": "model.safetensors",
+          "bytes": 2471645608,
+          "sha256": "1ff795ff6a07e6a68085d206fb84417da2f083f68391c2843cd2b8ac6df8538f"
+        }
+      ]
+    },
+    "precision": "bf16",
+    "context": 1024,
+    "batch": 1,
+    "seed": 1,
+    "measurement_scope": "autoregressive_host_decode",
+    "tokens_per_run": 1,
+    "engine": "native",
+    "variant": "native:upstream-like",
+    "config": {
+      "name": "upstream-like",
+      "consumer_warps": 16,
+      "consumer_registers": 104,
+      "service_registers": 64,
+      "register_mode": "static",
+      "static_registers": 96,
+      "workers": 20,
+      "backoff_ns": 20,
+      "scheduler": "rr",
+      "instruction_parties": 32,
+      "ordered_downproj": false,
+      "match_torch_bf16_rms": true,
+      "timing": false,
+      "arch": "sm_110a",
+      "page_size": 16384,
+      "page_count": 13,
+      "weight_stages": 3,
+      "tile_width": 512,
+      "architecture": "static",
+      "precision": "bf16"
+    },
+    "power_mode": "NV Power Mode: 120W\n1",
+    "concurrent_workload": "uncontrolled-existing",
+    "same_cache_replay": false,
+    "input_hash": "4b9ed18b09b88ae7189a9b3becf50a049d93a8cc5ccd6b328f98f537eaf4305a",
+    "native_resources": {
+      "build_source_hash": "ebcbeaa2959b87efd8c227d94c5d4120932f076260557dca7a98d41540174b47",
+      "portable_gmem_barriers": true,
+      "physical_sms": 20,
+      "register_mode": "static",
+      "consumer_register_target": 104,
+      "service_register_target": 64,
+      "ordered_downproj": false,
+      "match_torch_bf16_rms": true,
+      "consumer_warps": 16,
+      "threads_per_cta": 640,
+      "instruction_barrier_parties_per_warp": 32,
+      "backoff_ns": 20,
+      "timing_enabled": false,
+      "active_workers": 20,
+      "resident_ctas_per_sm": 1,
+      "static_smem_bytes": 10384,
+      "dynamic_smem_bytes": 214015,
+      "registers_per_thread": 96,
+      "local_bytes_per_thread": 160
+    },
+    "native_build": {
+      "timestamp": "2026-10-27T22:07:36.231707+00:00",
+      "binary": "/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama/mk_llama.cpython-312-aarch64-linux-gnu.so",
+      "binary_sha256": "7485833f3997b1a36462eb8fdeef9a3cdf0b3a61d19b5eb490ee1fcc61eaab53",
+      "source_hash": "ebcbeaa2959b87efd8c227d94c5d4120932f076260557dca7a98d41540174b47",
+      "gpu_target": "THOR",
+      "compiler": {
+        "returncode": 0,
+        "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_May_08_10:52:52_AM_PDT_2026\nCuda compilation tools, release 13.2, V13.2.86\nBuild cuda_13.2.r13.2/compiler.37953736_0",
+        "stderr": ""
+      },
+      "flags": [
+        "-DNDEBUG",
+        "-Xcompiler=-fPIE",
+        "--expt-extended-lambda",
+        "--expt-relaxed-constexpr",
+        "-Xcompiler=-Wno-psabi",
+        "-Xcompiler=-fno-strict-aliasing",
+        "--use_fast_math",
+        "-forward-unknown-to-host-compiler",
+        "-O3",
+        "-Xnvlink=--verbose",
+        "-Xptxas=--verbose",
+        "-Xptxas=--warn-on-spills",
+        "-std=c++20",
+        "-x",
+        "cu",
+        "-lrt",
+        "-lpthread",
+        "-ldl",
+        "-lcuda",
+        "-lcudadevrt",
+        "-lcudart_static",
+        "-lcublas",
+        "-lineinfo",
+        "-I/home/thor-guest/ml-perf/Megakernels/local/thunderkittens/include",
+        "-I/home/thor-guest/ml-perf/Megakernels/include",
+        "-I/usr/include/python3.12",
+        "-I/home/thor-guest/ml-perf/Megakernels/local/thor-venv/lib/python3.12/site-packages/pybind11/include",
+        "-L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/python3.12/config-3.12-aarch64-linux-gnu",
+        "-L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/aarch64-linux-gnu",
+        "-ldl",
+        "-lm",
+        "-shared",
+        "-fPIC",
+        "-DMK_BUILD_SOURCE_HASH=\"ebcbeaa2959b87efd8c227d94c5d4120932f076260557dca7a98d41540174b47\"",
+        "-DKITTENS_HOPPER",
+        "-DMK_THOR",
+        "-DMK_ACTIVE_WORKERS=20",
+        "-gencode=arch=compute_110a,code=sm_110a",
+        "-DMK_THOR_DYNAMIC_REGISTERS=0",
+        "-maxrregcount=96"
+      ]
+    },
+    "gate": {
+      "logit_nrmse_limit": 0.03,
+      "state_nrmse_limit": 0.02
+    },
+    "timing_includes": [
+      "embedding",
+      "runtime_dispatch",
+      "decoder",
+      "lm_head",
+      "argmax",
+      "final_ID_copy"
+    ],
+    "timing_excludes": [
+      "loading",
+      "prefill",
+      "KV_restore",
+      "correctness_checks"
+    ],
+    "cuda_event_note": "interval includes CPU enqueue gaps; all work uses current stream",
+    "dram_gb_s": null,
+    "gpu_power_w": null,
+    "energy_per_token_j": null,
+    "decode_steps_after_prefill": 2,
+    "timing_source": "host perf_counter with final CUDA synchronization and IDs on CPU",
+    "prefill_engine": "repository PyTorch",
+    "first_token": 83
+  },
+  "qualification": {
+    "passed": true,
+    "metrics": {
+      "logits": {
+        "passed": true,
+        "max_absolute_error": 0.0546875,
+        "mean_absolute_error": 0.009149872697889805,
+        "max_relative_error": 641.0,
+        "mean_relative_error": 0.06090845540165901,
+        "normalized_rmse": 0.008429029025137424,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.03
+      },
+      "hidden": {
+        "passed": true,
+        "max_absolute_error": 0.125,
+        "mean_absolute_error": 0.005036771297454834,
+        "max_relative_error": 5737.3046875,
+        "mean_relative_error": 2.8435375690460205,
+        "normalized_rmse": 0.006061584688723087,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.02
+      },
+      "k_cache": {
+        "passed": true,
+        "max_absolute_error": 0.125,
+        "mean_absolute_error": 0.010635066777467728,
+        "max_relative_error": 43.597286224365234,
+        "mean_relative_error": 0.03797920048236847,
+        "normalized_rmse": 0.0063317460007965565,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.02
+      },
+      "v_cache": {
+        "passed": true,
+        "max_absolute_error": 0.041015625,
+        "mean_absolute_error": 0.003181451465934515,
+        "max_relative_error": 85.21052551269531,
+        "mean_relative_error": 0.0979175940155983,
+        "normalized_rmse": 0.015806611627340317,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.02
+      }
+    },
+    "greedy_token_matches": true
+  },
+  "reference_generated_tokens": [
+    83,
+    13,
+    11372
+  ],
+  "qualification_scope": "first decode logits/hidden/KV against PyTorch; trajectory token agreement reported separately",
+  "trajectory_agreement": {
+    "all_requests_match_torch": true,
+    "matching_tokens_per_request": [
+      3
+    ],
+    "tokens_per_request": 3
+  }
+}

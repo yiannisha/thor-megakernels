@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 from pybind11.setup_helpers import build_ext
 import pybind11
@@ -7,7 +8,7 @@ from setuptools import setup, Extension
 # Environment variables
 THUNDERKITTENS_ROOT = os.environ.get('THUNDERKITTENS_ROOT', '')
 MEGAKERNELS_ROOT = os.environ.get('MEGAKERNELS_ROOT', '')
-PYTHON_VERSION = os.environ.get('PYTHON_VERSION', '3.13')
+PYTHON_VERSION = os.environ.get('PYTHON_VERSION', f'{sys.version_info.major}.{sys.version_info.minor}')
 
 # Target GPU (default to HOPPER)
 TARGET = os.environ.get('TARGET_GPU', 'HOPPER') # or BLACKWELL
@@ -48,8 +49,7 @@ nvcc_flags = [
     '-lcublas',
     '-lineinfo',
     '-shared',
-    '-fPIC',
-    f'-lpython{PYTHON_VERSION}'
+    '-fPIC'
 ]
 
 # Include directories
@@ -73,9 +73,15 @@ nvcc_flags.extend(get_python_config_flags())
 
 # Conditional setup based on target GPU
 if TARGET == 'HOPPER':
-    nvcc_flags.extend(['-DKITTENS_HOPPER', '-arch=sm_90a'])
+    nvcc_flags.extend(['-DKITTENS_HOPPER', '-gencode=arch=compute_90a,code=sm_90a'])
 elif TARGET == 'BLACKWELL':
-    nvcc_flags.extend(['-DKITTENS_HOPPER', '-DKITTENS_BLACKWELL', '-arch=sm_100a'])
+    nvcc_flags.extend(['-DKITTENS_HOPPER', '-DKITTENS_BLACKWELL', '-gencode=arch=compute_100a,code=sm_100a'])
+elif TARGET == 'THOR':
+    arch = os.environ.get('THOR_ARCH', 'sm_110a')
+    if arch not in ('sm_110', 'sm_110a'):
+        raise ValueError('THOR_ARCH must be sm_110 or sm_110a')
+    nvcc_flags.extend(['-DKITTENS_HOPPER', '-DMK_THOR', f'-gencode=arch={arch.replace("sm_", "compute_")},code={arch}',
+                       '-maxrregcount=' + os.environ.get('THOR_STATIC_REGISTERS', '96')])
 else:
     raise ValueError(f"Invalid target: {TARGET}")
 

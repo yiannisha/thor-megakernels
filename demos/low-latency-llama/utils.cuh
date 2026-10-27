@@ -30,8 +30,20 @@ rms_norm(const sv_t &rms_scale_smem, const sv_t &activations_smem,
     float rms_scale = rsqrtf(variance + rms_norm_eps);
 
     kittens::warp::mul(activations_vec, activations_vec, rms_scale);
+    // Match the BF16 reference's two rounding points: normalized input,
+    // then the learned RMS scale product. Keep the historical float path selectable.
+    if constexpr (Config::MATCH_TORCH_BF16_RMS) {
+        kittens::rv_bf<sv_t::length> rounded;
+        kittens::warp::copy(rounded, activations_vec);
+        kittens::warp::copy(activations_vec, rounded);
+    }
     kittens::warp::load(rms_scale_vec, rms_scale_smem);
     kittens::warp::mul(activations_vec, activations_vec, rms_scale_vec);
+    if constexpr (Config::MATCH_TORCH_BF16_RMS) {
+        kittens::rv_bf<sv_t::length> rounded;
+        kittens::warp::copy(rounded, activations_vec);
+        kittens::warp::copy(activations_vec, rounded);
+    }
 
     return activations_vec;
 }

@@ -50,12 +50,10 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
                                                 megakernel::state<Config> &s) {
             parsed_instruction inst{s};
             if (inst.layer_idx > 0) {
-                while (
-                    *(volatile int *)&g.Bar[{inst.layer_idx - 1,
-                                             OPCODE_DownProjResidual - 1, 0}] <
-                    EXPECTED_ARRIVAL_COUNT) {
-                    __nanosleep(Config::GMEM_SPIN_LOOP_SLEEP_NANOS);
-                }
+                megakernel::gmem_wait<Config>([&] { return (
+                    gmem_load_acquire(&g.Bar[{inst.layer_idx - 1,
+                                             OPCODE_DownProjResidual - 1, 0}]) <
+                    EXPECTED_ARRIVAL_COUNT); });
             }
         }
 
@@ -91,6 +89,11 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
                           pipeline::SCRATCH_BYTES_PER_WARP>(
                 output_scratch_start, qkv_proj);
 
+            if constexpr (Config::MATCH_TORCH_BF16_EPILOGUES) {
+                kittens::rv_bf<16> rounded;
+                kittens::warp::copy(rounded, qkv_proj);
+                kittens::warp::copy(qkv_proj, rounded);
+            }
             kittens::wait(rope_arrived(s), 0);
 
             auto head_chunk = block_idx % 4;
@@ -158,7 +161,7 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
                 // asm volatile("fence.acq_rel.gpu;\n"); // possible we need sc
                 // here but I don't think so.
 
-                atomicAdd(&g.Bar[{inst.layer_idx, opcode - 1, block_idx / 4}],
+                gmem_add_release(&g.Bar[{inst.layer_idx, opcode - 1, block_idx / 4}],
                           1);
                 s.record(megakernel::TEVENT_DONE_GMEM_STORE);
             }
@@ -208,6 +211,10 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
 
             parsed_instruction inst{s};
             pipeline::loader_loop(s, g, inst.layer_idx);
+            // A zero-iteration storer never waits on RoPE. Drain its TMA
+            // before instruction scratch/semaphores may be reused.
+            if (inst.iters == 0 && kittens::laneid() == 0)
+                kittens::wait(rope_arrived(s), 0);
         }
     };
     struct launcher {

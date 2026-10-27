@@ -15,6 +15,7 @@ class Globals(BaseGlobals):
     attn_out_intermediates: Tensor
     silu_out: Tensor
     logits: Tensor
+    down_partials: Tensor
 
     skip_attn_reduction: bool
 

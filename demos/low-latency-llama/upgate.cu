@@ -5,7 +5,6 @@ using namespace kittens;
 using namespace megakernel;
 
 using globals = llama_1b_globals;
-using config = default_config;
 
 template <typename Config, typename Globals> struct rms_upgate_silu {
     static constexpr int opcode =
@@ -32,11 +31,9 @@ template <typename Config, typename Globals> struct rms_upgate_silu {
         static __device__ inline void gmem_wait(const Globals &g,
                                                 megakernel::state<Config> &s) {
             parsed_instruction inst{s};
-            while (
-                *(volatile int *)&g.Bar[{inst.layer_idx, prev_opcode - 1, 0}] <
-                EXPECTED_ARRIVAL_COUNT) {
-                __nanosleep(Config::GMEM_SPIN_LOOP_SLEEP_NANOS);
-            }
+            megakernel::gmem_wait<Config>([&] { return (
+                gmem_load_acquire(&g.Bar[{inst.layer_idx, prev_opcode - 1, 0}]) <
+                EXPECTED_ARRIVAL_COUNT); });
         }
 
         static __device__ inline void
@@ -88,11 +85,25 @@ template <typename Config, typename Globals> struct rms_upgate_silu {
                           pipeline::SCRATCH_BYTES_PER_WARP>(
                 output_scratch_start, gate_out);
 
+            if constexpr (Config::MATCH_TORCH_BF16_EPILOGUES) {
+                kittens::rv_bf<16> rounded;
+                kittens::warp::copy(rounded, up_out);
+                kittens::warp::copy(up_out, rounded);
+                kittens::warp::copy(rounded, gate_out);
+                kittens::warp::copy(gate_out, rounded);
+            }
+
             // neg
             kittens::warp::mul(gate_scratch, gate_out, -1.f);
             kittens::warp::exp(gate_scratch, gate_scratch);
             kittens::warp::add(gate_scratch, gate_scratch, 1.f);
             kittens::warp::div(gate_out, gate_out, gate_scratch);
+
+            if constexpr (Config::MATCH_TORCH_BF16_EPILOGUES) {
+                kittens::rv_bf<16> rounded;
+                kittens::warp::copy(rounded, gate_out);
+                kittens::warp::copy(gate_out, rounded);
+            }
 
             // gating
             kittens::warp::mul(gate_out, up_out, gate_out);
@@ -114,7 +125,7 @@ template <typename Config, typename Globals> struct rms_upgate_silu {
                 // asm volatile("fence.acq_rel.gpu;");
 
                 parsed_instruction inst{s};
-                atomicAdd(&g.Bar[{inst.layer_idx, opcode - 1,
+                gmem_add_release(&g.Bar[{inst.layer_idx, opcode - 1,
                                   block_idx * globals::matvec_block_size /
                                       globals::hidden_dim}],
                           1);

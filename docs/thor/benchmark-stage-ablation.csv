@@ -1,0 +1,11 @@
+run_id,status,engine,variant,scope,precision,context,batch,samples,warmups,batches,power_mode,concurrent_workload,p50_ms,p95_ms,p99_ms,mean_ms,tokens_per_s
+2e36d8e8-a9ea-4254-8cfe-b6cf22108ced,PASS,native,native:reference-rounding-stage-1-pages-5,decode,bf16,1024,1,90,5,3,"NV Power Mode: 120W
+1",uncontrolled-existing,11.664304256439209,15.213587045669556,15.78807454109192,12.30622861650255,81.2596637981362
+c878d9ed-296b-4074-be83-d5f51aef09fa,PASS,native,native:reference-rounding-stage-2-pages-9,decode,bf16,1024,1,90,5,3,"NV Power Mode: 120W
+1",uncontrolled-existing,11.898127555847168,15.220659208297729,15.440651798248291,12.57229585647583,79.53996719580161
+13161e74-7bf4-4876-8e3e-8d46eb810652,PASS,native,native:reference-rounding-stage-3-pages-13,decode,bf16,1024,1,90,5,3,"NV Power Mode: 120W
+1",uncontrolled-existing,11.98422384262085,15.658180809020996,15.999422760009764,12.664014922247993,78.96389937469291
+e07053d9-7e7b-4db4-bfb2-053713f89b3d,PASS,native,native:reference-rounding-stage-1-pages-13,decode,bf16,1024,1,90,5,3,"NV Power Mode: 120W
+1",uncontrolled-existing,11.689487934112549,15.13620023727417,15.770777559280395,12.296980624728732,81.32077544214718
+8c558240-ba76-4547-9d18-5aacd2bbe54e,PASS,native,native:reference-rounding-stage-2-pages-13,decode,bf16,1024,1,90,5,3,"NV Power Mode: 120W
+1",uncontrolled-existing,11.990111827850342,15.526478290557861,15.708560895919799,12.75806753370497,78.38177665686003

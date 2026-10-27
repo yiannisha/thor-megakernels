@@ -1,0 +1,3 @@
+run_id,status,engine,variant,scope,precision,context,batch,samples,warmups,batches,power_mode,concurrent_workload,p50_ms,p95_ms,p99_ms,mean_ms,tokens_per_s
+8f69a5a1-55ad-43f3-a137-0c4db92100a5,PASS,native,native:reference-rounding,decode,bf16,1024,1,90,5,3,"NV Power Mode: 120W
+1",uncontrolled-existing,11.866447925567627,15.383670377731324,15.720237340927124,12.61940622329712,79.24303111455954

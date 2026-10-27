@@ -1,0 +1,4895 @@
+{
+  "schema_version": 1,
+  "run_id": "304c2f78-bc91-49b7-bad1-6ca463be5ef5",
+  "timestamp": "2026-10-27T21:39:39.990417+00:00",
+  "inventory": {
+    "platform": "Linux-6.8.12-1021-tegra-aarch64-with-glibc2.39",
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.13.0+cu132",
+      "transformers": "4.48.3",
+      "pybind11": "2.13.6"
+    },
+    "cuda_driver": {
+      "devices": [
+        {
+          "ordinal": 0,
+          "name": "NVIDIA Thor",
+          "sm_count": 20,
+          "cc_major": 11,
+          "cc_minor": 0,
+          "max_threads_per_block": 1024,
+          "shared_memory_per_block": 49152,
+          "shared_memory_per_sm": 233472,
+          "shared_memory_optin": 232448,
+          "max_blocks_per_sm": 24
+        }
+      ]
+    },
+    "tools": {
+      "nvcc": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc",
+      "tegrastats": "/usr/bin/tegrastats",
+      "nsys": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/opt/nvidia/nsight-systems/2025.6.3/bin/nsys",
+      "ncu": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/opt/nvidia/nsight-compute/2026.1.1/ncu",
+      "jtop": null
+    },
+    "commands": {
+      "nvcc": {
+        "returncode": 0,
+        "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_May_08_10:52:52_AM_PDT_2026\nCuda compilation tools, release 13.2, V13.2.86\nBuild cuda_13.2.r13.2/compiler.37953736_0",
+        "stderr": ""
+      },
+      "nvcc_targets": {
+        "returncode": 0,
+        "stdout": "sm_75\nsm_80\nsm_86\nsm_87\nsm_88\nsm_89\nsm_90\nsm_100\nsm_110\nsm_103\nsm_120\nsm_121",
+        "stderr": ""
+      },
+      "nvidia_smi": {
+        "returncode": 0,
+        "stdout": "==============NVSMI LOG==============\n\nTimestamp                                              : Tue Oct 27 14:39:40 2026\nDriver Version                                         : 595.78\nCUDA Version                                           : 13.2\n\nAttached GPUs                                          : 1\nGPU 00000000:01:00.0\n    Product Name                                       : NVIDIA Thor\n    Product Brand                                      : GeForce\n    Product Architecture                               : Blackwell\n    Display Mode                                       : Requested functionality has been deprecated\n    Display Attached                                   : No\n    Display Active                                     : Disabled\n    Persistence Mode                                   : Disabled\n    Addressing Mode                                    : ATS\n    MIG Mode\n        Current                                        : Disabled\n        Pending                                        : Disabled\n    Accounting Mode                                    : Disabled\n    Accounting Mode Buffer Size                        : 4000\n    Driver Model\n        Current                                        : N/A\n        Pending                                        : N/A\n    Serial Number                                      : N/A\n    GPU UUID                                           : GPU-a7c66ad2-6dbb-0ab8-c1a2-37ba6dba3600\n    GPU PDI                                            : 0xf7df299c60122a9d\n    Minor Number                                       : 0\n    VBIOS Version                                      : N/A\n    MultiGPU Board                                     : No\n    Board ID                                           : 0x100\n    Board Part Number                                  : N/A\n    GPU Part Number                                    : 2B00--A1\n    FRU Part Number                                    : N/A\n    Platform Info\n        Chassis Serial Number                          : N/A\n        Slot Number                                    : N/A\n        Tray Index                                     : N/A\n        Host ID                                        : N/A\n        Peer Type                                      : N/A\n        Module Id                                      : N/A\n        GPU Fabric GUID                                : N/A\n    Inforom Version\n        Image Version                                  : N/A\n        OEM Object                                     : N/A\n        ECC Object                                     : N/A\n        Power Management Object                        : N/A\n    Inforom BBX Object Flush\n        Latest Timestamp                               : N/A\n        Latest Duration                                : N/A\n    GPU Operation Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    GPU C2C Mode                                       : Disabled\n    GPU Virtualization Mode\n        Virtualization Mode                            : None\n        Host VGPU Mode                                 : N/A\n        vGPU Heterogeneous Mode                        : N/A\n    GPU Recovery Action                                : None\n    GSP Firmware Version                               : 595.78\n    IBMNPU\n        Relaxed Ordering Mode                          : N/A\n    PCI\n        Bus                                            : 0x01\n        Device                                         : 0x00\n        Domain                                         : 0x0000\n        Base Classcode                                 : 0x3\n        Sub Classcode                                  : 0x2\n        Device Id                                      : 0x2B0010DE\n        Bus Id                                         : 00000000:01:00.0\n        Sub System Id                                  : 0x00000000\n        GPU Link Info\n            PCIe Generation\n                Max                                    : 1\n                Current                                : 1\n                Device Current                         : 1\n                Device Max                             : 5\n                Host Max                               : 1\n            Link Width\n                Max                                    : 16x\n                Current                                : 1x\n        Bridge Chip\n            Type                                       : N/A\n            Firmware                                   : N/A\n        Replays Since Reset                            : 0\n        Replay Number Rollovers                        : 0\n        Tx Throughput                                  : N/A\n        Rx Throughput                                  : N/A\n        Atomic Caps Outbound                           : FETCHADD_32 FETCHADD_64 SWAP_32 SWAP_64 CAS_32 CAS_64 \n        Atomic Caps Inbound                            : N/A\n    Fan Speed                                          : N/A\n    Performance State                                  : N/A\n    Clocks Event Reasons                               : N/A\n    Clocks Event Reasons Counters\n        SW Power Capping                               : N/A\n        Sync Boost                                     : N/A\n        SW Thermal Slowdown                            : N/A\n        HW Thermal Slowdown                            : N/A\n        HW Power Braking                               : N/A\n    Sparse Operation Mode                              : N/A\n    FB Memory Usage\n        Total                                          : N/A\n        Reserved                                       : N/A\n        Used                                           : N/A\n        Free                                           : N/A\n    BAR1 Memory Usage\n        Total                                          : N/A\n        Used                                           : N/A\n        Free                                           : N/A\n    Conf Compute Protected Memory Usage\n        Total                                          : 0 MiB\n        Used                                           : 0 MiB\n        Free                                           : 0 MiB\n    Compute Mode                                       : Default\n    Utilization\n        GPU                                            : 3 %\n        Memory                                         : 0 %\n        Encoder                                        : 0 %\n        Decoder                                        : 0 %\n        JPEG                                           : 0 %\n        OFA                                            : 0 %\n    Encoder Stats\n        Active Sessions                                : 0\n        Average FPS                                    : 0\n        Average Latency                                : 0\n    FBC Stats\n        Active Sessions                                : 0\n        Average FPS                                    : 0\n        Average Latency                                : 0\n    DRAM Encryption Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    ECC Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    ECC Errors\n        Volatile\n            SRAM Correctable                           : N/A\n            SRAM Uncorrectable Parity                  : N/A\n            SRAM Uncorrectable SEC-DED                 : N/A\n            DRAM Correctable                           : N/A\n            DRAM Uncorrectable                         : N/A\n        Aggregate\n            SRAM Correctable                           : N/A\n            SRAM Uncorrectable Parity                  : N/A\n            SRAM Uncorrectable SEC-DED                 : N/A\n            DRAM Correctable                           : N/A\n            DRAM Uncorrectable                         : N/A\n            SRAM Threshold Exceeded                    : N/A\n        Aggregate Uncorrectable SRAM Sources\n            SRAM L2                                    : N/A\n            SRAM SM                                    : N/A\n            SRAM Microcontroller                       : N/A\n            SRAM PCIE                                  : N/A\n            SRAM Other                                 : N/A\n        Channel Repair Pending                         : N/A\n        TPC Repair Pending                             : N/A\n        Unrepairable Memory                            : N/A\n    Retired Pages\n        Single Bit ECC                                 : N/A\n        Double Bit ECC                                 : N/A\n        Pending Page Blacklist                         : N/A\n    Remapped Rows                                      : N/A\n    Temperature\n        GPU Current Temp                               : 35 C\n        GPU T.Limit Temp                               : N/A\n        GPU Shutdown Temp                              : N/A\n        GPU Slowdown Temp                              : N/A\n        GPU Max Operating Temp                         : N/A\n        GPU Target Temperature                         : N/A\n        Memory Current Temp                            : N/A\n        Memory Max Operating Temp                      : N/A\n    GPU Power Readings\n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : 2.77 W\n        Current Power Limit                            : N/A\n        Requested Power Limit                          : N/A\n        Default Power Limit                            : N/A\n        Min Power Limit                                : N/A\n        Max Power Limit                                : N/A\n    GPU Memory Power Readings \n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : N/A\n    Module Power Readings\n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : N/A\n        Current Power Limit                            : N/A\n        Requested Power Limit                          : N/A\n        Default Power Limit                            : N/A\n        Min Power Limit                                : N/A\n        Max Power Limit                                : N/A\n    Power Smoothing                                    : N/A\n    Workload Power Profiles\n        Requested Profiles                             : N/A\n        Enforced Profiles                              : N/A\n    EDPp Multiplier                                    : N/A\n    Clocks\n        Graphics                                       : 315 MHz\n        SM                                             : N/A\n        Memory                                         : N/A\n        Video                                          : 315 MHz\n    Applications Clocks\n        Graphics                                       : Requested functionality has been deprecated\n        Memory                                         : Requested functionality has been deprecated\n    Default Applications Clocks\n        Graphics                                       : Requested functionality has been deprecated\n        Memory                                         : Requested functionality has been deprecated\n    Deferred Clocks\n        Memory                                         : N/A\n    Max Clocks\n        Graphics                                       : N/A\n        SM                                             : N/A\n        Memory                                         : N/A\n        Video                                          : N/A\n    Max Customer Boost Clocks\n        Graphics                                       : N/A\n    Clock Policy\n        Auto Boost                                     : N/A\n        Auto Boost Default                             : N/A\n    Fabric\n        State                                          : N/A\n        Status                                         : N/A\n        CliqueId                                       : N/A\n        ClusterUUID                                    : N/A\n        Health\n            Summary                                    : N/A\n            Bandwidth                                  : N/A\n            Route Recovery in progress                 : N/A\n            Route Unhealthy                            : N/A\n            Access Timeout Recovery                    : N/A\n            Incorrect Configuration                    : N/A\n            Partition Assigned                         : N/A\n    Processes\n        GPU instance ID                   : N/A\n        Compute instance ID               : N/A\n        Process ID                        : 5564\n            Type                          : G\n            Name                          : /usr/lib/xorg/Xorg\n            Used GPU Memory               : 91 MiB\n        GPU instance ID                   : N/A\n        Compute instance ID               : N/A\n        Process ID                        : 5823\n            Type                          : G\n            Name                          : /usr/bin/gnome-shell\n            Used GPU Memory               : 48 MiB\n        GPU instance ID                   : N/A\n        Compute instance ID               : N/A\n        Process ID                        : 1387370\n            Type                          : C\n            Name                          : /home/zainab99/Projects/vanity-robot/.venvs/task-capture-candidate/bin/python\n            Used GPU Memory               : 104 MiB\n    Capabilities\n        EGM                                            : disabled",
+        "stderr": ""
+      },
+      "power_mode": {
+        "returncode": 0,
+        "stdout": "NV Power Mode: 120W\n1",
+        "stderr": ""
+      },
+      "git_sha": {
+        "returncode": 0,
+        "stdout": "7309cec801537b61fea3b50d7dfe454a6cde578e",
+        "stderr": ""
+      },
+      "worktree": {
+        "returncode": 0,
+        "stdout": "M .gitignore\n M demos/low-latency-llama/Makefile\n M demos/low-latency-llama/attention_partial.cu\n M demos/low-latency-llama/attention_reduction.cu\n M demos/low-latency-llama/llama.cu\n M demos/low-latency-llama/llama.cuh\n M demos/low-latency-llama/matvec_adds.cu\n M demos/low-latency-llama/matvec_pipeline.cuh\n M demos/low-latency-llama/rms_lm_head.cu\n M demos/low-latency-llama/rms_matvec_rope_append.cu\n M demos/low-latency-llama/upgate.cu\n M demos/low-latency-llama/utils.cuh\n M include/config.cuh\n M include/controller/controller.cuh\n M include/controller/instruction_fetch.cuh\n M include/megakernel.cuh\n M include/util.cuh\n M megakernels/demos/latency/scheduler.py\n M megakernels/instructions.py\n M megakernels/model_types.py\n M megakernels/scheduler.py\n M util/mk_init/sources/setup.py\n?? configs/\n?? docs/\n?? include/checked_binding.cuh\n?? include/gmem_barrier.cuh\n?? include/page_layout.h\n?? tests/\n?? tools/",
+        "stderr": ""
+      },
+      "submodules": {
+        "returncode": 0,
+        "stdout": "664c108d16f12707a73d3072ab525f26fb2b4f62 ThunderKittens (664c108d)",
+        "stderr": ""
+      }
+    },
+    "jetpack_release": "# R39 (release), REVISION: 2.1, GCID: 46758480, BOARD: generic, EABI: aarch64, DATE: Fri Aug  7 05:54:22 AM UTC 2026\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia\n"
+  },
+  "protocol": {
+    "timeout": 300,
+    "worker": true,
+    "run_id": "304c2f78-bc91-49b7-bad1-6ca463be5ef5",
+    "adapter": "tools.thor.model_bench:make_adapter",
+    "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/bench-torch-context1024.json",
+    "dry_run": false,
+    "warmups": 5,
+    "repeats": 30,
+    "batches": 3
+  },
+  "status": "PASS",
+  "errors": [],
+  "summary": {
+    "p50_ms": 14.12715196609497,
+    "p95_ms": 17.524294471740724,
+    "p99_ms": 17.889095497131347,
+    "mean_ms": 14.477301375071209,
+    "min_ms": 12.226719856262207,
+    "max_ms": 18.282432556152344,
+    "tokens_per_s": 69.07364667574873
+  },
+  "metadata": {
+    "model": "Llama-3.2-1B-Instruct",
+    "model_provenance": {
+      "path": "/home/thor-guest/ml-perf/Megakernels/local/models/Llama-3.2-1B-Instruct",
+      "config": {
+        "architectures": [
+          "LlamaForCausalLM"
+        ],
+        "attention_bias": false,
+        "attention_dropout": 0.0,
+        "bos_token_id": 128000,
+        "eos_token_id": [
+          128001,
+          128008,
+          128009
+        ],
+        "head_dim": 64,
+        "hidden_act": "silu",
+        "hidden_size": 2048,
+        "initializer_range": 0.02,
+        "intermediate_size": 8192,
+        "max_position_embeddings": 131072,
+        "mlp_bias": false,
+        "model_type": "llama",
+        "num_attention_heads": 32,
+        "num_hidden_layers": 16,
+        "num_key_value_heads": 8,
+        "pretraining_tp": 1,
+        "rms_norm_eps": 1e-05,
+        "rope_scaling": {
+          "factor": 32.0,
+          "high_freq_factor": 4.0,
+          "low_freq_factor": 1.0,
+          "original_max_position_embeddings": 8192,
+          "rope_type": "llama3"
+        },
+        "rope_theta": 500000.0,
+        "tie_word_embeddings": true,
+        "torch_dtype": "bfloat16",
+        "transformers_version": "4.45.0.dev0",
+        "use_cache": true,
+        "vocab_size": 128256
+      },
+      "config_sha256": "2febf68cea25bf4611be02b7536f2488a5ba523bb1134986e3610152abe74fdb",
+      "download_revision": "9213176726f574b556790deb65791e0c5aa438b6",
+      "tensor_count": 146,
+      "weights": [
+        {
+          "file": "model.safetensors",
+          "bytes": 2471645608,
+          "sha256": "1ff795ff6a07e6a68085d206fb84417da2f083f68391c2843cd2b8ac6df8538f"
+        }
+      ]
+    },
+    "precision": "bf16",
+    "context": 1024,
+    "batch": 1,
+    "seed": 1,
+    "measurement_scope": "decode",
+    "tokens_per_run": 1,
+    "engine": "torch",
+    "variant": "torch:upstream-like",
+    "config": {
+      "name": "upstream-like",
+      "consumer_warps": 16,
+      "consumer_registers": 104,
+      "service_registers": 64,
+      "register_mode": "static",
+      "static_registers": 96,
+      "workers": 20,
+      "backoff_ns": 20,
+      "scheduler": "rr",
+      "instruction_parties": 32,
+      "ordered_downproj": false,
+      "match_torch_bf16_rms": true,
+      "timing": false,
+      "arch": "sm_110a",
+      "page_size": 16384,
+      "page_count": 13,
+      "weight_stages": 3,
+      "tile_width": 512,
+      "architecture": "static",
+      "precision": "bf16"
+    },
+    "power_mode": "NV Power Mode: 120W\n1",
+    "concurrent_workload": "uncontrolled-existing",
+    "same_cache_replay": true,
+    "input_hash": "4b9ed18b09b88ae7189a9b3becf50a049d93a8cc5ccd6b328f98f537eaf4305a",
+    "native_resources": null,
+    "native_build": null,
+    "gate": {
+      "logit_nrmse_limit": 0.03,
+      "state_nrmse_limit": 0.02
+    },
+    "timing_includes": [
+      "embedding",
+      "runtime_dispatch",
+      "decoder",
+      "lm_head",
+      "argmax"
+    ],
+    "timing_excludes": [
+      "model_loading",
+      "prefill",
+      "frozen_KV_restore",
+      "correctness_checks"
+    ],
+    "cuda_event_note": "interval includes CPU enqueue gaps; all work uses current stream",
+    "dram_gb_s": null,
+    "gpu_power_w": null,
+    "energy_per_token_j": null
+  },
+  "correctness": {
+    "passed": true,
+    "metrics": {
+      "logits": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.03
+      },
+      "hidden": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.02
+      },
+      "k_cache": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.02
+      },
+      "v_cache": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.02
+      }
+    },
+    "greedy_token_matches": true
+  },
+  "trials": [
+    {
+      "batch_index": 0,
+      "samples_ms": [
+        17.321088790893555,
+        16.801376342773438,
+        15.391424179077148,
+        17.84048080444336,
+        17.246335983276367,
+        17.573183059692383,
+        15.67903995513916,
+        15.74886417388916,
+        17.375743865966797,
+        15.621888160705566,
+        17.110431671142578,
+        17.20355224609375,
+        15.758079528808594,
+        16.74608039855957,
+        15.778400421142578,
+        17.65228843688965,
+        15.684927940368652,
+        16.620960235595703,
+        18.282432556152344,
+        15.86415958404541,
+        17.20582389831543,
+        17.350879669189453,
+        17.537311553955078,
+        16.645727157592773,
+        15.599871635437012,
+        17.508384704589844,
+        15.535327911376953,
+        16.979551315307617,
+        17.378400802612305,
+        15.872415542602539
+      ],
+      "correctness_checks": [
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        }
+      ],
+      "p50_ms": 16.890463829040527,
+      "p95_ms": 17.75579423904419,
+      "p99_ms": 18.154266548156738,
+      "mean_ms": 16.69714775085449,
+      "min_ms": 15.391424179077148,
+      "max_ms": 18.282432556152344
+    },
+    {
+      "batch_index": 1,
+      "samples_ms": [
+        17.080896377563477,
+        13.363007545471191,
+        14.060768127441406,
+        12.43177604675293,
+        13.740192413330078,
+        12.434080123901367,
+        13.764863967895508,
+        12.509183883666992,
+        13.095904350280762,
+        12.620256423950195,
+        13.375904083251953,
+        12.5032320022583,
+        12.551839828491211,
+        12.48083209991455,
+        14.450464248657227,
+        12.548864364624023,
+        12.95622444152832,
+        12.325152397155762,
+        13.22105598449707,
+        14.614175796508789,
+        12.508352279663086,
+        14.636735916137695,
+        14.160672187805176,
+        14.339679718017578,
+        12.449888229370117,
+        14.120223999023438,
+        13.278271675109863,
+        13.954336166381836,
+        12.582528114318848,
+        13.732352256774902
+      ],
+      "correctness_checks": [
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        }
+      ],
+      "p50_ms": 13.249663829803467,
+      "p95_ms": 14.626583862304688,
+      "p99_ms": 16.37208984375,
+      "mean_ms": 13.396390501658122,
+      "min_ms": 12.325152397155762,
+      "max_ms": 17.080896377563477
+    },
+    {
+      "batch_index": 2,
+      "samples_ms": [
+        14.483327865600586,
+        13.587264060974121,
+        12.37609577178955,
+        13.757439613342285,
+        14.198495864868164,
+        14.553088188171387,
+        12.226719856262207,
+        14.262080192565918,
+        13.62492847442627,
+        14.134079933166504,
+        12.3754243850708,
+        13.913311958312988,
+        12.823264122009277,
+        14.378368377685547,
+        12.594688415527344,
+        14.306367874145508,
+        13.030719757080078,
+        14.306559562683105,
+        12.445280075073242,
+        14.136832237243652,
+        12.415424346923828,
+        13.633312225341797,
+        12.251487731933594,
+        12.969856262207031,
+        12.507935523986816,
+        13.735584259033203,
+        12.462592124938965,
+        12.367199897766113,
+        12.586655616760254,
+        13.706591606140137
+      ],
+      "correctness_checks": [
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "mean_absolute_error": 0.0,
+              "max_relative_error": 0.0,
+              "mean_relative_error": 0.0,
+              "normalized_rmse": 0.0,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        }
+      ],
+      "p50_ms": 13.606096267700195,
+      "p95_ms": 14.436096096038819,
+      "p99_ms": 14.532857694625855,
+      "mean_ms": 13.33836587270101,
+      "min_ms": 12.226719856262207,
+      "max_ms": 14.553088188171387
+    }
+  ],
+  "warmups_completed": 5,
+  "process": {
+    "returncode": 0,
+    "output": "\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.07it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.06it/s]\n{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/bench-torch-context1024.json\", \"errors\": []}\n"
+  }
+}
