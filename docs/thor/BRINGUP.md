@@ -76,3 +76,5 @@ THOR_CONFIG='{"name":"weight-stage-1","weight_stages":1,"page_count":5}' python 
 ```
 
 The full `stage_matrix` command in BENCHMARKS.md applies matching build/host flags and checks actual resource metadata. The historical BF16 atomic math can fail repeated model gates; the qualified stage comparison uses the same reference-rounding numerical switches in every candidate. Neither layout selection nor that experiment closes the model-wide correctness gate.
+
+The qualified stage, fixed-page, racecheck and memcheck datasets were captured before the first local commit and therefore record the upstream Git SHA plus a dirty worktree. Commit `859ac01` preserves their exact source fingerprint `61f4be3bdb497ebd4ba3dc3d15a75edda184bfc6a80fb54ab781a0335d4bfdee` for reproduction. Later plot-label changes do not alter kernel mathematics. Earlier bring-up failures retain their recorded hashes/logs but do not all have independently recoverable source snapshots.

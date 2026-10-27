@@ -95,7 +95,7 @@ def plot(paths, output):
         samples = sorted(x for trial in data['trials'] for x in trial['samples_ms'])
         meta = data['metadata']
         axes.step(samples, [(i+1)/len(samples) for i in range(len(samples))], where='post',
-                  label=f"{meta.get('engine', meta['variant'])}; context {meta['context']}")
+                  label=f"{meta.get('variant', meta.get('engine', 'unknown'))}; context {meta['context']}")
         count += 1
     if not count:
         plt.close(figure)
@@ -103,7 +103,7 @@ def plot(paths, output):
     axes.set(xlabel='CUDA-event interval (ms)', ylabel='Empirical cumulative probability',
              title='Measured latency distributions (see run conditions)')
     axes.grid(alpha=.25)
-    axes.legend()
+    axes.legend(fontsize=8)
     figure.tight_layout()
     figure.savefig(output)
     plt.close(figure)
