@@ -1,0 +1,12 @@
+========= COMPUTE-SANITIZER
+{"stages":1,"issuers":1,"consumer_reads":false,"bytes":10485760,"median_ms":0.131616,"GB_s":79.669343,"checksum":0,"checksum_checked":false,"resident_ctas_per_sm":1,"registers":34,"dynamic_smem":214015,"samples_ms":[0.131616]}
+{"stages":3,"issuers":4,"consumer_reads":true,"bytes":10485760,"median_ms":0.674144,"GB_s":15.554184,"checksum":1756410896,"checksum_checked":true,"resident_ctas_per_sm":1,"registers":48,"dynamic_smem":214015,"samples_ms":[0.674144]}
+{"stages":2,"issuers":1,"consumer_reads":true,"bytes":10485760,"median_ms":0.663552,"GB_s":15.802469,"checksum":1756410896,"checksum_checked":true,"resident_ctas_per_sm":1,"registers":47,"dynamic_smem":214015,"samples_ms":[0.663552]}
+{"stages":3,"issuers":1,"consumer_reads":true,"bytes":10485760,"median_ms":0.675968,"GB_s":15.512214,"checksum":1756410896,"checksum_checked":true,"resident_ctas_per_sm":1,"registers":48,"dynamic_smem":214015,"samples_ms":[0.675968]}
+{"stages":3,"issuers":4,"consumer_reads":false,"bytes":10485760,"median_ms":0.126688,"GB_s":82.768374,"checksum":0,"checksum_checked":false,"resident_ctas_per_sm":1,"registers":21,"dynamic_smem":214015,"samples_ms":[0.126688]}
+{"stages":2,"issuers":1,"consumer_reads":false,"bytes":10485760,"median_ms":0.126784,"GB_s":82.705706,"checksum":0,"checksum_checked":false,"resident_ctas_per_sm":1,"registers":34,"dynamic_smem":214015,"samples_ms":[0.126784]}
+{"stages":1,"issuers":1,"consumer_reads":true,"bytes":10485760,"median_ms":0.775008,"GB_s":13.529873,"checksum":1756410896,"checksum_checked":true,"resident_ctas_per_sm":1,"registers":44,"dynamic_smem":214015,"samples_ms":[0.775008]}
+{"stages":3,"issuers":2,"consumer_reads":false,"bytes":10485760,"median_ms":0.148480,"GB_s":70.620691,"checksum":0,"checksum_checked":false,"resident_ctas_per_sm":1,"registers":35,"dynamic_smem":214015,"samples_ms":[0.148480]}
+{"stages":3,"issuers":1,"consumer_reads":false,"bytes":10485760,"median_ms":0.150880,"GB_s":69.497352,"checksum":0,"checksum_checked":false,"resident_ctas_per_sm":1,"registers":34,"dynamic_smem":214015,"samples_ms":[0.150880]}
+{"stages":3,"issuers":2,"consumer_reads":true,"bytes":10485760,"median_ms":0.689184,"GB_s":15.214746,"checksum":1756410896,"checksum_checked":true,"resident_ctas_per_sm":1,"registers":48,"dynamic_smem":214015,"samples_ms":[0.689184]}
+========= ERROR SUMMARY: 0 errors

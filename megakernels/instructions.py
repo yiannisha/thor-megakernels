@@ -48,8 +48,30 @@ class BaseGlobals:
         self.instructions: Tensor | None = None
         self.timings: Tensor | None = None
 
-    def sm_count(self) -> int:
+    def physical_sm_count(self) -> int:
         return get_sm_count(self.device)
+
+    def sm_count(self) -> int:
+        physical = self.physical_sm_count()
+        active = getattr(self, "active_workers", None)
+        if active is None:
+            return physical
+        if not isinstance(active, int) or isinstance(active, bool) or not 1 <= active <= physical:
+            raise ValueError("active_workers must be an integer in 1..physical SM count")
+        return active
+
+    def set_active_workers(self, count: int):
+        if type(count) is not int:
+            raise ValueError("active worker count must be an integer")
+        previous = getattr(self, "active_workers", None)
+        self.active_workers = count
+        try:
+            self.sm_count()
+        except ValueError:
+            self.active_workers = previous
+            raise
+        # Existing queue tensors were built for the previous worker count.
+        self.instructions = self.timings = None
 
     def diff(self, other: "BaseGlobals", skip_kv_cache: bool = False):
         for field in fields(self):

@@ -24,6 +24,8 @@ __device__ void inline load_instructions(int *instruction,
     if (laneid < config::INSTRUCTION_WIDTH) {
         instruction[laneid] = src_ptr[laneid];
     }
+    // The controller lane reads fields fetched by other lanes.
+    __syncwarp();
 }
 
 template <typename config, typename globals>

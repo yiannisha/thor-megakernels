@@ -1,0 +1,72 @@
+{
+  "control_median_ms": 10.394831739977235,
+  "instrumented_median_ms": 10.392861049913336,
+  "observed_difference_percent": -0.01895836424480324,
+  "sampled_position": 1123,
+  "sampled_warp": 0,
+  "scope": "matvec consumer loops only; role times overlap and are not wall-time fractions",
+  "families": [
+    {
+      "opcode": 1,
+      "family": "QKV",
+      "rows": 960,
+      "weight_wait_pct": 9.739243590956795,
+      "output_slot_wait_pct": 56.14031771388611,
+      "matvec_work_pct": 28.599258113108576,
+      "other_loop_pct": 5.521180582048515,
+      "global_dependency_pct_of_input_setup": 96.12571100392265,
+      "input_setup_pct_of_setup_plus_loop": 38.0293624157798
+    },
+    {
+      "opcode": 4,
+      "family": "O projection",
+      "rows": 6144,
+      "weight_wait_pct": 39.04229321968732,
+      "output_slot_wait_pct": 5.5596601197603555,
+      "matvec_work_pct": 41.376342564553084,
+      "other_loop_pct": 14.021704095999237,
+      "global_dependency_pct_of_input_setup": 87.15115642000842,
+      "input_setup_pct_of_setup_plus_loop": 70.14142191210556
+    },
+    {
+      "opcode": 5,
+      "family": "Up/gate",
+      "rows": 960,
+      "weight_wait_pct": 2.738271055345621,
+      "output_slot_wait_pct": 69.32880667665916,
+      "matvec_work_pct": 24.36793429345815,
+      "other_loop_pct": 3.5649879745370714,
+      "global_dependency_pct_of_input_setup": 93.02232902421605,
+      "input_setup_pct_of_setup_plus_loop": 5.493294065399459
+    },
+    {
+      "opcode": 6,
+      "family": "Down projection",
+      "rows": 960,
+      "weight_wait_pct": 62.349735066354945,
+      "output_slot_wait_pct": 2.3403010757495744,
+      "matvec_work_pct": 30.576156444670968,
+      "other_loop_pct": 4.733807413224514,
+      "global_dependency_pct_of_input_setup": 79.76924002669516,
+      "input_setup_pct_of_setup_plus_loop": 9.314633767359501
+    },
+    {
+      "opcode": 7,
+      "family": "Output head",
+      "rows": 60,
+      "weight_wait_pct": 69.14002214472592,
+      "output_slot_wait_pct": 1.8375080402092852,
+      "matvec_work_pct": 25.706499193587604,
+      "other_loop_pct": 3.315970621477189,
+      "global_dependency_pct_of_input_setup": 96.5688906950754,
+      "input_setup_pct_of_setup_plus_loop": 1.3614770600383046
+    }
+  ],
+  "pooled_consumer_loop_percent": {
+    "weight_wait": 31.08079457702116,
+    "output_slot_wait": 37.944277756515454,
+    "matvec_work": 26.747429320108065,
+    "other": 4.22749834635532
+  },
+  "global_dependency_pct_of_setup_plus_loop": 13.351099900962476
+}

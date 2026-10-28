@@ -25,8 +25,11 @@ __device__ inline unsigned int get_smid() {
 }
 
 __device__ inline unsigned int get_worker_id() {
+#ifdef MK_PHYSICAL_WORKER_IDS
     return get_smid();
-    // return blockIdx.x;
+#else
+    return blockIdx.x;
+#endif
 }
 
 template <template <typename> typename op_dispatcher, typename... ops>
@@ -127,7 +130,7 @@ template <typename config> struct state {
     }
     __device__ inline void next_instruction() {
         __syncwarp();
-        if (kittens::laneid() == 0) {
+        if (kittens::laneid() < config::INSTRUCTION_BARRIER_PARTIES_PER_WARP) {
 #ifdef MK_DEBUG
             printf("Thread %d: arriving at instruction finished %d\n",
                    threadIdx.x, instruction_ring);
@@ -167,6 +170,11 @@ template <typename config> struct state {
         }
     }
 
+    __device__ inline void warp_arrive(kittens::semaphore &semaphore) {
+        if (kittens::laneid() < config::INSTRUCTION_BARRIER_PARTIES_PER_WARP)
+            kittens::arrive(semaphore);
+    }
+
     __device__ inline void warp_finish_page(int pid, int count) {
         if (kittens::warp::laneid() == 0) {
             finish_page(pid, count);
@@ -203,6 +211,8 @@ template <typename config> struct state {
 #endif
 
     uint32_t pid_order_shared_addr;
+    // Opt-in native MMA resource; allocated once per CTA by mk_internal.
+    uint32_t native_tmem_base = 0;
 
     __device__ inline void print() {
         printf("Kittens Virtual Machine State being printed by thread %d, "

@@ -1,0 +1,2 @@
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.16it/s]Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.16it/s]
+{"status": "PASS", "summary": {"request_mean_tpot_ms": {"p50_ms": 10.376910469931317, "p95_ms": 10.451257313456153, "p99_ms": 10.495768422650873, "mean_ms": 10.388612683978863, "min_ms": 10.363669240032323, "max_ms": 10.506896199949551}}}

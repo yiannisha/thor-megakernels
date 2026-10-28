@@ -9,3 +9,8 @@ __pycache__/
 *.ptx
 *.cubin
 *.fatbin
+
+*.so.build.json
+
+# Generated standalone GPU probe executables.
+/docs/thor/ready-queue-*/probe

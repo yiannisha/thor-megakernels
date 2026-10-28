@@ -1,0 +1,71 @@
+{
+  "original": {
+    "requests": 30,
+    "excluded_initial_queue": false,
+    "p50_ms": 10.394675745046698,
+    "p95_ms": 10.477533944052993,
+    "p99_ms": 10.51008107548114,
+    "block_p50_ms": [
+      10.46209298496251,
+      10.388888790039346,
+      10.3876587600098
+    ],
+    "first_step_reference_pass": [
+      true,
+      true,
+      true
+    ],
+    "median_latency_reduction_pct": 0.0,
+    "block_latency_reduction_pct": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "release": {
+    "requests": 30,
+    "excluded_initial_queue": false,
+    "p50_ms": 10.356856535072438,
+    "p95_ms": 10.375782743532909,
+    "p99_ms": 10.39415685577842,
+    "block_p50_ms": [
+      10.358436075039208,
+      10.350666334998095,
+      10.352774400234921
+    ],
+    "first_step_reference_pass": [
+      true,
+      true,
+      true
+    ],
+    "median_latency_reduction_pct": 0.3638325129312503,
+    "block_latency_reduction_pct": [
+      0.99078559206357,
+      0.36791668304214653,
+      0.3358250456703016
+    ]
+  },
+  "batched": {
+    "requests": 30,
+    "excluded_initial_queue": false,
+    "p50_ms": 10.357571609929437,
+    "p95_ms": 10.563740274388692,
+    "p99_ms": 10.57292479465832,
+    "block_p50_ms": [
+      10.531348895019619,
+      10.35068789482466,
+      10.347377964935731
+    ],
+    "first_step_reference_pass": [
+      true,
+      true,
+      true
+    ],
+    "median_latency_reduction_pct": 0.35695327134126487,
+    "block_latency_reduction_pct": [
+      -0.6619699342822916,
+      0.3677091552978462,
+      0.38777549402315703
+    ]
+  }
+}

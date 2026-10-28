@@ -1,0 +1,48 @@
+{
+  "original": {
+    "requests": 30,
+    "excluded_initial_queue": false,
+    "p50_ms": 10.38866787988809,
+    "p95_ms": 10.406195039031445,
+    "p99_ms": 10.546510050061624,
+    "block_p50_ms": [
+      10.393883525102865,
+      10.387663279980188,
+      10.37988875512383
+    ],
+    "first_step_reference_pass": [
+      true,
+      true,
+      true
+    ],
+    "median_latency_reduction_pct": 0.0,
+    "block_latency_reduction_pct": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "queue_v2": {
+    "requests": 30,
+    "excluded_initial_queue": false,
+    "p50_ms": 10.440639269945677,
+    "p95_ms": 11.041123869537842,
+    "p99_ms": 11.171978480438701,
+    "block_p50_ms": [
+      10.607246395229595,
+      10.435112164996099,
+      10.42358830512967
+    ],
+    "first_step_reference_pass": [
+      true,
+      true,
+      true
+    ],
+    "median_latency_reduction_pct": -0.5002700120792403,
+    "block_latency_reduction_pct": [
+      -2.0527733412773586,
+      -0.45678112330957976,
+      -0.42100210355595635
+    ]
+  }
+}

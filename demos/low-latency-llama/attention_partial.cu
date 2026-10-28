@@ -36,6 +36,13 @@ template <typename config, typename globals> struct attention_partial {
     using o_sv = kittens::sv_fl<LLAMA_1B_HEAD_DIM>;
     using o_sv_bf = kittens::sv_bf<LLAMA_1B_HEAD_DIM>;
 
+    static_assert(config::NUM_PAGES >= 2);
+    static_assert(sizeof(q_st) + 4 * sizeof(o_sv) + sizeof(l_sv) <= config::PAGE_SIZE,
+                  "attention Q/output buffers exceed one page");
+    static_assert(2 * NUM_STAGES * sizeof(kv_st) <= config::PAGE_SIZE,
+                  "attention KV stages exceed one page");
+    static_assert(3 + 4 * NUM_STAGES <= config::DYNAMIC_SEMAPHORES);
+
     struct parsed_instruction {
         int layer_idx;
         int kv_head_idx;
@@ -277,19 +284,19 @@ template <typename config, typename globals> struct attention_partial {
         static __device__ int
         release_lid(const globals &g,
                     typename config::instruction_t &instruction, int &query) {
-            int ret_order[13] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 1};
-            return ret_order[query];
+            int order[13] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 1};
+            return order[query];
         }
         static __device__ int init_semaphores(const globals &g,
                                               megakernel::state<config> &s) {
             init_semaphore(Q_arrived(s), 0, 1);
-            init_semaphore(O_arrived(s), 0, 1);
-            init_semaphore(L_arrived(s), 0, 1);
+            init_semaphore(O_arrived(s), config::INSTRUCTION_BARRIER_PARTIES_PER_WARP);
+            init_semaphore(L_arrived(s), config::INSTRUCTION_BARRIER_PARTIES_PER_WARP);
             for (int i = 0; i < NUM_STAGES; i++) {
                 init_semaphore(K_arrived(s, i), 0, 1);
                 init_semaphore(V_arrived(s, i), 0, 1);
-                init_semaphore(K_finished(s, i), 0, 1);
-                init_semaphore(V_finished(s, i), 0, 1);
+                init_semaphore(K_finished(s, i), config::INSTRUCTION_BARRIER_PARTIES_PER_WARP);
+                init_semaphore(V_finished(s, i), config::INSTRUCTION_BARRIER_PARTIES_PER_WARP);
             }
             return 3 + 4 * NUM_STAGES;
         }
@@ -311,19 +318,14 @@ template <typename config, typename globals> struct attention_partial {
 
             // Wait for the previous ops to finish (16 dims each, so 4 ops on
             // the same head)
-            while (*(volatile int *)&g.Bar[{
+            megakernel::gmem_wait<config>([&] { return (gmem_load_acquire(&g.Bar[{
                        inst.layer_idx, OPCODE_RMS_QKV_MatVecRopeAppend - 1,
-                       LLAMA_1B_NUM_ATTENTION_HEADS + inst.kv_head_idx}] < 4) {
-                __nanosleep(config::GMEM_SPIN_LOOP_SLEEP_NANOS);
-            }
+                       LLAMA_1B_NUM_ATTENTION_HEADS + inst.kv_head_idx}]) < 4); });
 
-            while (
-                *(volatile int *)&g
-                     .Bar[{inst.layer_idx, OPCODE_RMS_QKV_MatVecRopeAppend - 1,
+            megakernel::gmem_wait<config>([&] { return (
+                gmem_load_acquire(&g.Bar[{inst.layer_idx, OPCODE_RMS_QKV_MatVecRopeAppend - 1,
                            LLAMA_1B_NUM_ATTENTION_HEADS +
-                               LLAMA_1B_NUM_KV_HEADS + inst.kv_head_idx}] < 4) {
-                __nanosleep(config::GMEM_SPIN_LOOP_SLEEP_NANOS);
-            }
+                               LLAMA_1B_NUM_KV_HEADS + inst.kv_head_idx}]) < 4); });
 
             s.record(megakernel::TEVENT_DONE_GMEM_WAIT);
         }
@@ -356,7 +358,7 @@ template <typename config, typename globals> struct attention_partial {
                 // Run the pipeline!
                 for (int i = 0; i + start_blk_idx < end_blk_idx; ++i) {
                     auto cur_blk_idx = start_blk_idx + i;
-                    int stage = cur_blk_idx % NUM_STAGES;
+                    int stage = i % NUM_STAGES; // ring phases are relative to this partial
                     kv_st &K_smem = get_K_smem(s, stage);
                     kv_st &V_smem = get_V_smem(s, stage);
 
@@ -395,13 +397,10 @@ template <typename config, typename globals> struct attention_partial {
                 if (kittens::laneid() == 0) {
                     for (int head_offset = 0; head_offset < GQA_RATIO;
                          head_offset++) {
-                        while (*(volatile int *)&g
-                                    .Bar[{inst.layer_idx,
+                        megakernel::gmem_wait<config>([&] { return (gmem_load_acquire(&g.Bar[{inst.layer_idx,
                                           OPCODE_RMS_QKV_MatVecRopeAppend - 1,
-                                          q_head_start_idx + head_offset}] <
-                               4) {
-                            __nanosleep(config::GMEM_SPIN_LOOP_SLEEP_NANOS);
-                        }
+                                          q_head_start_idx + head_offset}]) <
+                               4); });
                     }
                 }
                 kittens::warp::sync();
@@ -433,7 +432,7 @@ template <typename config, typename globals> struct attention_partial {
                 max_vec_rv diff_scaled_max_vec_reg;
                 norm_vec_rv norm_vec_reg;
                 kittens::warp::neg_infty(max_vec_reg);
-                kittens::warp::zero(last_scaled_max_vec_reg); // just not +-inf
+                kittens::warp::neg_infty(last_scaled_max_vec_reg); // just not +-inf
                 kittens::warp::zero(norm_vec_reg);
                 kittens::warp::zero(O_reg);
                 o_sv(&O_smem)[4] = get_O_smem(s);
@@ -472,7 +471,7 @@ template <typename config, typename globals> struct attention_partial {
                     kittens::warp::load(K_reg, K_smem);
                     kittens::warp::mma_ABt(attn_fl_reg, Q_reg, K_reg, attn_fl_reg);
                     kittens::warp::sync();
-                    kittens::warp::arrive(K_finished(s, stage));
+                    s.warp_arrive(K_finished(s, stage));
 
                     // Mask out invalid positions at the end
                     if ((i + start_blk_idx + 1) * LLAMA_1B_KV_BLOCK_SIZE >
@@ -508,7 +507,7 @@ template <typename config, typename globals> struct attention_partial {
                                attn_fl_reg); // Convert to bf16 to do matmul
                     kittens::warp::mma_AB(O_reg, attn_bf_reg, V_reg, O_reg);
                     kittens::warp::sync();
-                    kittens::warp::arrive(V_finished(s, stage));
+                    s.warp_arrive(V_finished(s, stage));
 
                     // Normalize and accumulate demoniator
                     kittens::warp::mul(norm_vec_reg, norm_vec_reg,
@@ -539,10 +538,10 @@ template <typename config, typename globals> struct attention_partial {
                 store_4_rows(O_smem, O_reg, q_head_local_idx);
                 kittens::warp::sync();
 
-                kittens::warp::arrive(O_arrived(s));
+                s.warp_arrive(O_arrived(s));
                 kittens::warp::store(L_smem, L_reg);
                 kittens::warp::sync();
-                kittens::warp::arrive(L_arrived(s));
+                s.warp_arrive(L_arrived(s));
             }
         }
     };
@@ -552,8 +551,8 @@ template <typename config, typename globals> struct attention_partial {
         store_o_skip(const globals &g, megakernel::state<config> &s, int q_head_start_idx) {
             auto O_smem = get_O_smem(s);
 
+            kittens::wait(O_arrived(s), 0);
             if (kittens::laneid() == 0) {
-                kittens::wait(O_arrived(s), 0);
                 s.record(megakernel::TEVENT_OUTPUT_READY);
             }
             kittens::warp::sync();
@@ -584,7 +583,7 @@ template <typename config, typename globals> struct attention_partial {
         store_o_no_skip(const globals &g, megakernel::state<config> &s,
                         int q_head_start_idx, parsed_instruction &inst) {
             // Store partial attention output to global memory
-            if (laneid == 0) {
+            if (kittens::laneid() == 0) {
                 o_sv(&O_smem)[GQA_RATIO] = get_O_smem(s);
                 kittens::wait(O_arrived(s), 0);
                 s.record(megakernel::TEVENT_OUTPUT_READY);
@@ -636,12 +635,14 @@ template <typename config, typename globals> struct attention_partial {
                              : "r"(src_ptr));
                 asm volatile("st.global.f32 [%0], %1;\n"
                              :
-                             : "l"(dst_ptr), "f"(tmp));
+                             : "l"(dst_ptr), "f"(tmp) : "memory");
             }
             kittens::warp::sync(); // ensure all writes are committed
             // asm volatile("fence.acq_rel.gpu;");
 
             kittens::tma::store_async_wait();
+            // Lane 0's DMA completion must precede every publishing lane.
+            kittens::warp::sync();
             if (laneid == 0) {
                 s.record(123 + laneid);
                 finish_QOL_page(s);
@@ -655,13 +656,13 @@ template <typename config, typename globals> struct attention_partial {
                 }
 
                 if (skip_attn_reduction) {
-                    atomicAdd(&g.Bar[{inst.layer_idx,
+                    gmem_add_release(&g.Bar[{inst.layer_idx,
                                       OPCODE_AttentionReduction - 1, 0}],
                               1);
                 } else {
                     // Adding only at 0, 4, 8, ... should be sufficient for the
                     // reduction op!
-                    atomicAdd(&g.Bar[{inst.layer_idx, opcode - 1,
+                    gmem_add_release(&g.Bar[{inst.layer_idx, opcode - 1,
                                       q_head_start_idx + laneid}],
                               1);
                 }

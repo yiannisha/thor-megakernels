@@ -1,0 +1,24 @@
+2048x2048 bf16_simt 0.06332799978554249 {'max_abs': 0.0001220703125, 'relative_l2': 3.047043492188095e-06, 'finite': True}
+2048x2048 w4a16_simt 0.04708800092339516 {'max_abs': 0.0, 'relative_l2': 0.0, 'finite': True}
+2048x2048 w4a4_tcgen05_prequantized 0.02643200010061264 {'max_abs': 0.0, 'relative_l2': 0.0, 'finite': True}
+2048x2048 w4a4_tcgen05_including_activation_quant 0.028959999792277813 {'max_abs': 0.0, 'relative_l2': 0.0, 'finite': True}
+2048x2048 activation_quant 0.00595200015231967 None
+2048x2048 torch_bf16_mv 0.04649600014090538 {'max_abs': 0.0001220703125, 'relative_l2': 3.1408205813932e-06, 'finite': True}
+8192x2048 bf16_simt 0.18428799510002136 {'max_abs': 0.0001220703125, 'relative_l2': 1.461357783227868e-06, 'finite': True}
+8192x2048 w4a16_simt 0.1616320013999939 {'max_abs': 0.00390625, 'relative_l2': 5.366052937461063e-05, 'finite': True}
+8192x2048 w4a4_tcgen05_prequantized 0.0530879981815815 {'max_abs': 9.5367431640625e-07, 'relative_l2': 1.1689264667325006e-08, 'finite': True}
+8192x2048 w4a4_tcgen05_including_activation_quant 0.055296000093221664 {'max_abs': 9.5367431640625e-07, 'relative_l2': 1.1689264667325006e-08, 'finite': True}
+8192x2048 activation_quant 0.00595200015231967 None
+8192x2048 torch_bf16_mv 0.19129599630832672 {'max_abs': 0.0078125, 'relative_l2': 0.00010522778757149354, 'finite': True}
+2048x8192 bf16_simt 0.19920000433921814 {'max_abs': 0.0, 'relative_l2': 0.0, 'finite': True}
+2048x8192 w4a16_simt 0.16777600347995758 {'max_abs': 0.0, 'relative_l2': 0.0, 'finite': True}
+2048x8192 w4a4_tcgen05_prequantized 0.05400000140070915 {'max_abs': 0.0, 'relative_l2': 0.0, 'finite': True}
+2048x8192 w4a4_tcgen05_including_activation_quant 0.0562720000743866 {'max_abs': 0.0, 'relative_l2': 0.0, 'finite': True}
+2048x8192 activation_quant 0.00598399993032217 None
+2048x8192 torch_bf16_mv 0.1995360031723976 {'max_abs': 0.000244140625, 'relative_l2': 2.906877625719062e-06, 'finite': True}
+128256x2048 bf16_simt 2.0316959619522095 {'max_abs': 0.0078125, 'relative_l2': 4.799859380000271e-05, 'finite': True}
+128256x2048 w4a16_simt 2.3649600744247437 {'max_abs': 0.0078125, 'relative_l2': 4.060451828991063e-05, 'finite': True}
+128256x2048 w4a4_tcgen05_prequantized 0.6101120114326477 {'max_abs': 0.00390625, 'relative_l2': 1.8761975297820754e-05, 'finite': True}
+128256x2048 w4a4_tcgen05_including_activation_quant 0.6121600270271301 {'max_abs': 0.00390625, 'relative_l2': 1.8761975297820754e-05, 'finite': True}
+128256x2048 activation_quant 0.00595200015231967 None
+128256x2048 torch_bf16_mv 2.030351996421814 {'max_abs': 0.015625, 'relative_l2': 0.00011477871157694608, 'finite': True}

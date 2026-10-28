@@ -1,6 +1,7 @@
 #pragma once
 
 #include "kittens.cuh"
+#include <cooperative_groups.h>
 #include "config.cuh"
 #include "util.cuh"
 #include "controller/controller.cuh"
@@ -18,7 +19,7 @@ __device__ inline void mk_internal(const globals &g) {
 #ifdef MK_DEBUG
     if (threadIdx.x == 0)
         printf("Thread %d: Kernel launched\n", threadIdx.x);
-    group<config::NUM_WARPS>::sync(15);
+    kittens::group<config::NUM_WARPS>::sync(15);
 #endif
     __shared__ alignas(128) instruction_state_t<config>
         instruction_state[config::INSTRUCTION_PIPELINE_STAGES];
@@ -44,7 +45,7 @@ __device__ inline void mk_internal(const globals &g) {
 #ifdef MK_DEBUG
     if (threadIdx.x == 0)
         printf("Thread %d: Pre-MKS creation\n", threadIdx.x);
-    group<config::NUM_WARPS>::sync(15);
+    kittens::group<config::NUM_WARPS>::sync(15);
 #endif
     state<config> mks{instruction_state,
                       instruction_arrived,
@@ -68,8 +69,25 @@ __device__ inline void mk_internal(const globals &g) {
 #ifdef MK_DEBUG
     if (threadIdx.x == 0)
         printf("Thread %d: Created MKS\n", threadIdx.x);
-    group<config::NUM_WARPS>::sync(15);
+    kittens::group<config::NUM_WARPS>::sync(15);
 #endif
+
+    // Native tcgen05 instructions share one TMEM allocation for the entire VM.
+    // Only the launcher warp allocates/deallocates; operator barriers protect reuse.
+    if constexpr (requires { config::NATIVE_TMEM_COLUMNS; }) {
+        static_assert(config::CLUSTER_BLOCKS == 1, "native TMEM resource currently supports one-CTA clusters");
+        static_assert(config::COOPERATIVE_LAUNCH, "native TMEM resource requires cooperative admission");
+        static_assert(config::NATIVE_TMEM_COLUMNS >= 32 && config::NATIVE_TMEM_COLUMNS <= 512);
+        static_assert((config::NATIVE_TMEM_COLUMNS & (config::NATIVE_TMEM_COLUMNS - 1)) == 0);
+        __shared__ uint32_t native_tmem;
+        if (kittens::warpid() == config::NUM_CONSUMER_WARPS + 2) {
+            uint32_t address = static_cast<uint32_t>(__cvta_generic_to_shared(&native_tmem));
+            asm volatile("tcgen05.alloc.cta_group::1.sync.aligned.shared::cta.b32 [%0], %1;"
+                         :: "r"(address), "r"(config::NATIVE_TMEM_COLUMNS) : "memory");
+        }
+        __syncthreads();
+        mks.native_tmem_base = native_tmem;
+    }
 
     // Zero initial timings memory.
     if (threadIdx.x < config::TIMING_WIDTH) {
@@ -80,9 +98,10 @@ __device__ inline void mk_internal(const globals &g) {
     }
 
     if (threadIdx.x < config::INSTRUCTION_PIPELINE_STAGES) {
-        init_semaphore(instruction_arrived[threadIdx.x], 1);
+        init_semaphore(instruction_arrived[threadIdx.x],
+                       config::INSTRUCTION_BARRIER_PARTIES_PER_WARP);
         init_semaphore(instruction_finished[threadIdx.x],
-                       config::NUM_WARPS - 1);
+                       (config::NUM_WARPS - 1) * config::INSTRUCTION_BARRIER_PARTIES_PER_WARP);
     }
     if (threadIdx.x < config::NUM_PAGES) {
         for (int i = 0; i < config::INSTRUCTION_PIPELINE_STAGES_BITS; i++) {
@@ -102,6 +121,7 @@ __device__ inline void mk_internal(const globals &g) {
     }
 
     asm volatile("fence.proxy.async.shared::cta;\n" ::: "memory");
+    asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
     __syncthreads();
 
     if (config::CLUSTER_BLOCKS == 1)
@@ -116,10 +136,12 @@ __device__ inline void mk_internal(const globals &g) {
 #endif
 
     if (kittens::warpid() < config::NUM_CONSUMER_WARPS) {
-        kittens::warpgroup::increase_registers<config::CONSUMER_REGISTERS>();
+        if constexpr (!config::STATIC_REGISTER_ALLOCATION)
+            kittens::warpgroup::increase_registers<config::CONSUMER_REGISTERS>();
         ::megakernel::consumer::main_loop<config, globals, ops...>(g, mks);
     } else {
-        kittens::warpgroup::decrease_registers<config::NON_CONSUMER_REGISTERS>();
+        if constexpr (!config::STATIC_REGISTER_ALLOCATION)
+            kittens::warpgroup::decrease_registers<config::NON_CONSUMER_REGISTERS>();
         switch (kittens::warpgroup::warpid()) {
         case 0:
             ::megakernel::loader::main_loop<config, globals, ops...>(g, mks);
@@ -148,6 +170,14 @@ __device__ inline void mk_internal(const globals &g) {
     else
         kittens::everyone::sync(15);
 
+    if constexpr (requires { config::NATIVE_TMEM_COLUMNS; }) {
+        if (kittens::warpid() == config::NUM_CONSUMER_WARPS + 2) {
+            asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;" ::: "memory");
+            asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;"
+                         :: "r"(mks.native_tmem_base), "r"(config::NATIVE_TMEM_COLUMNS) : "memory");
+        }
+    }
+
 #ifdef MK_DEBUG
     uint64_t end_time = (uint64_t)clock64();
     if (threadIdx.x == 0)
@@ -164,9 +194,17 @@ struct megakernel_wrapper {
 };
 
 template <typename config, typename globals, typename... ops>
+#ifdef MK_THOR
+__maxnreg__(96)
+#else
 __launch_bounds__(config::NUM_THREADS, 1)
+#endif
     __cluster_dims__(config::CLUSTER_BLOCKS) __global__
     void mk(const __grid_constant__ globals g) {
+    if constexpr (requires { config::COOPERATIVE_LAUNCH; }) {
+        if constexpr (config::COOPERATIVE_LAUNCH)
+            cooperative_groups::this_grid().sync();
+    }
     megakernel_wrapper<config, globals, ops...>::run(g);
 }
 

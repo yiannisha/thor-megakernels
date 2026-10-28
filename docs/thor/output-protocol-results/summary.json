@@ -1,0 +1,117 @@
+{
+  "baseline": {
+    "requests": 30,
+    "excluded_initial_queue": false,
+    "p50_ms": 10.471679585170932,
+    "p95_ms": 10.615405959673808,
+    "p99_ms": 10.67992758123437,
+    "block_p50_ms": [
+      10.556264505139552,
+      10.387961945089046,
+      10.471679585170932
+    ],
+    "first_step_reference_pass": [
+      true,
+      true,
+      true
+    ],
+    "median_latency_reduction_pct": 0.0,
+    "block_latency_reduction_pct": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "early": {
+    "requests": 30,
+    "excluded_initial_queue": false,
+    "p50_ms": 10.390289765055059,
+    "p95_ms": 10.587783019436756,
+    "p99_ms": 10.59176687427389,
+    "block_p50_ms": [
+      10.534038660116494,
+      10.385434560157591,
+      10.38840793989948
+    ],
+    "first_step_reference_pass": [
+      true,
+      true,
+      true
+    ],
+    "median_latency_reduction_pct": 0.7772374952259908,
+    "block_latency_reduction_pct": [
+      0.21054649599048236,
+      0.02432994022132373,
+      0.795208109588974
+    ]
+  },
+  "release": {
+    "requests": 30,
+    "excluded_initial_queue": false,
+    "p50_ms": 10.379748584964545,
+    "p95_ms": 10.542183853554889,
+    "p99_ms": 10.552498001675122,
+    "block_p50_ms": [
+      10.376910469931317,
+      10.506084060034482,
+      10.367519969877321
+    ],
+    "first_step_reference_pass": [
+      true,
+      true,
+      true
+    ],
+    "median_latency_reduction_pct": 0.8779011949197835,
+    "block_latency_reduction_pct": [
+      1.6990293784407529,
+      -1.1371057727187717,
+      0.9946791672380106
+    ]
+  },
+  "async": {
+    "requests": 30,
+    "excluded_initial_queue": true,
+    "p50_ms": 10.432738634990528,
+    "p95_ms": 10.51977520143555,
+    "p99_ms": 10.558241830891347,
+    "block_p50_ms": [
+      10.424507595016621,
+      10.435038230061764,
+      10.481286840076791
+    ],
+    "first_step_reference_pass": [
+      true,
+      true,
+      true
+    ],
+    "median_latency_reduction_pct": 0.3718691912188432,
+    "block_latency_reduction_pct": [
+      1.2481395294593245,
+      -0.4531811458452051,
+      -0.09174511908733862
+    ]
+  },
+  "combined": {
+    "requests": 30,
+    "excluded_initial_queue": true,
+    "p50_ms": 10.396430314867757,
+    "p95_ms": 10.536598652935936,
+    "p99_ms": 10.57863542031846,
+    "block_p50_ms": [
+      10.503441105101956,
+      10.375419345073169,
+      10.392875934921904
+    ],
+    "first_step_reference_pass": [
+      true,
+      true,
+      true
+    ],
+    "median_latency_reduction_pct": 0.7185979067745318,
+    "block_latency_reduction_pct": [
+      0.5003986022885099,
+      0.12074168236442251,
+      0.7525406942418655
+    ]
+  }
+}

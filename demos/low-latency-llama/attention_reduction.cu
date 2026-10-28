@@ -137,20 +137,20 @@ template <typename Config, typename Globals> struct attention_reduction {
         static __device__ int
         release_lid(const Globals &g,
                     typename Config::instruction_t &instruction, int &query) {
-            int ret_order[13] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0};
-            return ret_order[query];
+            int order[13] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0};
+            return order[query];
         }
         static __device__ int init_semaphores(const Globals &g,
                                               megakernel::state<Config> &s) {
             for (int q_head = 0; q_head < Q_HEADS_PER_INSTRUCTION; ++q_head) {
                 for (int stage = 0; stage < NUM_STAGES; stage++) {
                     init_semaphore(O_partial_arrived(s, q_head, stage), 0, 1);
-                    init_semaphore(O_partial_finished(s, q_head, stage), 0, 1);
+                    init_semaphore(O_partial_finished(s, q_head, stage), Config::INSTRUCTION_BARRIER_PARTIES_PER_WARP);
                 }
                 init_semaphore(L_partial_all_arrived(s, q_head), 0, 1);
-                init_semaphore(L_partial_all_finished(s, q_head), 0, 1);
+                init_semaphore(L_partial_all_finished(s, q_head), Config::INSTRUCTION_BARRIER_PARTIES_PER_WARP);
 
-                init_semaphore(final_O_ready(s, q_head), 0, 1);
+                init_semaphore(final_O_ready(s, q_head), Config::INSTRUCTION_BARRIER_PARTIES_PER_WARP);
             }
             return 4 * ((NUM_STAGES * 2) + 3);
         }
@@ -181,20 +181,18 @@ template <typename Config, typename Globals> struct attention_reduction {
                 parsed_instruction inst{s};
 
                 s.record(megakernel::TEVENT_AT_GMEM_WAIT);
-                while (*(volatile int *)&g.Bar[{inst.layer_idx, prev_opcode - 1,
-                                                inst.q_head_start_idx + 0}] <
+                megakernel::gmem_wait<Config>([&] { return (gmem_load_acquire(&g.Bar[{inst.layer_idx, prev_opcode - 1,
+                                                inst.q_head_start_idx + 0}]) <
                            inst.num_partials ||
-                       *(volatile int *)&g.Bar[{inst.layer_idx, prev_opcode - 1,
-                                                inst.q_head_start_idx + 1}] <
+                       gmem_load_acquire(&g.Bar[{inst.layer_idx, prev_opcode - 1,
+                                                inst.q_head_start_idx + 1}]) <
                            inst.num_partials ||
-                       *(volatile int *)&g.Bar[{inst.layer_idx, prev_opcode - 1,
-                                                inst.q_head_start_idx + 2}] <
+                       gmem_load_acquire(&g.Bar[{inst.layer_idx, prev_opcode - 1,
+                                                inst.q_head_start_idx + 2}]) <
                            inst.num_partials ||
-                       *(volatile int *)&g.Bar[{inst.layer_idx, prev_opcode - 1,
-                                                inst.q_head_start_idx + 3}] <
-                           inst.num_partials) {
-                    __nanosleep(Config::GMEM_SPIN_LOOP_SLEEP_NANOS);
-                }
+                       gmem_load_acquire(&g.Bar[{inst.layer_idx, prev_opcode - 1,
+                                                inst.q_head_start_idx + 3}]) <
+                           inst.num_partials); });
                 s.record(megakernel::TEVENT_DONE_GMEM_WAIT);
 
                 for (int i = 0; i < 4; ++i) {
@@ -267,6 +265,9 @@ template <typename Config, typename Globals> struct attention_reduction {
                     // Load O_partial_reg
                     kittens::warp::load(current_out, O_smem);
 
+                    // Empty attention partitions carry LSE=-inf and zero output.
+                    // Avoid -inf - -inf when an empty partition is first.
+                    if (current_lse != -INFINITY) {
                     float max_lse = max(accumulated_lse, current_lse);
 
                     float accumulated_exp = exp2f(accumulated_lse - max_lse);
@@ -284,18 +285,19 @@ template <typename Config, typename Globals> struct attention_reduction {
 
                     // Update LSE accumulator:
                     accumulated_lse = max_lse + log2f(new_denom);
+                    }
 
-                    kittens::warp::arrive(
+                    s.warp_arrive(
                         O_partial_finished(s, q_head_local_idx, stage));
                 }
-                kittens::warp::arrive(L_partial_all_finished(s, q_head_local_idx));
+                s.warp_arrive(L_partial_all_finished(s, q_head_local_idx));
 
                 o_final_sv &O_final_smem =
                     get_O_final_smem(s, q_head_local_idx);
                 kittens::warp::store(O_final_smem, accumulated_out);
                 kittens::warp::sync();
 
-                kittens::warp::arrive(final_O_ready(s, q_head_local_idx));
+                s.warp_arrive(final_O_ready(s, q_head_local_idx));
             }
         }
     };
@@ -320,9 +322,11 @@ template <typename Config, typename Globals> struct attention_reduction {
                     {0, 0, 0, inst.q_head_start_idx + q_head_local_idx});
                 kittens::tma::store_async_wait();
 
-                // atomicAdd(&g.Bar[{inst.layer_idx, opcode - 1,
+                // gmem_add_release(&g.Bar[{inst.layer_idx, opcode - 1,
                 // inst.q_head_start_idx + q_head_local_idx}], 1);
             }
+            // All four issuing lanes finish their TMA stores before page reuse.
+            kittens::warp::sync();
             finish_shared_page(s);
 
             kittens::warp::sync();
@@ -331,7 +335,7 @@ template <typename Config, typename Globals> struct attention_reduction {
                 // asm volatile("fence.acq_rel.gpu;");
 
                 // simple signalling strat for now
-                atomicAdd(&g.Bar[{inst.layer_idx, opcode - 1, 0}],
+                gmem_add_release(&g.Bar[{inst.layer_idx, opcode - 1, 0}],
                           Q_HEADS_PER_INSTRUCTION);
                 s.record(megakernel::TEVENT_DONE_GMEM_STORE);
             }

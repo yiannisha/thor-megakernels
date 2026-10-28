@@ -68,6 +68,8 @@ struct MatVecAddOp {
                           pipeline::SCRATCH_BYTES_PER_WARP>(
                 output_scratch_start, output_rv);
 
+
+
             kittens::warp::sync();
             kittens::warp::store(output_smem_bf, output_rv);
             kittens::warp::sync();
@@ -126,11 +128,10 @@ struct MatVecAddOp {
                 s.wait_page_ready(activation_page);
 
                 s.record(megakernel::TEVENT_AT_GMEM_WAIT);
-                while (*(volatile int *)&g.Bar[{inst.layer, prev_opcode - 1,
-                                                inst.reduction_block_idx}] <
-                       EXPECTED_ARRIVAL_COUNT) {
-                    __nanosleep(Config::GMEM_SPIN_LOOP_SLEEP_NANOS);
-                }
+
+                megakernel::gmem_wait<Config>([&] { return (gmem_load_acquire(&g.Bar[{inst.layer, prev_opcode - 1,
+                                                inst.reduction_block_idx}]) <
+                       EXPECTED_ARRIVAL_COUNT); });
                 s.record(megakernel::TEVENT_DONE_GMEM_WAIT);
 
                 auto &activations = pipeline::get_activations(s);
@@ -171,7 +172,8 @@ struct MatVecAddOp {
 
                 // asm volatile("fence.acq_rel.gpu;\n"); // possible we need sc
                 // here but I don't think so.
-                atomicAdd(&g.Bar[{inst.layer, opcode - 1, 0}], inst.iters);
+
+                gmem_add_release(&g.Bar[{inst.layer, opcode - 1, 0}], inst.iters);
                 s.record(megakernel::TEVENT_DONE_GMEM_STORE);
             }
         }

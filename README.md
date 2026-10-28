@@ -44,3 +44,8 @@ To benchmark the megakernel, run:
 python megakernels/scripts/generate.py mode=mk prompt="tell me a funny joke about cookies" ntok=100
 
 ```
+
+
+## Jetson Thor
+
+The native SM110a port keeps the upstream static VM, pipeline geometry and Llama arithmetic. It adds architecture/build support, logical worker indexing, checked cooperative residency, and synchronization correctness fixes. Experimental optimizations are archived on `archive/thor-experiments-20261027` and removed from this branch. See [Thor bring-up](docs/thor/BRINGUP.md) and [native versus vLLM results](docs/thor/BENCHMARKS.md).

@@ -8,6 +8,10 @@ struct default_config {
     // Instruction pipeline
     static constexpr int INSTRUCTION_PIPELINE_STAGES = 2;
 
+    static constexpr int INSTRUCTION_BARRIER_PARTIES_PER_WARP = 1;
+    static constexpr bool STATIC_REGISTER_ALLOCATION = false;
+    static constexpr bool COOPERATIVE_LAUNCH = false;
+
     // num bits required to represent num pipeline stages
     static constexpr int INSTRUCTION_PIPELINE_STAGES_BITS = 1;
 
@@ -45,11 +49,28 @@ struct default_config {
 
     static constexpr bool TIMING_RECORD_ENABLED = false;
 
-    static constexpr bool GMEM_SPIN_LOOP_SLEEP_NANOS = 20;
+    static constexpr int GMEM_SPIN_LOOP_SLEEP_NANOS = 20;
 
     static constexpr int CONSUMER_REGISTERS = 104;
     static constexpr int NON_CONSUMER_REGISTERS = 64;
 };
+#ifdef MK_THOR
+#ifndef MK_ACTIVE_WORKERS
+#define MK_ACTIVE_WORKERS 20
+#endif
+struct thor_config : default_config {
+    static constexpr bool STATIC_REGISTER_ALLOCATION = true;
+    static constexpr bool COOPERATIVE_LAUNCH = true;
+    static constexpr int INSTRUCTION_BARRIER_PARTIES_PER_WARP = 32;
+    static constexpr int ACTIVE_WORKERS = MK_ACTIVE_WORKERS;
+    static_assert(ACTIVE_WORKERS > 0);
+    static constexpr int NUM_PAGES = 13;
+    // Include worst-case alignment loss in the allocation, then check the
+    // actual compiled static + dynamic allocation before launch.
+    static constexpr int DYNAMIC_SHARED_MEMORY = NUM_PAGES * PAGE_SIZE + 1023;
+};
+#endif
+
 template <typename config>
 using instruction_layout = kittens::gl<int, 1, -1, -1, config::INSTRUCTION_WIDTH>;
 template <typename config>

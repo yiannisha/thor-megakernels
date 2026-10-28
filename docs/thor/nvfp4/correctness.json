@@ -1,0 +1,68 @@
+{
+  "format_fixture": "passed",
+  "cases": [
+    {
+      "m": 128,
+      "k": 256,
+      "errors": [
+        {
+          "max_abs": 0.0,
+          "relative_l2": 0.0,
+          "finite": true
+        },
+        {
+          "max_abs": 0.0,
+          "relative_l2": 0.0,
+          "finite": true
+        },
+        {
+          "max_abs": 0.0,
+          "relative_l2": 0.0,
+          "finite": true
+        }
+      ]
+    },
+    {
+      "m": 264,
+      "k": 512,
+      "errors": [
+        {
+          "max_abs": 0.0,
+          "relative_l2": 0.0,
+          "finite": true
+        },
+        {
+          "max_abs": 0.0,
+          "relative_l2": 0.0,
+          "finite": true
+        },
+        {
+          "max_abs": 0.0,
+          "relative_l2": 0.0,
+          "finite": true
+        }
+      ]
+    },
+    {
+      "m": 128,
+      "k": 2048,
+      "errors": [
+        {
+          "max_abs": 0.0,
+          "relative_l2": 0.0,
+          "finite": true
+        },
+        {
+          "max_abs": 0.0,
+          "relative_l2": 0.0,
+          "finite": true
+        },
+        {
+          "max_abs": 0.0,
+          "relative_l2": 0.0,
+          "finite": true
+        }
+      ]
+    }
+  ]
+}

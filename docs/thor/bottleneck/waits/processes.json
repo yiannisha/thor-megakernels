@@ -1,0 +1,39 @@
+{
+  "control_source_hash": "e168d6442cad29e215292f04c0e24f981a85feb4cf4925eb53ea5f908f9c4a76",
+  "processes": [
+    {
+      "name": "control-before",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.analysis.collect_waits",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/bottleneck/waits/control-before.json"
+      ],
+      "returncode": 0,
+      "output": "\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.23it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.23it/s]\n{\"status\": \"PASS\", \"instrumented\": false, \"ms_per_token\": [10.397644549957477, 10.36937611992471, 10.426759859983576]}\n"
+    },
+    {
+      "name": "instrumented",
+      "command": [
+        "bash",
+        "-c",
+        "cd local/thor-diagnostic-worktree\nsource tools/thor/env.sh\nTHOR_BINARY_DIR=/home/thor-guest/ml-perf/Megakernels/local/thor-wait-diagnostic python -m tools.analysis.collect_waits --output /home/thor-guest/ml-perf/Megakernels/docs/thor/bottleneck/waits/instrumented.json"
+      ],
+      "returncode": 0,
+      "output": "\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.25it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.25it/s]\n{\"status\": \"PASS\", \"instrumented\": true, \"ms_per_token\": [10.383241119998274, 10.392861049913336, 10.39560192002682]}\n"
+    },
+    {
+      "name": "control-after",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.analysis.collect_waits",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/bottleneck/waits/control-after.json"
+      ],
+      "returncode": 0,
+      "output": "\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.23it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.23it/s]\n{\"status\": \"PASS\", \"instrumented\": false, \"ms_per_token\": [10.378791929979343, 10.401035510003567, 10.392018929996993]}\n"
+    }
+  ]
+}

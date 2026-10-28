@@ -1,0 +1,8 @@
+{
+  "scope": "Static count from unchanged full-model instruction scheduling, not hardware counters",
+  "qkv_original": 3072,
+  "qkv_batched": 1024,
+  "upgate_original": 8192,
+  "upgate_batched": 1280,
+  "targeted_update_reduction_pct": 79.54545454545455
+}

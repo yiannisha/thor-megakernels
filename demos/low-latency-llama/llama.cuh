@@ -2,6 +2,7 @@
 
 #include "kittens.cuh"
 #include "megakernel.cuh"
+#include "gmem_barrier.cuh"
 #include <iostream>
 
 #define OPCODE_RMS_QKV_MatVecRopeAppend 1
@@ -43,7 +44,11 @@ constexpr int TEMP4 = TEMP3 + 1;
 constexpr int TEMP5 = TEMP4 + 1;
 constexpr int TEMP6 = TEMP5 + 1;
 
+#ifdef MK_THOR
+using config = megakernel::thor_config;
+#else
 using config = megakernel::default_config;
+#endif
 
 template <int _num_layers, int _hidden_dim, int _intermediate_dim,
           int _head_dim, int _num_attention_heads, int _num_kv_heads,
@@ -150,7 +155,9 @@ typedef globals_t<LLAMA_1B_NUM_LAYERS, LLAMA_1B_HIDDEN_DIM,
                   LLAMA_1B_INTERMEDIATE_DIM, LLAMA_1B_HEAD_DIM,
                   LLAMA_1B_NUM_ATTENTION_HEADS, LLAMA_1B_NUM_KV_HEADS,
                   LLAMA_1B_KV_BLOCK_SIZE, LLAMA_1B_MATVEC_BLOCK_SIZE,
-#ifndef KITTENS_BLACKWELL
+#ifdef MK_THOR
+                  config::ACTIVE_WORKERS>
+#elif !defined(KITTENS_BLACKWELL)
                   H100_SM_COUNT>
 #else
                   B200_SM_COUNT>

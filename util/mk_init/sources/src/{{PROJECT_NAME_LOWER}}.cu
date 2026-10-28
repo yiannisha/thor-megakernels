@@ -1,4 +1,5 @@
 #include "megakernel.cuh"
+#include "checked_binding.cuh"
 
 #include "config.cuh"
 
@@ -13,7 +14,13 @@ struct globals {
     using timing_layout = megakernel::timing_layout<{{PROJECT_NAME_LOWER}}_config>;
     instruction_layout instructions;
     timing_layout timings;
-    dim3 grid() { return dim3(148); }
+    dim3 grid() {
+        int device;
+        megakernel::py::check_cuda(cudaGetDevice(&device), "device");
+        cudaDeviceProp properties;
+        megakernel::py::check_cuda(cudaGetDeviceProperties(&properties, device), "properties");
+        return dim3(properties.multiProcessorCount);
+    }
     dim3 block() { return dim3({{PROJECT_NAME_LOWER}}_config::NUM_THREADS); }
     int dynamic_shared_memory() { return {{PROJECT_NAME_LOWER}}_config::DYNAMIC_SHARED_MEMORY; }
 };
@@ -61,7 +68,7 @@ struct TestOp {
 PYBIND11_MODULE({{PROJECT_NAME_LOWER}}, m)
 {
     m.doc() = "";
-    kittens::py::bind_kernel<megakernel::mk<{{PROJECT_NAME_LOWER}}_config, globals, TestOp>>(m, "example_megakernel",
+    megakernel::py::bind_checked_kernel<megakernel::mk<{{PROJECT_NAME_LOWER}}_config, globals, TestOp>, {{PROJECT_NAME_LOWER}}_config>(m, "example_megakernel",
                                                   &globals::instructions,
                                                   &globals::timings);
 }

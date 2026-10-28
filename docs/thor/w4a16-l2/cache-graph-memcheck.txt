@@ -1,0 +1,3 @@
+========= COMPUTE-SANITIZER
+2048x2048 {'decode_each_use_warm': 24543.1, 'decode_each_use_evicted': 22508.93, 'cached_bf16_warm': 22372.61, 'cached_bf16_evicted': 22482.24, 'unpack_once_warm': 10975.62, 'unpack_once_evicted': 8860.74, 'cached_bf16_persisting_warm': 22507.26, 'cached_bf16_persisting_evicted': 22183.84}
+========= ERROR SUMMARY: 0 errors

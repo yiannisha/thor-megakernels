@@ -1,0 +1,14 @@
+{
+  "runtime_source_hash": "e168d6442cad29e215292f04c0e24f981a85feb4cf4925eb53ea5f908f9c4a76",
+  "native_binary_sha256": "83cc14ce9aa8e916a181a191a5c46ac9c583344cea530ee8be18681514eaef6a",
+  "decode_range_start_ns": 15011509,
+  "decode_range_end_ns": 1054894017,
+  "analysis_sources": {
+    "tools/analysis/thor_bottleneck.py": "cbb6edfe9ba6e1dbbbe819869d3637727b1b6dd2647b00bf85847121bb5fdb0b",
+    "tools/analysis/summarize_thor_trace.py": "c90b4f923db23ea37c7f64cbeaeb028a36104ca9f2eba25a7c1ce01ab3614222",
+    "tools/analysis/stream_read.cu": "1f3363b2eed544103f8e97bdf00bc41fcc129d0cd8c9aea5a01ccafc13500b44"
+  },
+  "profiler_report": "local/thor-enabling-bottleneck-steady.nsys-rep",
+  "sqlite": "local/thor-enabling-bottleneck-steady.sqlite",
+  "counter_status": "ERR_NVGPUCTRPERM; no privilege or driver changes attempted"
+}

@@ -1,0 +1,49 @@
+diff --git a/include/output_publication.cuh b/include/output_publication.cuh
+index fd95fb0..294caa8 100644
+--- a/include/output_publication.cuh
++++ b/include/output_publication.cuh
+@@ -6,6 +6,9 @@
+ #ifndef MK_ASYNC_PUBLICATION
+ #define MK_ASYNC_PUBLICATION 0
+ #endif
++#ifndef MK_BATCHED_PUBLICATION
++#define MK_BATCHED_PUBLICATION 0
++#endif
+ namespace megakernel {
+ // Per-instruction SPSC queue, storer -> launcher. This scratch interval is
+ // reserved between the reduction/RMS region and the RoPE region.
+@@ -22,12 +25,18 @@ __device__ inline void queue_release(int &v,int n) {
+  cuda::atomic_ref<int,cuda::thread_scope_block>(v).store(n,cuda::memory_order_release);
+ }
+ template<class C> __device__ void publication_init(state<C>&s) {
+-#if MK_ASYNC_PUBLICATION
+- auto&q=publication_queue(s);q.head=0;q.tail=0;
++#if MK_ASYNC_PUBLICATION || MK_BATCHED_PUBLICATION
++ auto&q=publication_queue(s);q.head=0;q.tail=0;q.records[0]={nullptr,0,0};
+ #endif
+ }
+ template<class C> __device__ void publish_output(state<C>&s,unsigned*counter,int value) {
+-#if MK_ASYNC_PUBLICATION
++#if MK_BATCHED_PUBLICATION
++ // The producer completes every TMA store before accumulating readiness.
++ // One release RMW publishes all completed outputs for this counter.
++ auto&r=publication_queue(s).records[0];
++ if(r.counter!=counter && r.value){gmem_add_release(r.counter,r.value);r.value=0;}
++ r.counter=counter;r.value+=value;
++#elif MK_ASYNC_PUBLICATION
+  auto&q=publication_queue(s);int tail=q.tail;
+  while(tail-queue_acquire(q.head)>=8)__nanosleep(20);
+  q.records[tail%8]={counter,value,0};queue_release(q.tail,tail+1);
+@@ -36,7 +45,11 @@ template<class C> __device__ void publish_output(state<C>&s,unsigned*counter,int
+ #endif
+ }
+ template<class C> __device__ void publication_drain(state<C>&s) {
+-#if MK_ASYNC_PUBLICATION
++#if MK_BATCHED_PUBLICATION
++ if(kittens::laneid()==0){auto&r=publication_queue(s).records[0];
++ if(r.value)gmem_add_release(r.counter,r.value);}
++ kittens::warp::sync();
++#elif MK_ASYNC_PUBLICATION
+  if(kittens::laneid()==0){auto&q=publication_queue(s);int tail=q.tail;
+  while(queue_acquire(q.head)!=tail)__nanosleep(20);}
+  kittens::warp::sync();

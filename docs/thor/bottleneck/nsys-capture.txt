@@ -1,0 +1,19 @@
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.10it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.10it/s]
+Capture range started in the application.
+Capture range ended in the application.
+Generating '/tmp/nsys-report-5187.qdstrm'
+
+[1/1] [0%                          ] thor-enabling-bottleneck-steady.nsys-repProcessing events...
+
+[1/1] [0%                          ] thor-enabling-bottleneck-steady.nsys-rep
+[1/1] [=======39%                  ] thor-enabling-bottleneck-steady.nsys-rep
+[1/1] [==========49%               ] thor-enabling-bottleneck-steady.nsys-rep
+[1/1] [=============60%            ] thor-enabling-bottleneck-steady.nsys-rep
+[1/1] [========================100%] thor-enabling-bottleneck-steady.nsys-rep
+[1/1] [========================100%] thor-enabling-bottleneck-steady.nsys-rep
+{"status": "PASS", "mean_ms_per_step": 10.399785110057564}
+Generated:
+	/home/thor-guest/ml-perf/Megakernels/local/thor-enabling-bottleneck-steady.nsys-rep
