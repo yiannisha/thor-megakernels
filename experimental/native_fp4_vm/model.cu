@@ -2,6 +2,7 @@
 #include "../../demos/low-latency-llama/attention_partial.cu"
 #include "vm.cu"
 #include "ops/nvfp4_weight_only.cuh"
+#include "ops/mxfp4_fp8_linear.cuh"
 #include "pyutils/pyutils.cuh"
 #include <pybind11/stl.h>
 
@@ -52,13 +53,14 @@ struct ModelQuantize : fvm::Quantize {
 struct ModelLinear : fvm::Linear {
  struct controller {
   __device__ static int release_lid(const fvm::Globals& g,fvm::Config::instruction_t& inst,int& q){
+   if(g.operands[inst[1]].fp8_input)return fvm::mixed8::Linear::controller::release_lid(g,inst,q);
    return g.operands[inst[1]].bf16_input?fvm::weight_only::Linear::controller::release_lid(g,inst,q):fvm::Linear::controller::release_lid(g,inst,q);
   }
-  __device__ static int init_semaphores(const fvm::Globals& g,ModelState& s){return g.operands[s.instruction()[1]].bf16_input?fvm::weight_only::Linear::controller::init_semaphores(g,s):fvm::Linear::controller::init_semaphores(g,s);}
+  __device__ static int init_semaphores(const fvm::Globals& g,ModelState& s){if(g.operands[s.instruction()[1]].fp8_input)return fvm::mixed8::Linear::controller::init_semaphores(g,s);return g.operands[s.instruction()[1]].bf16_input?fvm::weight_only::Linear::controller::init_semaphores(g,s):fvm::Linear::controller::init_semaphores(g,s);}
  };
- struct loader {__device__ static void run(const ModelGlobals& g,ModelState& s){if(g.operands[s.instruction()[1]].bf16_input)fvm::weight_only::Linear::loader::run(g,s);else fvm::Linear::loader::run(g,s);}};
- struct launcher {__device__ static void run(const ModelGlobals& g,ModelState& s){if(g.operands[s.instruction()[1]].bf16_input)fvm::weight_only::Linear::launcher::run(g,s);else fvm::Linear::launcher::run(g,s);}};
- struct consumer {__device__ static void run(const ModelGlobals& g,ModelState& s){if(g.operands[s.instruction()[1]].bf16_input)fvm::weight_only::Linear::consumer::run(g,s);else fvm::Linear::consumer::run(g,s);}};
+ struct loader {__device__ static void run(const ModelGlobals& g,ModelState& s){if(g.operands[s.instruction()[1]].fp8_input)fvm::mixed8::Linear::loader::run(g,s);else if(g.operands[s.instruction()[1]].bf16_input)fvm::weight_only::Linear::loader::run(g,s);else fvm::Linear::loader::run(g,s);}};
+ struct launcher {__device__ static void run(const ModelGlobals& g,ModelState& s){if(g.operands[s.instruction()[1]].fp8_input)fvm::mixed8::Linear::launcher::run(g,s);else if(g.operands[s.instruction()[1]].bf16_input)fvm::weight_only::Linear::launcher::run(g,s);else fvm::Linear::launcher::run(g,s);}};
+ struct consumer {__device__ static void run(const ModelGlobals& g,ModelState& s){if(g.operands[s.instruction()[1]].fp8_input)fvm::mixed8::Linear::consumer::run(g,s);else if(g.operands[s.instruction()[1]].bf16_input)fvm::weight_only::Linear::consumer::run(g,s);else fvm::Linear::consumer::run(g,s);}};
  struct storer {
   __device__ static void run(const ModelGlobals& g,ModelState& s){
    if(g.trace){
@@ -143,6 +145,22 @@ template<class... Members>void bind_model(pybind11::module_& m,Members... member
   std::vector<fvm::Operand> ops(65);cudaMemcpy(ops.data(),p->vm->operands,65*sizeof(fvm::Operand),cudaMemcpyDeviceToHost);
   for(int i=0;i<65;++i){ops[i].bf16_input=(__nv_bfloat16*)activations[i];ops[i].weight_scales=(unsigned char*)scales[i];ops[i].alpha=global_scales[i];}
   auto e=cudaMemcpy(p->vm->operands,ops.data(),65*sizeof(fvm::Operand),cudaMemcpyHostToDevice);if(e!=cudaSuccess)throw std::runtime_error(cudaGetErrorString(e));
+ });
+ m.def("mixed8",[](uintptr_t handle,std::vector<uintptr_t> weights,std::vector<uintptr_t> scales,std::vector<uintptr_t> activations,std::vector<uintptr_t> activation_scales){
+  if(weights.size()!=65 || scales.size()!=65 || activations.size()!=65 || activation_scales.size()!=65)throw std::runtime_error("expected 65 mixed8 operands");
+  auto* p=(ModelPlan*)handle;std::vector<fvm::Operand> ops(65);
+  auto check=[](cudaError_t e){if(e!=cudaSuccess)throw std::runtime_error(cudaGetErrorString(e));};
+  check(cudaMemcpy(ops.data(),p->vm->operands,65*sizeof(fvm::Operand),cudaMemcpyDeviceToHost));
+  using ML=fvm::mixed8::Mainloop;using SF=fvm::mixed8::SFConfig;
+  for(int i=0;i<65;++i){auto& o=ops[i];o.bf16_input=nullptr;o.fp8_input=(unsigned char*)activations[i];o.input_scales=(unsigned char*)activation_scales[i];o.alpha=1.f;
+   auto sa=cutlass::make_cute_packed_stride(typename ML::StrideA{},{o.m,o.k,1});
+   auto sb=cutlass::make_cute_packed_stride(typename ML::StrideB{},{1,o.k,1});
+   typename ML::Arguments args{(cutlass::float_e2m1_t*)weights[i],sa,(cutlass::float_e4m3_t*)activations[i],sb,
+    (cutlass::float_ue8m0_t*)scales[i],SF::tile_atom_to_shape_SFA(o.problem_shape),
+    (cutlass::float_ue8m0_t*)activation_scales[i],SF::tile_atom_to_shape_SFB(o.problem_shape)};
+   o.mixed_mainloop=ML::to_underlying_arguments(o.problem_shape,args,nullptr);
+  }
+  check(cudaMemcpy(p->vm->operands,ops.data(),65*sizeof(fvm::Operand),cudaMemcpyHostToDevice));
  });
  m.def("attention",[](uintptr_t handle,int layer,int position,uintptr_t stream){
   if(layer<0 || layer>=16)throw std::runtime_error("invalid attention layer");

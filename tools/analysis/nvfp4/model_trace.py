@@ -8,8 +8,8 @@ from tools.thor.model_check import errors,attention_context
 
 @torch.inference_mode()
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--context',type=int,default=1024);ap.add_argument('--weight-only',action='store_true');args=ap.parse_args()
- a=FP4ModelAdapter(args.context,weight_only=args.weight_only);trace=[]
+ ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--context',type=int,default=1024);ap.add_argument('--weight-only',action='store_true');ap.add_argument('--mixed-fp8',action='store_true');args=ap.parse_args()
+ a=FP4ModelAdapter(args.context,weight_only=args.weight_only,mixed_fp8=args.mixed_fp8);trace=[]
  for w in a.weights:
   m,halfk=w['packed'].shape;k=halfk*2
   trace.append({name:torch.full((size,),float('nan'),device='cuda',dtype=torch.bfloat16)
@@ -21,9 +21,11 @@ def main():
  def weight(w):
   m,hk=w['packed'].shape;out=torch.empty((m,hk*2),device='cuda',dtype=torch.float32)
   for start in range(0,m,1024):
-   out[start:start+1024]=levels[unpack(w['packed'][start:start+1024])]*w['scales'][start:start+1024].view(torch.float8_e4m3fn).float().repeat_interleave(16,-1)*w['tensor_scale']
+   sf=w['scales'][start:start+1024]
+   scale=torch.exp2(sf.float()-127).repeat_interleave(32,-1) if args.mixed_fp8 else sf.view(torch.float8_e4m3fn).float().repeat_interleave(16,-1)
+   out[start:start+1024]=levels[unpack(w['packed'][start:start+1024])]*scale*w['tensor_scale']
   return out
- result={'precision':'W4A16' if args.weight_only else 'W4A4','scope':'one decode; each operator checked on its actual native input','operations':[],'attention':[]}
+ result={'precision':'W4A8' if args.mixed_fp8 else 'W4A16' if args.weight_only else 'W4A4','scope':'one decode; each operator checked on its actual native input','operations':[],'attention':[]}
  old=torch.get_float32_matmul_precision();torch.set_float32_matmul_precision('highest')
  try:
   for i,(w,x,t) in enumerate(zip(a.weights,a.inputs,trace)):
@@ -34,8 +36,13 @@ def main():
     transformed=(transformed*norm).bfloat16()
    elif kind==3:transformed=(F.silu(t['gate'].float())*source.float()).bfloat16()
    else:transformed=source
-   if args.weight_only:
-    actual_x=a.bf16_activations[i].float()
+   if args.weight_only or args.mixed_fp8:
+    if args.mixed_fp8:
+     from .mixed_format import quantize_activation
+     groups=torch.arange(source.numel()//32,device='cuda');offsets=(groups//4)*512+groups%4
+     actual_x=a.fp8_activations[i].view(torch.float8_e4m3fn).float()*torch.exp2(a.fp8_scales[i][offsets].float()-127).repeat_interleave(32)
+     transformed=quantize_activation(transformed)
+    else:actual_x=a.bf16_activations[i].float()
     decoded=weight(w)
     y=F.linear(actual_x,decoded).bfloat16()
     y_expected=F.linear(transformed.float(),decoded).bfloat16()

@@ -22,8 +22,8 @@ CASES=[
 ]
 @torch.inference_mode()
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--cases',type=int,default=8);ap.add_argument('--max-new-tokens',type=int,default=48);ap.add_argument('--weight-only',action='store_true');args=ap.parse_args()
- a=FP4ModelAdapter(weight_only=args.weight_only);tokenizer=AutoTokenizer.from_pretrained(ROOT/'local/models/Llama-3.2-1B-Instruct',local_files_only=True)
+ ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--cases',type=int,default=8);ap.add_argument('--max-new-tokens',type=int,default=48);ap.add_argument('--weight-only',action='store_true');ap.add_argument('--mixed-fp8',action='store_true');args=ap.parse_args()
+ a=FP4ModelAdapter(weight_only=args.weight_only,mixed_fp8=args.mixed_fp8);tokenizer=AutoTokenizer.from_pretrained(ROOT/'local/models/Llama-3.2-1B-Instruct',local_files_only=True)
  cache=a.model.stacked_kv_cache
  def clone():return [v.clone() for v in cache]
  def restore(saved):
@@ -31,7 +31,7 @@ def main():
  def step(mode,position,token):
   a.context=position;a.position.fill_(position);a.state.seq_len=position+1;a.case.token.fill_(token)
   return a._run_torch() if mode=='bf16' else a.run()
- result={'precision':'W4A16' if args.weight_only else 'W4A4','scope':'8 authored sanity prompts; BF16 prefill; separate autoregressive decode caches; no latency claims', 'cases':[]}
+ result={'precision':'W4A8' if args.mixed_fp8 else 'W4A16' if args.weight_only else 'W4A4','scope':'8 authored sanity prompts; BF16 prefill; separate autoregressive decode caches; no latency claims', 'cases':[]}
  stop={tokenizer.eos_token_id,tokenizer.convert_tokens_to_ids('<|eot_id|>')}
  def write():args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(json.dumps(result,indent=2)+'\n')
  for prompt,answer in CASES[:args.cases]:
