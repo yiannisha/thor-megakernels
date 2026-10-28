@@ -32,13 +32,17 @@ def check_quantized(adapter, native_attention=False):
   for start in range(0,m,1024):
    packed=w['packed'][start:start+1024]
    codes=torch.stack((packed&15,packed>>4),-1).flatten(-2).long()
-   scales=w['scales'][start:start+1024].view(torch.float8_e4m3fn).float().repeat_interleave(16,-1)
+   if adapter.mixed_fp8:scales=torch.exp2(w['scales'][start:start+1024].float()-127).repeat_interleave(32,-1)
+   else:scales=w['scales'][start:start+1024].view(torch.float8_e4m3fn).float().repeat_interleave(16,-1)
    mapped[start:start+1024]=levels[codes]*scales*w['tensor_scale']
   return mapped
  def patch(module,weight):
   restored.append((module,module.forward));retained.append(weight)
   def forward(x):
    if adapter.weight_only:return F.linear(x.float(),weight).bfloat16()
+   if adapter.mixed_fp8:
+    from .mixed_format import quantize_activation
+    return F.linear(quantize_activation(x),weight).bfloat16()
    q=p.storage(x.reshape(1,-1).contiguous());q['tensor_scale']=1/64;p.quantize(q,reference=True)
    return F.linear(q['decoded'].reshape(x.shape),weight).bfloat16()
   module.forward=forward

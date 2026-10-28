@@ -60,3 +60,5 @@ python -m tools.analysis.nvfp4.model_bench --context 1024 --decode-steps 100 --w
 ```
 
 A separate experimental [weight-only W4A16 path](W4A16_VM.md) preserves BF16 activations. It is currently slower than BF16; W4A4 remains available unchanged.
+
+The [mixed MXFP4/FP8 backend](W4A8_VM.md) uses native mixed MMA with block-32 UE8M0 scales, preserving both earlier backend choices.

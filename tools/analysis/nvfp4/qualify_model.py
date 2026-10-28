@@ -7,13 +7,14 @@ from pathlib import Path
 from .bench import ROOT
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--weight-only',action='store_true');ap.add_argument('--output',type=Path,default=ROOT/'docs/thor/native-fp4-vm');args=ap.parse_args()
+ ap=argparse.ArgumentParser();ap.add_argument('--weight-only',action='store_true');ap.add_argument('--mixed-fp8',action='store_true');ap.add_argument('--output',type=Path,default=ROOT/'docs/thor/native-fp4-vm');args=ap.parse_args()
  out=args.output;out.mkdir(parents=True,exist_ok=True);records=[]
  for tool in ('memcheck','synccheck','racecheck'):
   command=['compute-sanitizer','--tool',tool,'--kernel-name','kns=megakernel',
    '--error-exitcode','7','--print-limit','3',sys.executable,'-m','tools.analysis.nvfp4.model_bench',
    '--check-only','--context','1024','--output',str(out/f'model-{tool}.json')]
   if args.weight_only:command.append('--weight-only')
+  if args.mixed_fp8:command.append('--mixed-fp8')
   with (out/f'model-{tool}.txt').open('w') as log:
    p=subprocess.run(command,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,timeout=240)
   records.append(dict(tool=tool,returncode=p.returncode,command=command))

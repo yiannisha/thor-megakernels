@@ -31,6 +31,8 @@ struct Operand {
  // Optional weight-only mode: prepare activations as BF16, never as FP4.
  __nv_bfloat16* bf16_input=nullptr;
  const unsigned char* weight_scales=nullptr;
+ unsigned char* fp8_input=nullptr;
+ mixed8::Mainloop::Params mixed_mainloop{};
 };
 struct Globals {
  megakernel::instruction_layout<Config> instructions;
@@ -186,6 +188,20 @@ template<int Opcode=9> struct QuantizeOp : megakernel::NoOp<Config> {
     float sum=0;for(int c=lane;c<o.k;c+=32){float v=__bfloat162float(o.input[c]);sum=fmaf(v,v,sum);}
     for(int d=16;d;d>>=1)sum+=__shfl_xor_sync(0xffffffff,sum,d);
     norm_scale=rsqrtf(sum/o.k+o.norm_eps);
+   }
+   if(o.fp8_input){
+    auto layout=mixed8::SFConfig::tile_atom_to_shape_SFB(cute::make_shape(o.m,1,o.k,1));
+    for(int group=megakernel::get_worker_id()*Config::NUM_CONSUMER_WARPS+kittens::warpid();group<o.k/32;group+=g.quant_workers*Config::NUM_CONSUMER_WARPS){
+     int col=group*32;float v=__bfloat162float(o.input[col+lane]);
+     if(o.transform==1){v=__bfloat162float(__float2bfloat16(v*norm_scale));v=__bfloat162float(__float2bfloat16(v*__bfloat162float(o.norm[col+lane])));}
+     if(o.transform==2){float gate=__bfloat162float(o.input_gate[col+lane]);v=__bfloat162float(__float2bfloat16(v*(gate/(1.f+expf(-gate)))));}
+     float a=fabsf(v);for(int d=16;d;d>>=1)a=fmaxf(a,__shfl_xor_sync(0xffffffff,a,d));
+     int e=max(-126,min(127,int(ceilf(log2f(fmaxf(a/448.f,0x1p-126f))))));
+     __nv_fp8_e4m3 q(ldexpf(v,-e));o.fp8_input[col+lane]=q.__x;
+     if(lane==0)o.input_scales[layout(cute::make_coord(0,col,0))]=static_cast<unsigned char>(e+127);
+    }
+    __threadfence();asm volatile("fence.proxy.async.global;" ::: "memory");__syncwarp();
+    if(lane==0)kittens::arrive(sem(s,0));return;
    }
    auto layout=SFConfig::tile_atom_to_shape_SFB(cute::make_shape(o.m,1,o.k,1));
    for(int group=megakernel::get_worker_id()*Config::NUM_CONSUMER_WARPS+kittens::warpid();group<o.k/16;group+=g.quant_workers*Config::NUM_CONSUMER_WARPS){

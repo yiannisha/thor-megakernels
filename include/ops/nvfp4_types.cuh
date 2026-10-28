@@ -24,4 +24,13 @@ using Mainloop = typename cutlass::gemm::collective::CollectiveBuilder<
 using SFConfig = Mainloop::Sm1xxBlkScaledConfig;
 using SFLayout = Mainloop::LayoutSFA;
 
+namespace mixed8 {
+using Mainloop = typename cutlass::gemm::collective::CollectiveBuilder<
+ cutlass::arch::Sm100,cutlass::arch::OpClassBlockScaledTensorOp,
+ cute::tuple<cutlass::float_e2m1_t,cutlass::float_ue8m0_t>,cutlass::layout::RowMajor,32,
+ cute::tuple<cutlass::float_e4m3_t,cutlass::float_ue8m0_t>,cutlass::layout::ColumnMajor,16,
+ float,NvTile,NvCluster,NvStagePolicy,cutlass::gemm::collective::KernelScheduleAuto>::CollectiveOp;
+using SFConfig=Mainloop::Sm1xxBlkScaledConfig;
+}
+
 }
