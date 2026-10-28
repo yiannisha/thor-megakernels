@@ -1,0 +1,7 @@
+========= COMPUTE-SANITIZER
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.07it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.07it/s]
+{"status": "PASS", "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/segments-graph-memcheck.json", "errors": []}
+========= ERROR SUMMARY: 0 errors
