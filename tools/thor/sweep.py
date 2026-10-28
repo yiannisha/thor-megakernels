@@ -14,9 +14,11 @@ import subprocess
 import sys
 
 try:
+    from .report import measured
     from .config import Config
     from .inspect_device import ROOT, command, inventory
 except ImportError:
+    from report import measured
     from config import Config
     from inspect_device import ROOT, command, inventory
 
@@ -43,13 +45,15 @@ def source_hash():
     return digest.hexdigest()
 
 
-def candidates(base, sms):
+def candidates(base, sms, dimensions_filter=None):
     # One-dimensional ablations preserve interpretability before joint tuning.
     yield base
-    dimensions = {'consumer_warps': [4, 8, 16], 'consumer_registers': [64, 96, 104, 128],
+    dimensions = {'register_mode': ['static', 'dynamic'], 'consumer_warps': [4, 8, 16], 'consumer_registers': [64, 96, 104, 128],
                   'service_registers': [32, 48, 64], 'static_registers': [32, 64, 96, 128], 'workers': [x for x in (12, 16, 20) if x <= sms],
                   'backoff_ns': [0, 20, 100, 500], 'scheduler': ['rr', 'zz', 'wave', 'dag']}
     for dimension, values in dimensions.items():
+        if dimensions_filter and dimension not in dimensions_filter:
+            continue
         for value in values:
             if value != getattr(base, dimension):
                 changes = {dimension: value}
@@ -63,12 +67,39 @@ def cache_key(config, toolchain, sources):
                                      'sources': sources}, sort_keys=True).encode()).hexdigest()
 
 
+def rank_finalists(entries):
+    """Observed rankings are distinct from a controlled recommendation."""
+    valid = [e for e in entries if e['status'] == 'FINALIST_PASS'
+             and measured(e['finalist'])]
+    keys = ('context', 'batch', 'precision', 'input_hash', 'measurement_scope',
+            'same_cache_replay', 'prefill_attention', 'reference_attention',
+            'power_mode', 'model_provenance', 'float32_matmul_precision', 'gate')
+    signatures = {json.dumps({k: e['finalist']['metadata'].get(k) for k in keys},
+                             sort_keys=True) for e in valid}
+    reasons = []
+    if len(signatures) > 1:
+        reasons.append('finalists have incomparable workload or measurement metadata')
+    if any(e['finalist']['metadata'].get('concurrent_workload') != 'controlled-idle'
+           for e in valid):
+        reasons.append('GPU contention is not controlled; rankings are observational')
+    frontier = [e['cache_key'] for e in valid if not any(
+        all(other['finalist']['summary'][k] <= e['finalist']['summary'][k]
+            for k in ('p50_ms', 'p99_ms')) and
+        any(other['finalist']['summary'][k] < e['finalist']['summary'][k]
+            for k in ('p50_ms', 'p99_ms')) for other in valid)]
+    fastest = min(valid, key=lambda e: e['finalist']['summary']['p50_ms'])['cache_key'] if valid and len(signatures) == 1 else None
+    return {'selected': None, 'exploratory_fastest': fastest,
+            'observed_pareto_frontier': frontier if len(signatures) <= 1 else [],
+            'selection_notes': reasons + ['Independent validation is required before promoting a default.']}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path, default=ROOT / 'configs/thor/upstream-like.json')
     parser.add_argument('--output', type=Path, default=ROOT / 'local/thor-sweep')
     parser.add_argument('--execute', action='store_true')
     parser.add_argument('--adapter')
+    parser.add_argument('--dimensions', nargs='+', help='Restrict one-factor ablations; always include the base')
     parser.add_argument('--timeout', type=int, default=300)
     parser.add_argument('--retries', type=int, default=1)
     args = parser.parse_args()
@@ -84,10 +115,13 @@ def main():
     sources = source_hash()
     toolchain = {'nvcc': command(['nvcc', '--version']), 'python': inv['python'],
                  'packages': inv['packages'], 'targets': command(['nvcc', '--list-gpu-code']),
-                 'host_compiler': command(['c++', '--version'])}
+                 'host_compiler': command([os.environ.get('NVCC_CCBIN', os.environ.get('CXX', 'c++')), '--version'])}
+    tk_root = Path(os.environ.get('THUNDERKITTENS_ROOT', str(ROOT / 'ThunderKittens')))
+    toolchain['tk_headers_sha256'] = {str(p.relative_to(tk_root)): hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in sorted((tk_root / 'include').rglob('*')) if p.is_file()}
     args.output.mkdir(parents=True, exist_ok=True)
     manifest = {'inventory': inv, 'toolchain': toolchain, 'source_hash': sources, 'variants': []}
-    for config in candidates(base, devices[0]['sm_count']):
+    for config in candidates(base, devices[0]['sm_count'], args.dimensions):
         key = cache_key(config, toolchain, sources)
         entry = {'config': config.to_dict(), 'cache_key': key, 'errors': config.validate(devices[0]),
                  'status': 'PLANNED', 'attempts': []}
@@ -132,7 +166,7 @@ def main():
                         data = json.loads(output.read_text())
                         if data.get('metadata', {}).get('config') != config.to_dict():
                             entry['errors'].append('adapter did not attest exact applied configuration')
-                        elif data['status'] == 'PASS':
+                        elif measured(data):
                             entry['status'] = 'PILOT_PASS'
                             entry['pilot'] = data
         (args.output / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
@@ -147,13 +181,10 @@ def main():
         entry['status'] = 'FINALIST_FAIL'
         if outcome['returncode'] == 0:
             data = json.loads((build_dir / 'finalist.json').read_text())
-            if data.get('metadata', {}).get('config') == entry['config'] and data['status'] == 'PASS':
+            if data.get('metadata', {}).get('config') == entry['config'] and measured(data):
                 entry['status'] = 'FINALIST_PASS'
                 entry['finalist'] = data
-    manifest['selected'] = None
-    valid = [e for e in finalists if e['status'] == 'FINALIST_PASS']
-    if valid:
-        manifest['selected'] = min(valid, key=lambda e: e['finalist']['summary']['p50_ms'])['cache_key']
+    manifest.update(rank_finalists(finalists))
     (args.output / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     print(json.dumps({'variants': len(manifest['variants']), 'selected': manifest['selected'],
                       'manifest': str(args.output / 'manifest.json')}))
