@@ -84,7 +84,7 @@ class ConfigTests(unittest.TestCase):
         variant = replace(Config(), ready_queue=True, serial_instruction_handoff=True)
         self.assertFalse(variant.validate(DEVICE))
         for changes in ({'serial_instruction_handoff':False},{'allow_multi_cta':True},
-                        {'timing':True},{'register_mode':'dynamic'},{'ready_queue':1}):
+                        {'timing':True},{'register_mode':'dynamic'},{'ready_queue':1},{'scheduler':'dag'}):
             self.assertTrue(replace(variant,**changes).validate(DEVICE))
         self.assertIn('-DMK_READY_QUEUE=1', variant.defines())
         self.assertNotEqual(cache_key(Config(), {}, 's'), cache_key(variant, {}, 's'))

@@ -39,6 +39,8 @@ class Config:
             errors.append('configuration switches must be booleans')
         if self.ready_queue and (not self.serial_instruction_handoff or self.allow_multi_cta or self.timing or self.register_mode!='static'):
             errors.append('ready prototype requires static, serial, untimed single-CTA residency')
+        if self.ready_queue and self.scheduler!='rr':
+            errors.append('ready dispatch uses device FIFO; static scheduler overrides are unsupported')
         if self.tensorcore_matvec and not self.match_torch_bf16_rms:
             errors.append('BF16 MMA matvec requires BF16-rounded normalized inputs')
         if self.fp32_downproj and self.ordered_downproj:

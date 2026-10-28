@@ -1,0 +1,6 @@
+run_id,status,batch_index,sample_index,elapsed_ms
+d0d21cfe-9e1f-42dc-aa55-198aac1b7efa,PASS,0,0,17.360671997070312
+d0d21cfe-9e1f-42dc-aa55-198aac1b7efa,PASS,0,1,16.393951416015625
+d0d21cfe-9e1f-42dc-aa55-198aac1b7efa,PASS,0,2,16.860607147216797
+d0d21cfe-9e1f-42dc-aa55-198aac1b7efa,PASS,0,3,16.44963264465332
+d0d21cfe-9e1f-42dc-aa55-198aac1b7efa,PASS,0,4,14.736607551574707

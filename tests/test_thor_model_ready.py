@@ -1,7 +1,12 @@
 import random
 from types import SimpleNamespace
 import unittest
-from megakernels.instructions import NoOp
+import importlib.util
+
+
+class NoOp:
+    def serialize(self): return [0]
+
 from megakernels.scheduler import DAG_Node, Schedule
 from megakernels.demos.latency.ready_queue import pack_dag,audit_llama_fanins
 
@@ -31,6 +36,7 @@ class ReadyGraphTests(unittest.TestCase):
         b.dependencies=[a];a.dependencies=[b]
         with self.assertRaises(ValueError):pack_dag([a,b])
 
+    @unittest.skipUnless(importlib.util.find_spec('torch') and importlib.util.find_spec('safetensors'), 'tensor dependencies unavailable')
     def test_actual_llama_barrier_coverage_rejects_missing_edges_and_outputs(self):
         from megakernels.demos.latency.scheduler import make_dag
         g=SimpleNamespace(sm_count=lambda:20,skip_attn_reduction=True,ordered_downproj=False,
@@ -49,3 +55,23 @@ class ReadyGraphTests(unittest.TestCase):
         original=node.instruction.end_block_idx;node.instruction.end_block_idx+=1
         with self.assertRaises(ValueError):audit_llama_fanins(s)
         node.instruction.end_block_idx=original
+        from dataclasses import replace
+        for op in (1,4,5,6,7):
+            template=next(n for n in nodes if n.instruction.opcode()==op)
+            ins=template.instruction
+            if op==5:empty=replace(ins,block_idxs=[])
+            elif op in (1,7):empty=replace(ins,end_output_block_idx=ins.start_output_block_idx)
+            else:empty=replace(ins,end_block_idx=ins.start_block_idx)
+            extra=DAG_Node(empty,list(template.dependencies));nodes.append(extra)
+            with self.assertRaises(ValueError):audit_llama_fanins(s)
+            nodes.pop()
+
+    @unittest.skipUnless(importlib.util.find_spec('torch'), 'PyTorch unavailable')
+    def test_non_native_ready_adapter_rejected_before_loading_weights(self):
+        import json
+        from unittest.mock import patch
+        from tools.thor.model_bench import ModelAdapter
+        config=json.dumps({'ready_queue':True,'serial_instruction_handoff':True})
+        with patch.dict('os.environ',{'THOR_CONFIG':config}), patch('tools.thor.model_bench.load_reference',side_effect=AssertionError('weights must not load')):
+            for engine in ('torch','torch_graph','pyvm'):
+                with self.assertRaisesRegex(ValueError,'native'):ModelAdapter(engine)

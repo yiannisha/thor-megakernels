@@ -26,6 +26,8 @@ class ModelAdapter:
             raise ValueError('unsupported engine')
         self.engine = engine
         self.config = Config(**json.loads(os.environ.get('THOR_CONFIG', '{}')))
+        if self.config.ready_queue and engine!='native':
+            raise ValueError('ready dispatch requires native execution')
         self.logit_limit = float(os.environ.get('THOR_LOGIT_NRMSE_LIMIT', '.03'))
         if not 0 < self.logit_limit < 1:
             raise ValueError('logit NRMSE limit must lie between zero and one')

@@ -43,6 +43,13 @@ def audit_llama_fanins(schedule):
         if op not in (1,2,4,5,6,7):raise ValueError('unsupported model task')
         layer=getattr(node.instruction,'layer_idx',g.num_hidden_layers-1)
         if not 0<=layer<g.num_hidden_layers:raise ValueError('invalid task layer')
+        ins=node.instruction
+        if op in (1,7) and ins.end_output_block_idx<=ins.start_output_block_idx:
+            raise ValueError('full-model tasks require nonempty output ranges')
+        if op in (4,6) and (ins.end_block_idx<=ins.start_block_idx or
+                            not 0<=ins.reduction_block_idx<(1 if op==4 else g.intermediate_size//g.hidden_size)):
+            raise ValueError('invalid model output range or reduction column')
+        if op==5 and not ins.block_idxs:raise ValueError('empty model up/gate task')
         groups.setdefault((layer,op),[]).append(node)
     def group(layer,op):return groups.get((layer,op),[])
     def cover(values,expected):
@@ -100,7 +107,7 @@ def tensorize_ready(schedule, *, audit_model=True):
     g.timings=torch.zeros((g.sm_count(),n+1,128),dtype=torch.int32,device=g.device)
     g.ready_metadata=torch.tensor(packed['metadata'],dtype=torch.int32,device=g.device)
     g.ready_state=torch.empty(packed['workspace_elements'],dtype=torch.int32,device=g.device)
-    return {'tasks':n,'edges':len(packed['children']), 'instruction_bytes':g.instructions.numel()*4,
+    return {'policy':'device-ready-fifo','tasks':n,'edges':len(packed['children']), 'instruction_bytes':g.instructions.numel()*4,
             'metadata_bytes':g.ready_metadata.numel()*4,'workspace_bytes':g.ready_state.numel()*4,
             'timing_capacity_bytes':g.timings.numel()*4,'fanins_audited':audit_model}
 
