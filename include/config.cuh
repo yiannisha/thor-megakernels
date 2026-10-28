@@ -57,6 +57,7 @@ struct default_config {
     static constexpr bool ALLOW_MULTI_CTA = false;
     static constexpr bool READY_QUEUE = false;
     static constexpr bool SERIAL_INSTRUCTION_HANDOFF = false;
+    static constexpr int HANDOFF_AFTER_OPCODE = -1;
     static constexpr int FULL_CTA_BARRIER = 15;
     static constexpr bool FP32_DOWNPROJ = false;
     static constexpr bool MATCH_TORCH_BF16_EPILOGUES = false;
@@ -83,6 +84,9 @@ struct default_config {
 #endif
 #ifndef MK_PAGE_COUNT
 #define MK_PAGE_COUNT (1 + (2048 / MK_WEIGHT_CHUNK_WIDTH) * MK_WEIGHT_PIPELINE_STAGES)
+#endif
+#ifndef MK_HANDOFF_AFTER_OPCODE
+#define MK_HANDOFF_AFTER_OPCODE -1
 #endif
 #ifndef MK_SERIAL_INSTRUCTION_HANDOFF
 #define MK_SERIAL_INSTRUCTION_HANDOFF 0
@@ -148,6 +152,8 @@ struct thor_config : default_config {
     static constexpr bool ALLOW_MULTI_CTA = MK_ALLOW_MULTI_CTA != 0;
     static constexpr bool READY_QUEUE = MK_READY_QUEUE != 0;
     static constexpr bool SERIAL_INSTRUCTION_HANDOFF = MK_SERIAL_INSTRUCTION_HANDOFF != 0;
+    static constexpr int HANDOFF_AFTER_OPCODE = MK_HANDOFF_AFTER_OPCODE;
+    static_assert(HANDOFF_AFTER_OPCODE>=-1 && HANDOFF_AFTER_OPCODE<=7, "invalid instruction handoff opcode");
     static_assert(!READY_QUEUE || (SERIAL_INSTRUCTION_HANDOFF && !ALLOW_MULTI_CTA && !MK_RECORD_TIMING && STATIC_REGISTER_ALLOCATION), "ready prototype requires static, serial, untimed single-CTA residency");
     // IDs 0, 3 and 4 belong to consumer collectives. Full-CTA use is
     // confined to initialization/teardown; a lower ID reduces reservation.

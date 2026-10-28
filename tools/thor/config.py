@@ -24,7 +24,9 @@ class Config:
     timing: bool = False
     allow_multi_cta: bool = False
     ready_queue: bool = False
+    o_proj_grouped: bool = False
     serial_instruction_handoff: bool = False
+    handoff_after_opcode: int = -1
     arch: str = 'sm_110a'
     page_size: int = 16384
     page_count: int = 13
@@ -35,20 +37,26 @@ class Config:
 
     def validate(self, device):
         errors = []
-        if any(type(value) is not bool for value in (self.timing, self.allow_multi_cta, self.ready_queue, self.serial_instruction_handoff, self.match_torch_bf16_rms, self.ordered_downproj, self.fp32_downproj, self.match_torch_bf16_epilogues, self.compensated_attention, self.fp64_rms, self.tensorcore_matvec)):
+        if any(type(value) is not bool for value in (self.timing, self.allow_multi_cta, self.ready_queue, self.o_proj_grouped, self.serial_instruction_handoff, self.match_torch_bf16_rms, self.ordered_downproj, self.fp32_downproj, self.match_torch_bf16_epilogues, self.compensated_attention, self.fp64_rms, self.tensorcore_matvec)):
             errors.append('configuration switches must be booleans')
         if self.ready_queue and (not self.serial_instruction_handoff or self.allow_multi_cta or self.timing or self.register_mode!='static'):
             errors.append('ready prototype requires static, serial, untimed single-CTA residency')
+        if self.o_proj_grouped and not (self.serial_instruction_handoff or self.handoff_after_opcode==2):
+            errors.append('grouped O projection requires attention retirement or full instruction handoff; pipelined reuse failed racecheck')
+        if self.ready_queue and self.handoff_after_opcode!=-1:
+            errors.append('ready dispatch already joins all execution roles')
         if self.ready_queue and self.scheduler!='rr':
             errors.append('ready dispatch uses device FIFO; static scheduler overrides are unsupported')
         if self.tensorcore_matvec and not self.match_torch_bf16_rms:
             errors.append('BF16 MMA matvec requires BF16-rounded normalized inputs')
         if self.fp32_downproj and self.ordered_downproj:
             errors.append('FP32 downprojection and ordered BF16 updates are mutually exclusive')
-        integer_fields = ('instruction_parties', 'static_registers', 'consumer_warps', 'consumer_registers', 'service_registers', 'workers',
+        integer_fields = ('handoff_after_opcode', 'instruction_parties', 'static_registers', 'consumer_warps', 'consumer_registers', 'service_registers', 'workers',
                           'backoff_ns', 'page_size', 'page_count', 'weight_stages', 'tile_width')
         if any(type(getattr(self, field)) is not int for field in integer_fields):
             return ['configuration dimensions must be integers']
+        if not -1<=self.handoff_after_opcode<=7:
+            errors.append('instruction handoff opcode must be -1 or 0..7')
         if self.instruction_parties != 32:
             errors.append('Thor requires per-thread instruction barriers; warp-aggregated path failed racecheck')
         if self.consumer_warps not in (4, 8, 16):
@@ -107,6 +115,7 @@ class Config:
             'MK_ALLOW_MULTI_CTA': int(self.allow_multi_cta),
             'MK_READY_QUEUE': int(self.ready_queue),
             'MK_SERIAL_INSTRUCTION_HANDOFF': int(self.serial_instruction_handoff),
+            'MK_HANDOFF_AFTER_OPCODE': self.handoff_after_opcode,
             'MK_MATCH_TORCH_BF16_RMS': int(self.match_torch_bf16_rms),
             'MK_ORDERED_DOWNPROJ': int(self.ordered_downproj),
             'MK_FP32_DOWNPROJ': int(self.fp32_downproj),

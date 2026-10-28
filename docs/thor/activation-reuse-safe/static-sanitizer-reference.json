@@ -1,0 +1,10 @@
+{
+  "source_hash": "1a7ea7829e641e244dd8cb533deee72f7a19f09f61ff13cf162a4c49e660a7e7",
+  "process_record": "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-handoff-pilot/processes.json",
+  "tools": [
+    "memcheck",
+    "synccheck",
+    "racecheck"
+  ],
+  "status": "PASS"
+}

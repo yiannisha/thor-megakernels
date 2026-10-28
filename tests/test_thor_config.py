@@ -89,6 +89,19 @@ class ConfigTests(unittest.TestCase):
         self.assertIn('-DMK_READY_QUEUE=1', variant.defines())
         self.assertNotEqual(cache_key(Config(), {}, 's'), cache_key(variant, {}, 's'))
 
+    def test_activation_grouping_is_a_distinct_host_schedule(self):
+        control=replace(Config(),handoff_after_opcode=2)
+        grouped = replace(control, o_proj_grouped=True)
+        self.assertFalse(grouped.validate(DEVICE))
+        self.assertTrue(replace(grouped,o_proj_grouped=1).validate(DEVICE))
+        self.assertEqual(grouped.defines(),control.defines())
+        self.assertNotEqual(cache_key(control,{},'s'),cache_key(grouped,{},'s'))
+        self.assertTrue(replace(grouped,handoff_after_opcode=-1).validate(DEVICE))
+        self.assertFalse(replace(grouped,handoff_after_opcode=-1,serial_instruction_handoff=True).validate(DEVICE))
+        for value in (-2,8,True):
+            self.assertTrue(replace(control,handoff_after_opcode=value).validate(DEVICE))
+        self.assertNotEqual(cache_key(Config(),{},'s'),cache_key(grouped,{},'s'))
+
     def test_cache_tracks_toolchain_and_sources(self):
         key = cache_key(Config(), {'nvcc': 'a'}, 'source')
         self.assertNotEqual(key, cache_key(Config(), {'nvcc': 'b'}, 'source'))

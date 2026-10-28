@@ -1,0 +1,37 @@
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.25it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.25it/s]
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.68it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.68it/s]
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.94it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.94it/s]
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.76it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.76it/s]
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.71it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.71it/s]
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.70it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.70it/s]
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  2.02it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  2.01it/s]
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.98it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.97it/s]
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  2.04it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  2.04it/s]
+{"status": "PASS", "cases": 9, "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-qualified/identity-static.json"}

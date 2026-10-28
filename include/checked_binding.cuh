@@ -117,6 +117,7 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
         result["timing_enabled"] = Config::TIMING_RECORD_ENABLED;
         result["active_workers"] = grid.x;
         result["ready_queue"] = Config::READY_QUEUE;
+        result["handoff_after_opcode"] = Config::HANDOFF_AFTER_OPCODE;
         result["weight_pipeline_stages"] = Config::WEIGHT_PIPELINE_STAGES;
         result["page_count"] = Config::NUM_PAGES;
         result["page_size"] = Config::PAGE_SIZE;

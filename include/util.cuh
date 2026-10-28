@@ -138,8 +138,10 @@ template <typename config> struct state {
     }
     __device__ inline void next_instruction() {
         __syncwarp();
-        if constexpr (config::SERIAL_INSTRUCTION_HANDOFF) {
-            // All execution roles join before any role advances. The controller
+        if (config::SERIAL_INSTRUCTION_HANDOFF ||
+            (config::HANDOFF_AFTER_OPCODE>=0 && instruction()[0]==config::HANDOFF_AFTER_OPCODE)) {
+            // Selected instruction boundaries, or all boundaries in serial mode,
+            // join execution roles before any advances. The controller
             // is excluded and retains its asynchronous instruction prefetch.
             // ID 6 is disjoint from consumer collectives and the full-CTA ID.
             // Roles reach separate call sites under divergent control flow;

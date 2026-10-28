@@ -1,0 +1,712 @@
+{
+  "source_hash": "1a7ea7829e641e244dd8cb533deee72f7a19f09f61ff13cf162a4c49e660a7e7",
+  "processes": [
+    {
+      "name": "build-baseline",
+      "command": [
+        "make",
+        "-B",
+        "-C",
+        "/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama",
+        "GPU=THOR",
+        "THOR_WORKERS=20",
+        "THOR_STATIC_REGISTERS=96",
+        "TARGET=/home/thor-guest/ml-perf/Megakernels/local/activation-reuse-safe-baseline/mk_llama",
+        "EXTRA_NVCCFLAGS=-DMK_WEIGHT_PIPELINE_STAGES=3 -DMK_PAGE_COUNT=13 -DMK_PAGE_SIZE=16384 -DMK_WEIGHT_CHUNK_WIDTH=512 -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_CONSUMER_WARPS=16 -DMK_CONSUMER_REGISTERS=104 -DMK_SERVICE_REGISTERS=64 -DMK_BACKOFF_NS=20 -DMK_RECORD_TIMING=0 -DMK_ALLOW_MULTI_CTA=0 -DMK_READY_QUEUE=0 -DMK_SERIAL_INSTRUCTION_HANDOFF=0 -DMK_HANDOFF_AFTER_OPCODE=-1 -DMK_MATCH_TORCH_BF16_RMS=1 -DMK_ORDERED_DOWNPROJ=0 -DMK_FP32_DOWNPROJ=1 -DMK_FP64_RMS=0 -DMK_TENSORCORE_MATVEC=0 -DMK_COMPENSATED_ATTENTION=1 -DMK_MATCH_TORCH_BF16_EPILOGUES=1 -DMK_INSTRUCTION_BARRIER_PARTIES=32"
+      ],
+      "returncode": 0,
+      "output": "make: Entering directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc llama.cu -DNDEBUG -Xcompiler=-fPIE --expt-extended-lambda --expt-relaxed-constexpr -Xcompiler=-Wno-psabi -Xcompiler=-fno-strict-aliasing --use_fast_math -forward-unknown-to-host-compiler -O3 -Xnvlink=--verbose -Xptxas=--verbose -Xptxas=--warn-on-spills -std=c++20 -x cu -lrt -lpthread -ldl -lcuda -lcudadevrt -lcudart_static -lcublas -lineinfo -I/home/thor-guest/ml-perf/Megakernels/local/thunderkittens/include -I/home/thor-guest/ml-perf/Megakernels/include -I/usr/include/python3.12 -I/home/thor-guest/ml-perf/Megakernels/local/thor-venv/lib/python3.12/site-packages/pybind11/include -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/python3.12/config-3.12-aarch64-linux-gnu -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/aarch64-linux-gnu  -ldl  -lm  -shared -fPIC -DMK_BUILD_SOURCE_HASH='\"1a7ea7829e641e244dd8cb533deee72f7a19f09f61ff13cf162a4c49e660a7e7\"' -DKITTENS_HOPPER -DMK_THOR -DMK_ACTIVE_WORKERS=20 -gencode=arch=compute_110a,code=sm_110a -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_THOR_STATIC_REGISTERS=96 -maxrregcount=96 -DMK_WEIGHT_PIPELINE_STAGES=3 -DMK_PAGE_COUNT=13 -DMK_PAGE_SIZE=16384 -DMK_WEIGHT_CHUNK_WIDTH=512 -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_CONSUMER_WARPS=16 -DMK_CONSUMER_REGISTERS=104 -DMK_SERVICE_REGISTERS=64 -DMK_BACKOFF_NS=20 -DMK_RECORD_TIMING=0 -DMK_ALLOW_MULTI_CTA=0 -DMK_READY_QUEUE=0 -DMK_SERIAL_INSTRUCTION_HANDOFF=0 -DMK_HANDOFF_AFTER_OPCODE=-1 -DMK_MATCH_TORCH_BF16_RMS=1 -DMK_ORDERED_DOWNPROJ=0 -DMK_FP32_DOWNPROJ=1 -DMK_FP64_RMS=0 -DMK_TENSORCORE_MATVEC=0 -DMK_COMPENSATED_ATTENTION=1 -DMK_MATCH_TORCH_BF16_EPILOGUES=1 -DMK_INSTRUCTION_BARRIER_PARTIES=32 -o /home/thor-guest/ml-perf/Megakernels/local/activation-reuse-safe-baseline/mk_llama.cpython-312-aarch64-linux-gnu.so\nptxas warning : Registers are spilled to local memory in function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_', 64 bytes spill stores, 108 bytes spill loads\nptxas info    : 6 bytes gmem\nptxas info    : Compiling entry function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_' for 'sm_110a'\nptxas info    : Function properties for _ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_\n    208 bytes stack frame, 64 bytes spill stores, 108 bytes spill loads\nptxas info    : Used 96 registers, used 16 barriers, 208 bytes cumulative stack size, 10384 bytes smem\nptxas info    : Compile time = 911.542 ms\nnvlink info    : 0 bytes gmem\npython3 ../../tools/thor/build_manifest.py --binary \"/home/thor-guest/ml-perf/Megakernels/local/activation-reuse-safe-baseline/mk_llama.cpython-312-aarch64-linux-gnu.so\" --compiler \"/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc\" --gpu \"THOR\"\nmake: Leaving directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n"
+    },
+    {
+      "name": "build-ready",
+      "command": [
+        "make",
+        "-B",
+        "-C",
+        "/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama",
+        "GPU=THOR",
+        "THOR_WORKERS=20",
+        "THOR_STATIC_REGISTERS=96",
+        "TARGET=/home/thor-guest/ml-perf/Megakernels/local/activation-reuse-safe-ready/mk_llama",
+        "EXTRA_NVCCFLAGS=-DMK_WEIGHT_PIPELINE_STAGES=3 -DMK_PAGE_COUNT=13 -DMK_PAGE_SIZE=16384 -DMK_WEIGHT_CHUNK_WIDTH=512 -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_CONSUMER_WARPS=16 -DMK_CONSUMER_REGISTERS=104 -DMK_SERVICE_REGISTERS=64 -DMK_BACKOFF_NS=20 -DMK_RECORD_TIMING=0 -DMK_ALLOW_MULTI_CTA=0 -DMK_READY_QUEUE=1 -DMK_SERIAL_INSTRUCTION_HANDOFF=1 -DMK_HANDOFF_AFTER_OPCODE=-1 -DMK_MATCH_TORCH_BF16_RMS=1 -DMK_ORDERED_DOWNPROJ=0 -DMK_FP32_DOWNPROJ=1 -DMK_FP64_RMS=0 -DMK_TENSORCORE_MATVEC=0 -DMK_COMPENSATED_ATTENTION=1 -DMK_MATCH_TORCH_BF16_EPILOGUES=1 -DMK_INSTRUCTION_BARRIER_PARTIES=32"
+      ],
+      "returncode": 0,
+      "output": "make: Entering directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc llama.cu -DNDEBUG -Xcompiler=-fPIE --expt-extended-lambda --expt-relaxed-constexpr -Xcompiler=-Wno-psabi -Xcompiler=-fno-strict-aliasing --use_fast_math -forward-unknown-to-host-compiler -O3 -Xnvlink=--verbose -Xptxas=--verbose -Xptxas=--warn-on-spills -std=c++20 -x cu -lrt -lpthread -ldl -lcuda -lcudadevrt -lcudart_static -lcublas -lineinfo -I/home/thor-guest/ml-perf/Megakernels/local/thunderkittens/include -I/home/thor-guest/ml-perf/Megakernels/include -I/usr/include/python3.12 -I/home/thor-guest/ml-perf/Megakernels/local/thor-venv/lib/python3.12/site-packages/pybind11/include -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/python3.12/config-3.12-aarch64-linux-gnu -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/aarch64-linux-gnu  -ldl  -lm  -shared -fPIC -DMK_BUILD_SOURCE_HASH='\"1a7ea7829e641e244dd8cb533deee72f7a19f09f61ff13cf162a4c49e660a7e7\"' -DKITTENS_HOPPER -DMK_THOR -DMK_ACTIVE_WORKERS=20 -gencode=arch=compute_110a,code=sm_110a -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_THOR_STATIC_REGISTERS=96 -maxrregcount=96 -DMK_WEIGHT_PIPELINE_STAGES=3 -DMK_PAGE_COUNT=13 -DMK_PAGE_SIZE=16384 -DMK_WEIGHT_CHUNK_WIDTH=512 -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_CONSUMER_WARPS=16 -DMK_CONSUMER_REGISTERS=104 -DMK_SERVICE_REGISTERS=64 -DMK_BACKOFF_NS=20 -DMK_RECORD_TIMING=0 -DMK_ALLOW_MULTI_CTA=0 -DMK_READY_QUEUE=1 -DMK_SERIAL_INSTRUCTION_HANDOFF=1 -DMK_HANDOFF_AFTER_OPCODE=-1 -DMK_MATCH_TORCH_BF16_RMS=1 -DMK_ORDERED_DOWNPROJ=0 -DMK_FP32_DOWNPROJ=1 -DMK_FP64_RMS=0 -DMK_TENSORCORE_MATVEC=0 -DMK_COMPENSATED_ATTENTION=1 -DMK_MATCH_TORCH_BF16_EPILOGUES=1 -DMK_INSTRUCTION_BARRIER_PARTIES=32 -o /home/thor-guest/ml-perf/Megakernels/local/activation-reuse-safe-ready/mk_llama.cpython-312-aarch64-linux-gnu.so\nptxas warning : Registers are spilled to local memory in function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_', 52 bytes spill stores, 92 bytes spill loads\nptxas info    : 6 bytes gmem\nptxas info    : Compiling entry function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_' for 'sm_110a'\nptxas info    : Function properties for _ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_\n    208 bytes stack frame, 52 bytes spill stores, 92 bytes spill loads\nptxas info    : Used 96 registers, used 16 barriers, 208 bytes cumulative stack size, 10384 bytes smem\nptxas info    : Compile time = 882.906 ms\nnvlink info    : 0 bytes gmem\npython3 ../../tools/thor/build_manifest.py --binary \"/home/thor-guest/ml-perf/Megakernels/local/activation-reuse-safe-ready/mk_llama.cpython-312-aarch64-linux-gnu.so\" --compiler \"/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc\" --gpu \"THOR\"\nmake: Leaving directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n"
+    },
+    {
+      "name": "identity-static",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.experiments.activation_identity",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/identity-static.json"
+      ],
+      "returncode": 0,
+      "output": "\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.04it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.04it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.67it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.67it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.01it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.01it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.85it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.85it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.85it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.85it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.89it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.89it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.01it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.01it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.06it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.06it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.07it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.07it/s]\n{\"status\": \"PASS\", \"cases\": 9, \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/identity-static.json\"}\n"
+    },
+    {
+      "name": "static-reuse-temporal",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.teacher_forced",
+        "--context",
+        "1024",
+        "--steps",
+        "100",
+        "--reference-attention",
+        "math",
+        "--native-past",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/static-reuse-temporal.json"
+      ],
+      "returncode": 1,
+      "output": "{\"status\": \"FAIL\", \"steps_completed\": 100, \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/static-reuse-temporal.json\"}\n"
+    },
+    {
+      "name": "identity-ready",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.experiments.activation_identity",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/identity-ready.json"
+      ],
+      "returncode": 0,
+      "output": "\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.23it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.22it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.68it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.68it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.02it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.02it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.79it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.79it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.86it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.86it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.03it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.03it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.06it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.06it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.07it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.07it/s]\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.06it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.06it/s]\n{\"status\": \"PASS\", \"cases\": 9, \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/identity-ready.json\"}\n"
+    },
+    {
+      "name": "ready-reuse-synccheck",
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "synccheck",
+        "--target-processes",
+        "all",
+        "--kernel-name",
+        "kns=megakernel",
+        "--error-exitcode",
+        "99",
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "1",
+        "--batches",
+        "1",
+        "--timeout",
+        "500",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/ready-reuse-synccheck.json"
+      ],
+      "returncode": 0,
+      "output": "========= COMPUTE-SANITIZER\n{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/ready-reuse-synccheck.json\", \"errors\": []}\n========= ERROR SUMMARY: 0 errors\n"
+    },
+    {
+      "name": "ready-reuse-memcheck",
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "memcheck",
+        "--target-processes",
+        "all",
+        "--kernel-name",
+        "kns=megakernel",
+        "--error-exitcode",
+        "99",
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "1",
+        "--batches",
+        "1",
+        "--timeout",
+        "500",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/ready-reuse-memcheck.json"
+      ],
+      "returncode": 0,
+      "output": "========= COMPUTE-SANITIZER\n{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/ready-reuse-memcheck.json\", \"errors\": []}\n========= ERROR SUMMARY: 0 errors\n"
+    },
+    {
+      "name": "ready-reuse-racecheck",
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--target-processes",
+        "all",
+        "--kernel-name",
+        "kns=megakernel",
+        "--error-exitcode",
+        "99",
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "1",
+        "--batches",
+        "1",
+        "--timeout",
+        "500",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/ready-reuse-racecheck.json"
+      ],
+      "returncode": 0,
+      "output": "========= COMPUTE-SANITIZER\n{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/ready-reuse-racecheck.json\", \"errors\": []}\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n"
+    },
+    {
+      "name": "ready-reuse-temporal",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.teacher_forced",
+        "--context",
+        "1024",
+        "--steps",
+        "100",
+        "--reference-attention",
+        "math",
+        "--native-past",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/ready-reuse-temporal.json"
+      ],
+      "returncode": 1,
+      "output": "{\"status\": \"FAIL\", \"steps_completed\": 100, \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/ready-reuse-temporal.json\"}\n"
+    },
+    {
+      "name": "grouped-cli",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.model_check",
+        "--o-proj-grouped",
+        "--handoff-after-opcode",
+        "2",
+        "--context",
+        "1024",
+        "--fp32-downproj",
+        "--match-torch-bf16-epilogues",
+        "--compensated-attention",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/grouped-cli.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/grouped-cli.json\", \"diagnostics\": \" 6103.515625, \\\"mean_relative_error\\\": 3.022614002227783, \\\"normalized_rmse\\\": 0.005903955549001694, \\\"atol\\\": 0.25, \\\"rtol\\\": 0.05, \\\"nrmse_limit\\\": 0.02}, \\\"greedy_token\\\": 13, \\\"k_cache\\\": {\\\"passed\\\": true, \\\"max_absolute_error\\\": 0.125, \\\"mean_absolute_error\\\": 0.008603425696492195, \\\"max_relative_error\\\": 25.955665588378906, \\\"mean_relative_error\\\": 0.026324983686208725, \\\"normalized_rmse\\\": 0.005396516062319279, \\\"atol\\\": 0.25, \\\"rtol\\\": 0.05, \\\"nrmse_limit\\\": 0.02}, \\\"v_cache\\\": {\\\"passed\\\": true, \\\"max_absolute_error\\\": 0.03125, \\\"mean_absolute_error\\\": 0.0026629362255334854, \\\"max_relative_error\\\": 144.15789794921875, \\\"mean_relative_error\\\": 0.08368092775344849, \\\"normalized_rmse\\\": 0.013292677700519562, \\\"atol\\\": 0.25, \\\"rtol\\\": 0.05, \\\"nrmse_limit\\\": 0.02}, \\\"greedy_token_matches\\\": true}, {\\\"logits\\\": {\\\"passed\\\": true, \\\"max_absolute_error\\\": 0.08984375, \\\"mean_absolute_error\\\": 0.020043637603521347, \\\"max_relative_error\\\": 1914.90478515625, \\\"mean_relative_error\\\": 0.13827502727508545, \\\"normalized_rmse\\\": 0.016105184331536293, \\\"atol\\\": 0.25, \\\"rtol\\\": 0.05, \\\"nrmse_limit\\\": 0.03}, \\\"hidden\\\": {\\\"passed\\\": true, \\\"max_absolute_error\\\": 0.0625, \\\"mean_absolute_error\\\": 0.0048392415046691895, \\\"max_relative_error\\\": 6103.515625, \\\"mean_relative_error\\\": 3.022614002227783, \\\"normalized_rmse\\\": 0.005903955549001694, \\\"atol\\\": 0.25, \\\"rtol\\\": 0.05, \\\"nrmse_limit\\\": 0.02}, \\\"greedy_token\\\": 13, \\\"k_cache\\\": {\\\"passed\\\": true, \\\"max_absolute_error\\\": 0.125, \\\"mean_absolute_error\\\": 0.008603425696492195, \\\"max_relative_error\\\": 25.955665588378906, \\\"mean_relative_error\\\": 0.026324983686208725, \\\"normalized_rmse\\\": 0.005396516062319279, \\\"atol\\\": 0.25, \\\"rtol\\\": 0.05, \\\"nrmse_limit\\\": 0.02}, \\\"v_cache\\\": {\\\"passed\\\": true, \\\"max_absolute_error\\\": 0.03125, \\\"mean_absolute_error\\\": 0.0026629362255334854, \\\"max_relative_error\\\": 144.15789794921875, \\\"mean_relative_error\\\": 0.08368092775344849, \\\"normalized_rmse\\\": 0.013292677700519562, \\\"atol\\\": 0.25, \\\"rtol\\\": 0.05, \\\"nrmse_limit\\\": 0.02}, \\\"greedy_token_matches\\\": true}], \\\"all_trials_passed\\\": true, \\\"worst_logits_nrmse\\\": 0.016105184331536293}}}\\n\"}\n"
+    },
+    {
+      "name": "benchmark-static-reuse-batch0",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-reuse-batch0.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-reuse-batch0.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-ready-reuse-batch0",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-reuse-batch0.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-reuse-batch0.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-ready-batch0",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-batch0.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-batch0.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-static-batch0",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-batch0.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-batch0.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-baseline-batch0",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-baseline-batch0.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-baseline-batch0.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-baseline-batch1",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-baseline-batch1.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-baseline-batch1.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-static-reuse-batch1",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-reuse-batch1.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-reuse-batch1.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-ready-reuse-batch1",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-reuse-batch1.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-reuse-batch1.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-ready-batch1",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-batch1.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-batch1.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-static-batch1",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-batch1.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-batch1.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-ready-reuse-batch2",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-reuse-batch2.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-reuse-batch2.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-ready-batch2",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-batch2.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-batch2.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-static-batch2",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-batch2.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-batch2.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-baseline-batch2",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-baseline-batch2.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-baseline-batch2.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-static-reuse-batch2",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-reuse-batch2.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-reuse-batch2.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-static-batch3",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-batch3.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-batch3.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-baseline-batch3",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-baseline-batch3.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-baseline-batch3.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-static-reuse-batch3",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-reuse-batch3.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-reuse-batch3.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-ready-reuse-batch3",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-reuse-batch3.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-reuse-batch3.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-ready-batch3",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-batch3.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-batch3.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-ready-batch4",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-batch4.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-batch4.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-static-batch4",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-batch4.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-batch4.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-baseline-batch4",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-baseline-batch4.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-baseline-batch4.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-static-reuse-batch4",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-reuse-batch4.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-reuse-batch4.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-ready-reuse-batch4",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-reuse-batch4.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-ready-reuse-batch4.json\", \"errors\": []}\n"
+    }
+  ]
+}

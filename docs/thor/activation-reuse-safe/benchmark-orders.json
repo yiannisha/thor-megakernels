@@ -1,0 +1,41 @@
+{
+  "seed": 71,
+  "design": "randomly labelled Latin square; order positions balanced, adjacent pairs not fully balanced",
+  "orders": [
+    [
+      "static-reuse",
+      "ready-reuse",
+      "ready",
+      "static",
+      "baseline"
+    ],
+    [
+      "baseline",
+      "static-reuse",
+      "ready-reuse",
+      "ready",
+      "static"
+    ],
+    [
+      "ready-reuse",
+      "ready",
+      "static",
+      "baseline",
+      "static-reuse"
+    ],
+    [
+      "static",
+      "baseline",
+      "static-reuse",
+      "ready-reuse",
+      "ready"
+    ],
+    [
+      "ready",
+      "static",
+      "baseline",
+      "static-reuse",
+      "ready-reuse"
+    ]
+  ]
+}

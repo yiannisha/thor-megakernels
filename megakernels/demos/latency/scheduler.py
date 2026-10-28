@@ -349,11 +349,17 @@ def make_dag_layer(
     # oproj
     num_o_blocks = assert_div(globs.hidden_size, globs.o_proj_block_size)
     o_proj_nodes: list[DAG_Node] = []
-    for o_block_idx in range(num_o_blocks):
+    # A range instruction retains the input activation vector across weight
+    # tiles. Group into balanced worker-sized ranges without changing the
+    # native 128-output-tile completion counter contract.
+    groups = min(globs.sm_count(), num_o_blocks) if getattr(globs, 'o_proj_grouped', False) else num_o_blocks
+    for group in range(groups):
+        start = round(group * num_o_blocks / groups)
+        end = round((group + 1) * num_o_blocks / groups)
         ins = O_ProjResidual(
             layer_idx=layer_idx,
-            start_block_idx=o_block_idx,
-            end_block_idx=o_block_idx + 1,
+            start_block_idx=start,
+            end_block_idx=end,
             reduction_block_idx=0,
         )
 

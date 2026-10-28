@@ -1,0 +1,5 @@
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.08it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.08it/s]
+{"status": "PASS", "cases": 1, "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-pilot/identity-static.json"}

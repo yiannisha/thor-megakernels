@@ -1,0 +1,9 @@
+{
+  "name": "ready-activation-reuse",
+  "fp32_downproj": true,
+  "match_torch_bf16_epilogues": true,
+  "compensated_attention": true,
+  "o_proj_grouped": true,
+  "ready_queue": true,
+  "serial_instruction_handoff": true
+}

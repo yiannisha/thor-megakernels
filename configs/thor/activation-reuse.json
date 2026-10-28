@@ -1,0 +1,8 @@
+{
+  "name": "activation-reuse",
+  "fp32_downproj": true,
+  "match_torch_bf16_epilogues": true,
+  "compensated_attention": true,
+  "o_proj_grouped": true,
+  "handoff_after_opcode": 2
+}

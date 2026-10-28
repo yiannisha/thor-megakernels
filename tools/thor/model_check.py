@@ -117,15 +117,17 @@ def check(args):
     from megakernels.model_types import ExtraModelConfig, BatchState
     from megakernels.demos.latency.scheduler import LatencyScheduleBuilder
     from megakernels.demos.latency.mk import interpret_with_mk
-    from megakernels.scheduler import assign_to_sms, tensorize_instructions
+    from megakernels.scheduler import Schedule, assign_to_sms, tensorize_instructions
     from tools.thor.sweep import source_hash
     with torch.inference_mode():
         case = load_reference(args)
         model, provenance, token, cached = case.model, case.provenance, case.token, case.cached
         ref_hidden, ref_logits, ref_cache = case.ref_hidden, case.ref_logits, case.ref_cache
-        schedule = LatencyScheduleBuilder.build(model)
-        globs = schedule.globs
+        globs = LatencyScheduleBuilder.make_globals(model)
         globs.pos_id = args.context
+        globs.o_proj_grouped = args.o_proj_grouped
+        nodes,end = LatencyScheduleBuilder.make_dag(globs)
+        schedule = Schedule(globs,nodes,end)
         queues = assign_to_sms(args.scheduler, schedule=schedule)
         tensorize_instructions(globs, queues)
         sys.path.insert(0, os.environ.get('THOR_BINARY_DIR', str((ROOT / 'demos/low-latency-llama').resolve())))
@@ -134,6 +136,10 @@ def check(args):
         def preflight(*call_args, **kwargs):
             resources.update(mk_llama.mk_llama(*call_args, **kwargs, dry_run=True))
         interpret_with_mk(globs, preflight)
+        if resources.get('handoff_after_opcode') != args.handoff_after_opcode:
+            raise RuntimeError('instruction handoff build and requested variant disagree')
+        if args.o_proj_grouped and not (resources.get('serial_instruction_handoff') or resources.get('handoff_after_opcode')==2):
+            raise RuntimeError('grouped O projection needs qualified instruction handoff')
         if resources.get('tensorcore_matvec') != args.tensorcore_matvec:
             raise RuntimeError('Tensor Core matvec build and requested variant disagree')
         if resources.get('fp64_rms') != args.fp64_rms:
@@ -227,6 +233,8 @@ def main():
     parser.add_argument('--reference-attention', choices=('flash', 'math'), default=os.environ.get('THOR_REFERENCE_ATTENTION', 'flash'))
     parser.add_argument('--fp64-rms', action='store_true')
     parser.add_argument('--tensorcore-matvec', action='store_true')
+    parser.add_argument('--o-proj-grouped', action='store_true')
+    parser.add_argument('--handoff-after-opcode',type=int,choices=range(-1,8),default=-1)
     parser.add_argument('--compensated-attention', action='store_true')
     parser.add_argument('--fp32-downproj', action='store_true')
     parser.add_argument('--ordered-downproj', action='store_true')
@@ -253,6 +261,8 @@ def main():
             if args.match_torch_bf16_epilogues: command.append('--match-torch-bf16-epilogues')
             if args.fp64_rms: command.append('--fp64-rms')
             if args.tensorcore_matvec: command.append('--tensorcore-matvec')
+            if args.o_proj_grouped: command.append('--o-proj-grouped')
+            command.extend(['--handoff-after-opcode',str(args.handoff_after_opcode)])
             if args.compensated_attention: command.append('--compensated-attention')
             if args.fp32_downproj: command.append('--fp32-downproj')
             if args.pyvm: command.append('--pyvm')

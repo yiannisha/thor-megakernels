@@ -1,0 +1,1 @@
+{"status": "PASS", "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-pilot/static-grouped.json", "errors": []}

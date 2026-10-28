@@ -51,6 +51,7 @@ class ModelAdapter:
             self.globs = LatencyScheduleBuilder.make_globals(self.model)
             # Cost-based scheduling must see the same context as execution.
             self.globs.pos_id = context
+            self.globs.o_proj_grouped = self.config.o_proj_grouped
             self.globs.set_active_workers(self.config.workers, max_ctas_per_sm=2 if self.config.allow_multi_cta else 1)
             if self.config.allow_multi_cta:
                 # Equal intermediate-buffer capacity for the 1x/2x worker controls.
@@ -77,7 +78,7 @@ class ModelAdapter:
             self.interpret(self.globs, lambda *a, **k: resources.update(self.native(*a, **k, dry_run=True)))
             if resources.get('build_source_hash') != source_hash():
                 raise RuntimeError('stale native binary; rebuild before benchmarking')
-            expected = {'ready_queue':self.config.ready_queue, 'active_workers': self.config.workers, 'allow_multi_cta': self.config.allow_multi_cta,
+            expected = {'handoff_after_opcode':self.config.handoff_after_opcode, 'ready_queue':self.config.ready_queue, 'active_workers': self.config.workers, 'allow_multi_cta': self.config.allow_multi_cta,
                         'serial_instruction_handoff': self.config.serial_instruction_handoff,
                         'full_cta_barrier_id': 7 if self.config.allow_multi_cta else 15,
                         'weight_pipeline_stages': self.config.weight_stages, 'page_count': self.config.page_count,
@@ -128,6 +129,12 @@ class ModelAdapter:
                          'timing_excludes': ['model_loading', 'prefill', 'frozen_KV_restore', 'correctness_checks'],
                          'cuda_event_note': 'interval includes CPU enqueue gaps; all work uses current stream',
                          'dram_gb_s': None, 'gpu_power_w': None, 'energy_per_token_j': None}
+        if self.globs is not None:
+            o_tasks=sum(n.instruction.opcode()==4 for n in self.schedule.dag_nodes)
+            self.metadata['schedule_structure']={'tasks':len(self.schedule.dag_nodes),
+                'o_proj_tasks':o_tasks,'o_proj_grouped':self.config.o_proj_grouped,
+                'logical_o_proj_input_bytes':o_tasks*self.globs.hidden_size*2,
+                'traffic_note':'logical activation loads, not measured LPDDR traffic'}
         if self.config.ready_queue:
             self.metadata['ready_contract']=self.ready_contract
         if engine == 'torch_graph':
