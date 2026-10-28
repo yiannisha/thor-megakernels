@@ -26,10 +26,12 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
         if (prop.major != 11 || prop.minor != 0)
             throw std::runtime_error("Thor binary requires compute capability 11.0");
 #endif
+        static_assert(!Config::ALLOW_MULTI_CTA || (Config::COOPERATIVE_LAUNCH && Config::CLUSTER_BLOCKS == 1),
+                      "multi-CTA mode requires a cooperative single-CTA-cluster grid");
         const auto grid = g.grid();
         if (grid.x == 0 || grid.y != 1 || grid.z != 1 ||
-            grid.x > static_cast<unsigned>(prop.multiProcessorCount))
-            throw std::runtime_error("safe initial grid requires 1..physical SM count workers");
+            grid.x > static_cast<unsigned>(prop.multiProcessorCount * (Config::ALLOW_MULTI_CTA ? 2 : 1)))
+            throw std::runtime_error("worker grid exceeds the explicitly enabled physical-SM residency budget");
         if (g.instructions.depth() != grid.x || g.timings.depth() != grid.x ||
             g.instructions.rows() != g.timings.rows())
             throw std::runtime_error("instruction/timing queue dimensions do not match worker grid");
@@ -81,6 +83,9 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
 #endif
         result["portable_gmem_barriers"] = MK_PORTABLE_GMEM_BARRIERS != 0;
         result["physical_sms"] = prop.multiProcessorCount;
+        result["allow_multi_cta"] = Config::ALLOW_MULTI_CTA;
+        result["full_cta_barrier_id"] = Config::FULL_CTA_BARRIER;
+        result["resident_worker_capacity"] = resident * prop.multiProcessorCount;
         result["register_mode"] = Config::STATIC_REGISTER_ALLOCATION ? "static" : "dynamic";
 #ifdef MK_THOR
         result["register_bootstrap"] = !Config::STATIC_REGISTER_ALLOCATION;

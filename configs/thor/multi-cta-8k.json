@@ -1,0 +1,14 @@
+{
+  "name": "multi-cta-8k-8warps-64regs",
+  "fp32_downproj": true,
+  "match_torch_bf16_epilogues": true,
+  "compensated_attention": true,
+  "page_size": 8192,
+  "tile_width": 256,
+  "page_count": 9,
+  "allow_multi_cta": true,
+  "consumer_warps": 8,
+  "static_registers": 64,
+  "workers": 40,
+  "weight_stages": 1
+}

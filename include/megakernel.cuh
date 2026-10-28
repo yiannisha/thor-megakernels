@@ -19,7 +19,7 @@ __device__ inline void mk_internal(const globals &g) {
 #ifdef MK_DEBUG
     if (threadIdx.x == 0)
         printf("Thread %d: Kernel launched\n", threadIdx.x);
-    kittens::group<config::NUM_WARPS>::sync(15);
+    kittens::group<config::NUM_WARPS>::sync(config::FULL_CTA_BARRIER);
 #endif
     __shared__ alignas(128) instruction_state_t<config>
         instruction_state[config::INSTRUCTION_PIPELINE_STAGES];
@@ -45,7 +45,7 @@ __device__ inline void mk_internal(const globals &g) {
 #ifdef MK_DEBUG
     if (threadIdx.x == 0)
         printf("Thread %d: Pre-MKS creation\n", threadIdx.x);
-    kittens::group<config::NUM_WARPS>::sync(15);
+    kittens::group<config::NUM_WARPS>::sync(config::FULL_CTA_BARRIER);
 #endif
     state<config> mks{instruction_state,
                       instruction_arrived,
@@ -69,7 +69,7 @@ __device__ inline void mk_internal(const globals &g) {
 #ifdef MK_DEBUG
     if (threadIdx.x == 0)
         printf("Thread %d: Created MKS\n", threadIdx.x);
-    kittens::group<config::NUM_WARPS>::sync(15);
+    kittens::group<config::NUM_WARPS>::sync(config::FULL_CTA_BARRIER);
 #endif
 
     // Zero initial timings memory.
@@ -107,7 +107,7 @@ __device__ inline void mk_internal(const globals &g) {
     __syncthreads();
 
     if (config::CLUSTER_BLOCKS == 1)
-        kittens::everyone::sync(15); // all warps must arrive here, confirming semaphore
+        kittens::everyone::sync(config::FULL_CTA_BARRIER); // all warps must arrive here, confirming semaphore
                             // initialization is visible to all threads.
     else
         kittens::everyone::tma::cluster::sync();
@@ -154,7 +154,7 @@ __device__ inline void mk_internal(const globals &g) {
     if (config::CLUSTER_BLOCKS > 1)
         kittens::everyone::tma::cluster::sync();
     else
-        kittens::everyone::sync(15);
+        kittens::everyone::sync(config::FULL_CTA_BARRIER);
 
 #ifdef MK_DEBUG
     uint64_t end_time = (uint64_t)clock64();

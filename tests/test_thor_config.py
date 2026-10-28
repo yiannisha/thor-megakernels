@@ -38,6 +38,16 @@ class ConfigTests(unittest.TestCase):
         self.assertTrue(replace(Config(), page_size=8192).validate(DEVICE))
         self.assertTrue(replace(Config(), tile_width=256).validate(DEVICE))
 
+    def test_multi_cta_is_explicit_and_residency_is_bounded(self):
+        self.assertTrue(replace(Config(), workers=40).validate(DEVICE))
+        multi = replace(Config(), allow_multi_cta=True, workers=40)
+        self.assertFalse(multi.validate(DEVICE))
+        self.assertTrue(replace(multi, workers=41).validate(DEVICE))
+        self.assertTrue(replace(multi, register_mode='dynamic').validate(DEVICE))
+        self.assertTrue(replace(multi, allow_multi_cta=1).validate(DEVICE))
+        self.assertIn('-DMK_ALLOW_MULTI_CTA=1', multi.defines())
+        self.assertNotEqual(cache_key(Config(), {}, 's'), cache_key(multi, {}, 's'))
+
     def test_reject_overcommitted_registers_and_workers(self):
         self.assertTrue(replace(Config(), consumer_registers=128).validate(DEVICE))
         self.assertTrue(replace(Config(), workers=21).validate(DEVICE))

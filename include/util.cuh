@@ -197,9 +197,12 @@ template <typename config> struct state {
 
     __device__ inline void record(int event_id) {
         if constexpr (config::TIMING_RECORD_ENABLED) {
+            if (kittens::laneid() != 0) return;
             uint64_t current = clock64();
             int diff = (int)(current - start_clock);
-            timing()[event_id] = diff;
+            // Generic IDs may be emitted by several warps. Atomic publication
+            // avoids a data race; only unique same-warp pairs are durations.
+            atomicExch(&timing()[event_id], diff);
         }
     }
 

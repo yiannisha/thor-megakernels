@@ -53,6 +53,8 @@ struct default_config {
     static constexpr bool MATCH_TORCH_BF16_RMS = false;
     static constexpr bool ORDERED_DOWNPROJ = false;
     static constexpr bool COOPERATIVE_LAUNCH = false;
+    static constexpr bool ALLOW_MULTI_CTA = false;
+    static constexpr int FULL_CTA_BARRIER = 15;
     static constexpr bool FP32_DOWNPROJ = false;
     static constexpr bool MATCH_TORCH_BF16_EPILOGUES = false;
     static constexpr bool COMPENSATED_ATTENTION = false;
@@ -73,6 +75,9 @@ struct default_config {
 #endif
 #ifndef MK_PAGE_COUNT
 #define MK_PAGE_COUNT (1 + (2048 / MK_WEIGHT_CHUNK_WIDTH) * MK_WEIGHT_PIPELINE_STAGES)
+#endif
+#ifndef MK_ALLOW_MULTI_CTA
+#define MK_ALLOW_MULTI_CTA 0
 #endif
 #ifndef MK_ACTIVE_WORKERS
 #define MK_ACTIVE_WORKERS 20
@@ -123,6 +128,10 @@ struct thor_config : default_config {
     static constexpr bool STATIC_REGISTER_ALLOCATION = MK_THOR_DYNAMIC_REGISTERS == 0;
     static constexpr bool ORDERED_DOWNPROJ = MK_ORDERED_DOWNPROJ != 0;
     static constexpr bool COOPERATIVE_LAUNCH = true;
+    static constexpr bool ALLOW_MULTI_CTA = MK_ALLOW_MULTI_CTA != 0;
+    // IDs 0, 3 and 4 belong to consumer collectives. Full-CTA use is
+    // confined to initialization/teardown; a lower ID reduces reservation.
+    static constexpr int FULL_CTA_BARRIER = ALLOW_MULTI_CTA ? 7 : 15;
     static constexpr bool FP32_DOWNPROJ = MK_FP32_DOWNPROJ != 0;
     static constexpr bool MATCH_TORCH_BF16_EPILOGUES = MK_MATCH_TORCH_BF16_EPILOGUES != 0;
     static constexpr bool COMPENSATED_ATTENTION = MK_COMPENSATED_ATTENTION != 0;

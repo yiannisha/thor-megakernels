@@ -47,7 +47,14 @@ class ModelAdapter:
             from megakernels.demos.latency.scheduler import LatencyScheduleBuilder
             from megakernels.scheduler import Schedule, assign_to_sms, tensorize_instructions
             self.globs = LatencyScheduleBuilder.make_globals(self.model)
-            self.globs.set_active_workers(self.config.workers)
+            self.globs.set_active_workers(self.config.workers, max_ctas_per_sm=2 if self.config.allow_multi_cta else 1)
+            if self.config.allow_multi_cta:
+                # Equal intermediate-buffer capacity for the 1x/2x worker controls.
+                capacity = ((2 * self.globs.physical_sm_count() + 15) // 16) * 16
+                self.globs.attn_lse_intermediates = torch.zeros(
+                    (self.globs.num_attention_heads, capacity), dtype=torch.float32, device=self.model.device)
+                self.globs.attn_out_intermediates = torch.zeros(
+                    (self.globs.num_attention_heads, capacity, self.globs.head_dim), dtype=torch.float32, device=self.model.device)
             nodes, end = LatencyScheduleBuilder.make_dag(self.globs)
             self.schedule = Schedule(self.globs, nodes, end)
             tensorize_instructions(self.globs, assign_to_sms(self.config.scheduler, schedule=self.schedule))
@@ -61,7 +68,8 @@ class ModelAdapter:
             self.interpret(self.globs, lambda *a, **k: resources.update(self.native(*a, **k, dry_run=True)))
             if resources.get('build_source_hash') != source_hash():
                 raise RuntimeError('stale native binary; rebuild before benchmarking')
-            expected = {'active_workers': self.config.workers,
+            expected = {'active_workers': self.config.workers, 'allow_multi_cta': self.config.allow_multi_cta,
+                        'full_cta_barrier_id': 7 if self.config.allow_multi_cta else 15,
                         'weight_pipeline_stages': self.config.weight_stages, 'page_count': self.config.page_count,
                         'page_size': self.config.page_size, 'weight_chunk_width': self.config.tile_width, 'consumer_warps': self.config.consumer_warps,
                         'backoff_ns': self.config.backoff_ns, 'timing_enabled': self.config.timing,
