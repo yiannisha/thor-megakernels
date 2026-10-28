@@ -194,7 +194,8 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
                                               megakernel::state<Config> &s) {
             pipeline::init_semaphores(s);
             init_semaphore(rope_arrived(s), 1);
-            return pipeline::SEM_COUNT + 1;
+            megakernel::publication_init(s,pipeline::SEM_COUNT+1);
+            return MK_ASYNC_PUBLICATION ? Config::DYNAMIC_SEMAPHORES : pipeline::SEM_COUNT + 1;
         }
     };
     struct loader {

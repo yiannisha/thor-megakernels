@@ -150,7 +150,9 @@ template <typename Config, typename Globals> struct rms_upgate_silu {
         }
         static __device__ int init_semaphores(const Globals &g,
                                               megakernel::state<Config> &s) {
-            return pipeline::init_semaphores(s);
+            int used=pipeline::init_semaphores(s);
+            megakernel::publication_init(s,used);
+            return MK_ASYNC_PUBLICATION ? Config::DYNAMIC_SEMAPHORES : used;
         }
     };
 

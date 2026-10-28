@@ -110,7 +110,6 @@ struct matvec_pipeline {
     }
 
     __device__ static inline int init_semaphores(megakernel::state<Config> &s) {
-        megakernel::publication_init(s);
         init_semaphore(activations_arrived(s), 1);
         for (int i = 0; i < INPUT_PIPELINE_STAGES; i++) {
             init_semaphore(weights_arrived(s, i), 1);
