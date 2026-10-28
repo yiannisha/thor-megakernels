@@ -125,6 +125,7 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
 
             kittens::warp::sync();
             kittens::warp::store(qkv_proj_smem_bf, qkv_proj);
+                megakernel::fence_shared_to_async();
             kittens::warp::sync();
 
             if (kittens::laneid() == 0) {

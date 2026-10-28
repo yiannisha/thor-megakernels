@@ -114,15 +114,23 @@ struct matvec_pipeline {
                 kittens::wait(weights_finished(s, input_stage),
                      (iter % (2 * INPUT_PIPELINE_STAGES)) <
                          INPUT_PIPELINE_STAGES);
+                megakernel::fence_shared_to_async();
 
+                // Acquire every destination page before the release-arrival
+                // on weights_arrived. Consumers acquire that arrival; doing it
+                // earlier loses the previous page owner's memory ordering.
+                if (iter < INPUT_PIPELINE_STAGES) {
+#pragma unroll
+                    for (int i = 0; i < STAGE_PAGES; i++)
+                        s.wait_page_ready(get_weight_page(s, input_stage, i));
+                }
                 auto &sem = weights_arrived(s, input_stage);
+                asm volatile("" ::: "memory");
                 kittens::tma::expect_bytes(sem, sizeof(kittens::bf16) * 2048 * 16);
+                asm volatile("" ::: "memory");
 #pragma unroll
                 for (int i = 0; i < STAGE_PAGES; i++) {
                     int weight_page = get_weight_page(s, input_stage, i);
-                    if (iter < INPUT_PIPELINE_STAGES) {
-                        s.wait_page_ready(weight_page);
-                    }
                     auto &weight_chunk = reinterpret_cast<kittens::st_bf<16, Config::WEIGHT_CHUNK_WIDTH> &>(
                         s.pages[weight_page]);
 

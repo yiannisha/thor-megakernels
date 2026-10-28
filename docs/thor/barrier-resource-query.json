@@ -1,0 +1,1 @@
+{"scope":"occupancy query only; kernels not launched","threads":384,"dynamic_smem_bytes":85103,"variants":[{"barrier_id":15,"resident_ctas_per_sm":1},{"barrier_id":7,"resident_ctas_per_sm":2}]}

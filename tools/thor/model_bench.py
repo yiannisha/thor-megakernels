@@ -69,6 +69,7 @@ class ModelAdapter:
             if resources.get('build_source_hash') != source_hash():
                 raise RuntimeError('stale native binary; rebuild before benchmarking')
             expected = {'active_workers': self.config.workers, 'allow_multi_cta': self.config.allow_multi_cta,
+                        'serial_instruction_handoff': self.config.serial_instruction_handoff,
                         'full_cta_barrier_id': 7 if self.config.allow_multi_cta else 15,
                         'weight_pipeline_stages': self.config.weight_stages, 'page_count': self.config.page_count,
                         'page_size': self.config.page_size, 'weight_chunk_width': self.config.tile_width, 'consumer_warps': self.config.consumer_warps,
@@ -83,7 +84,7 @@ class ModelAdapter:
                         'service_register_target': self.config.service_registers,
                         'match_torch_bf16_rms': self.config.match_torch_bf16_rms,
                         'instruction_barrier_parties_per_warp': self.config.instruction_parties,
-                        'page_barrier_parties_per_warp': 32}
+                        'page_barrier_parties_per_warp': 1}
             if self.config.register_mode == 'static':
                 expected['static_register_cap'] = self.config.static_registers
             if any(resources.get(k) != value for k, value in expected.items()):

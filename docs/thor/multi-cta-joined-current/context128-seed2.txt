@@ -1,0 +1,1 @@
+{"status": "PASS", "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/multi-cta-joined-current/context128-seed2.json", "errors": []}

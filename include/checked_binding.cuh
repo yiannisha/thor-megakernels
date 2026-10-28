@@ -84,6 +84,7 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
         result["portable_gmem_barriers"] = MK_PORTABLE_GMEM_BARRIERS != 0;
         result["physical_sms"] = prop.multiProcessorCount;
         result["allow_multi_cta"] = Config::ALLOW_MULTI_CTA;
+        result["serial_instruction_handoff"] = Config::SERIAL_INSTRUCTION_HANDOFF;
         result["full_cta_barrier_id"] = Config::FULL_CTA_BARRIER;
         result["resident_worker_capacity"] = resident * prop.multiProcessorCount;
         result["register_mode"] = Config::STATIC_REGISTER_ALLOCATION ? "static" : "dynamic";

@@ -22,6 +22,7 @@ class Config:
     match_torch_bf16_rms: bool = True
     timing: bool = False
     allow_multi_cta: bool = False
+    serial_instruction_handoff: bool = False
     arch: str = 'sm_110a'
     page_size: int = 16384
     page_count: int = 13
@@ -32,7 +33,7 @@ class Config:
 
     def validate(self, device):
         errors = []
-        if any(type(value) is not bool for value in (self.timing, self.allow_multi_cta, self.match_torch_bf16_rms, self.ordered_downproj, self.fp32_downproj, self.match_torch_bf16_epilogues, self.compensated_attention, self.fp64_rms)):
+        if any(type(value) is not bool for value in (self.timing, self.allow_multi_cta, self.serial_instruction_handoff, self.match_torch_bf16_rms, self.ordered_downproj, self.fp32_downproj, self.match_torch_bf16_epilogues, self.compensated_attention, self.fp64_rms)):
             errors.append('configuration switches must be booleans')
         if self.fp32_downproj and self.ordered_downproj:
             errors.append('FP32 downprojection and ordered BF16 updates are mutually exclusive')
@@ -96,6 +97,7 @@ class Config:
             'MK_BACKOFF_NS': self.backoff_ns,
             'MK_RECORD_TIMING': int(self.timing),
             'MK_ALLOW_MULTI_CTA': int(self.allow_multi_cta),
+            'MK_SERIAL_INSTRUCTION_HANDOFF': int(self.serial_instruction_handoff),
             'MK_MATCH_TORCH_BF16_RMS': int(self.match_torch_bf16_rms),
             'MK_ORDERED_DOWNPROJ': int(self.ordered_downproj),
             'MK_FP32_DOWNPROJ': int(self.fp32_downproj),

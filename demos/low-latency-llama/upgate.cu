@@ -112,6 +112,7 @@ template <typename Config, typename Globals> struct rms_upgate_silu {
             kittens::warp::sync();
 
             kittens::warp::store(out_smem, gate_out);
+                megakernel::fence_shared_to_async();
 
             // wait before we store results to global memory
             kittens::warp::sync();

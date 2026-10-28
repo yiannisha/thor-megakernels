@@ -1,0 +1,656 @@
+{
+  "schema_version": 1,
+  "run_id": "ec056f62-f9d4-4a7f-a133-56fdcac47e3f",
+  "timestamp": "2026-10-28T02:50:34.861251+00:00",
+  "inventory": {
+    "platform": "Linux-6.8.12-1021-tegra-aarch64-with-glibc2.39",
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.13.0+cu132",
+      "transformers": "4.48.3",
+      "pybind11": "2.13.6"
+    },
+    "cuda_driver": {
+      "devices": [
+        {
+          "ordinal": 0,
+          "name": "NVIDIA Thor",
+          "sm_count": 20,
+          "cc_major": 11,
+          "cc_minor": 0,
+          "max_threads_per_block": 1024,
+          "shared_memory_per_block": 49152,
+          "shared_memory_per_sm": 233472,
+          "shared_memory_optin": 232448,
+          "max_blocks_per_sm": 24,
+          "cooperative_launch": 1
+        }
+      ]
+    },
+    "tools": {
+      "nvcc": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc",
+      "tegrastats": "/usr/bin/tegrastats",
+      "nsys": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/opt/nvidia/nsight-systems/2025.6.3/bin/nsys",
+      "ncu": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/opt/nvidia/nsight-compute/2026.1.1/ncu",
+      "jtop": null
+    },
+    "commands": {
+      "nvcc": {
+        "returncode": 0,
+        "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_May_08_10:52:52_AM_PDT_2026\nCuda compilation tools, release 13.2, V13.2.86\nBuild cuda_13.2.r13.2/compiler.37953736_0",
+        "stderr": ""
+      },
+      "nvcc_targets": {
+        "returncode": 0,
+        "stdout": "sm_75\nsm_80\nsm_86\nsm_87\nsm_88\nsm_89\nsm_90\nsm_100\nsm_110\nsm_103\nsm_120\nsm_121",
+        "stderr": ""
+      },
+      "nvidia_smi": {
+        "returncode": 0,
+        "stdout": "==============NVSMI LOG==============\n\nTimestamp                                              : Tue Oct 27 19:50:34 2026\nDriver Version                                         : 595.78\nCUDA Version                                           : 13.2\n\nAttached GPUs                                          : 1\nGPU 00000000:01:00.0\n    Product Name                                       : NVIDIA Thor\n    Product Brand                                      : GeForce\n    Product Architecture                               : Blackwell\n    Display Mode                                       : Requested functionality has been deprecated\n    Display Attached                                   : No\n    Display Active                                     : Disabled\n    Persistence Mode                                   : Disabled\n    Addressing Mode                                    : ATS\n    MIG Mode\n        Current                                        : Disabled\n        Pending                                        : Disabled\n    Accounting Mode                                    : Disabled\n    Accounting Mode Buffer Size                        : 4000\n    Driver Model\n        Current                                        : N/A\n        Pending                                        : N/A\n    Serial Number                                      : N/A\n    GPU UUID                                           : GPU-a7c66ad2-6dbb-0ab8-c1a2-37ba6dba3600\n    GPU PDI                                            : 0xf7df299c60122a9d\n    Minor Number                                       : 0\n    VBIOS Version                                      : N/A\n    MultiGPU Board                                     : No\n    Board ID                                           : 0x100\n    Board Part Number                                  : N/A\n    GPU Part Number                                    : 2B00--A1\n    FRU Part Number                                    : N/A\n    Platform Info\n        Chassis Serial Number                          : N/A\n        Slot Number                                    : N/A\n        Tray Index                                     : N/A\n        Host ID                                        : N/A\n        Peer Type                                      : N/A\n        Module Id                                      : N/A\n        GPU Fabric GUID                                : N/A\n    Inforom Version\n        Image Version                                  : N/A\n        OEM Object                                     : N/A\n        ECC Object                                     : N/A\n        Power Management Object                        : N/A\n    Inforom BBX Object Flush\n        Latest Timestamp                               : N/A\n        Latest Duration                                : N/A\n    GPU Operation Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    GPU C2C Mode                                       : Disabled\n    GPU Virtualization Mode\n        Virtualization Mode                            : None\n        Host VGPU Mode                                 : N/A\n        vGPU Heterogeneous Mode                        : N/A\n    GPU Recovery Action                                : None\n    GSP Firmware Version                               : 595.78\n    IBMNPU\n        Relaxed Ordering Mode                          : N/A\n    PCI\n        Bus                                            : 0x01\n        Device                                         : 0x00\n        Domain                                         : 0x0000\n        Base Classcode                                 : 0x3\n        Sub Classcode                                  : 0x2\n        Device Id                                      : 0x2B0010DE\n        Bus Id                                         : 00000000:01:00.0\n        Sub System Id                                  : 0x00000000\n        GPU Link Info\n            PCIe Generation\n                Max                                    : 1\n                Current                                : 1\n                Device Current                         : 1\n                Device Max                             : 5\n                Host Max                               : 1\n            Link Width\n                Max                                    : 16x\n                Current                                : 1x\n        Bridge Chip\n            Type                                       : N/A\n            Firmware                                   : N/A\n        Replays Since Reset                            : 0\n        Replay Number Rollovers                        : 0\n        Tx Throughput                                  : N/A\n        Rx Throughput                                  : N/A\n        Atomic Caps Outbound                           : FETCHADD_32 FETCHADD_64 SWAP_32 SWAP_64 CAS_32 CAS_64 \n        Atomic Caps Inbound                            : N/A\n    Fan Speed                                          : N/A\n    Performance State                                  : N/A\n    Clocks Event Reasons                               : N/A\n    Clocks Event Reasons Counters\n        SW Power Capping                               : N/A\n        Sync Boost                                     : N/A\n        SW Thermal Slowdown                            : N/A\n        HW Thermal Slowdown                            : N/A\n        HW Power Braking                               : N/A\n    Sparse Operation Mode                              : N/A\n    FB Memory Usage\n        Total                                          : N/A\n        Reserved                                       : N/A\n        Used                                           : N/A\n        Free                                           : N/A\n    BAR1 Memory Usage\n        Total                                          : N/A\n        Used                                           : N/A\n        Free                                           : N/A\n    Conf Compute Protected Memory Usage\n        Total                                          : 0 MiB\n        Used                                           : 0 MiB\n        Free                                           : 0 MiB\n    Compute Mode                                       : Default\n    Utilization\n        GPU                                            : 0 %\n        Memory                                         : 0 %\n        Encoder                                        : 0 %\n        Decoder                                        : 0 %\n        JPEG                                           : 0 %\n        OFA                                            : 0 %\n    Encoder Stats\n        Active Sessions                                : 0\n        Average FPS                                    : 0\n        Average Latency                                : 0\n    FBC Stats\n        Active Sessions                                : 0\n        Average FPS                                    : 0\n        Average Latency                                : 0\n    DRAM Encryption Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    ECC Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    ECC Errors\n        Volatile\n            SRAM Correctable                           : N/A\n            SRAM Uncorrectable Parity                  : N/A\n            SRAM Uncorrectable SEC-DED                 : N/A\n            DRAM Correctable                           : N/A\n            DRAM Uncorrectable                         : N/A\n        Aggregate\n            SRAM Correctable                           : N/A\n            SRAM Uncorrectable Parity                  : N/A\n            SRAM Uncorrectable SEC-DED                 : N/A\n            DRAM Correctable                           : N/A\n            DRAM Uncorrectable                         : N/A\n            SRAM Threshold Exceeded                    : N/A\n        Aggregate Uncorrectable SRAM Sources\n            SRAM L2                                    : N/A\n            SRAM SM                                    : N/A\n            SRAM Microcontroller                       : N/A\n            SRAM PCIE                                  : N/A\n            SRAM Other                                 : N/A\n        Channel Repair Pending                         : N/A\n        TPC Repair Pending                             : N/A\n        Unrepairable Memory                            : N/A\n    Retired Pages\n        Single Bit ECC                                 : N/A\n        Double Bit ECC                                 : N/A\n        Pending Page Blacklist                         : N/A\n    Remapped Rows                                      : N/A\n    Temperature\n        GPU Current Temp                               : 35 C\n        GPU T.Limit Temp                               : N/A\n        GPU Shutdown Temp                              : N/A\n        GPU Slowdown Temp                              : N/A\n        GPU Max Operating Temp                         : N/A\n        GPU Target Temperature                         : N/A\n        Memory Current Temp                            : N/A\n        Memory Max Operating Temp                      : N/A\n    GPU Power Readings\n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : 3.95 W\n        Current Power Limit                            : N/A\n        Requested Power Limit                          : N/A\n        Default Power Limit                            : N/A\n        Min Power Limit                                : N/A\n        Max Power Limit                                : N/A\n    GPU Memory Power Readings \n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : N/A\n    Module Power Readings\n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : N/A\n        Current Power Limit                            : N/A\n        Requested Power Limit                          : N/A\n        Default Power Limit                            : N/A\n        Min Power Limit                                : N/A\n        Max Power Limit                                : N/A\n    Power Smoothing                                    : N/A\n    Workload Power Profiles\n        Requested Profiles                             : N/A\n        Enforced Profiles                              : N/A\n    EDPp Multiplier                                    : N/A\n    Clocks\n        Graphics                                       : 684 MHz\n        SM                                             : N/A\n        Memory                                         : N/A\n        Video                                          : 315 MHz\n    Applications Clocks\n        Graphics                                       : Requested functionality has been deprecated\n        Memory                                         : Requested functionality has been deprecated\n    Default Applications Clocks\n        Graphics                                       : Requested functionality has been deprecated\n        Memory                                         : Requested functionality has been deprecated\n    Deferred Clocks\n        Memory                                         : N/A\n    Max Clocks\n        Graphics                                       : N/A\n        SM                                             : N/A\n        Memory                                         : N/A\n        Video                                          : N/A\n    Max Customer Boost Clocks\n        Graphics                                       : N/A\n    Clock Policy\n        Auto Boost                                     : N/A\n        Auto Boost Default                             : N/A\n    Fabric\n        State                                          : N/A\n        Status                                         : N/A\n        CliqueId                                       : N/A\n        ClusterUUID                                    : N/A\n        Health\n            Summary                                    : N/A\n            Bandwidth                                  : N/A\n            Route Recovery in progress                 : N/A\n            Route Unhealthy                            : N/A\n            Access Timeout Recovery                    : N/A\n            Incorrect Configuration                    : N/A\n            Partition Assigned                         : N/A\n    Processes\n        GPU instance ID                   : N/A\n        Compute instance ID               : N/A\n        Process ID                        : 5564\n            Type                          : G\n            Name                          : /usr/lib/xorg/Xorg\n            Used GPU Memory               : 91 MiB\n        GPU instance ID                   : N/A\n        Compute instance ID               : N/A\n        Process ID                        : 5823\n            Type                          : G\n            Name                          : /usr/bin/gnome-shell\n            Used GPU Memory               : 48 MiB\n    Capabilities\n        EGM                                            : disabled",
+        "stderr": ""
+      },
+      "power_mode": {
+        "returncode": 0,
+        "stdout": "NV Power Mode: 120W\n1",
+        "stderr": ""
+      },
+      "git_sha": {
+        "returncode": 0,
+        "stdout": "829d38c91c1d42e82121bf71a4db039b255dcf5c",
+        "stderr": ""
+      },
+      "worktree": {
+        "returncode": 0,
+        "stdout": "M demos/low-latency-llama/attention_partial.cu\n M demos/low-latency-llama/attention_reduction.cu\n M demos/low-latency-llama/matvec_pipeline.cuh\n M demos/low-latency-llama/rms_lm_head.cu\n M demos/low-latency-llama/rms_matvec_rope_append.cu\n M demos/low-latency-llama/upgate.cu\n M docs/thor/ROADMAP.md\n M include/checked_binding.cuh\n M include/config.cuh\n M include/util.cuh\n M tests/test_thor_config.py\n M tools/thor/config.py\n M tools/thor/model_bench.py\n?? configs/thor/multi-cta-8k-joined.json\n?? docs/thor/MULTI_CTA.md\n?? docs/thor/barrier-resource-build.txt\n?? docs/thor/barrier-resource-query.json\n?? docs/thor/baseline-pipelined-page1-racecheck.csv\n?? docs/thor/baseline-pipelined-page1-racecheck.json\n?? docs/thor/baseline-pipelined-page1-racecheck.txt\n?? docs/thor/handoff-current-compat-builds.json\n?? docs/thor/handoff-final-builds.json\n?? docs/thor/handoff-page1-processes.json\n?? docs/thor/multi-cta-collective-release-build.json\n?? docs/thor/multi-cta-collective-release-racecheck.csv\n?? docs/thor/multi-cta-collective-release-racecheck.json\n?? docs/thor/multi-cta-collective-release-racecheck.txt\n?? docs/thor/multi-cta-context1024-seed1.csv\n?? docs/thor/multi-cta-context1024-seed1.json\n?? docs/thor/multi-cta-context1024-seed2.csv\n?? docs/thor/multi-cta-context1024-seed2.json\n?? docs/thor/multi-cta-context1024-seed3.csv\n?? docs/thor/multi-cta-context1024-seed3.json\n?? docs/thor/multi-cta-context128-seed1.csv\n?? docs/thor/multi-cta-context128-seed1.json\n?? docs/thor/multi-cta-context128-seed2.csv\n?? docs/thor/multi-cta-context128-seed2.json\n?? docs/thor/multi-cta-context128-seed3.csv\n?? docs/thor/multi-cta-context128-seed3.json\n?? docs/thor/multi-cta-context8192-seed1.csv\n?? docs/thor/multi-cta-context8192-seed1.json\n?? docs/thor/multi-cta-context8192-seed2.csv\n?? docs/thor/multi-cta-context8192-seed2.json\n?? docs/thor/multi-cta-context8192-seed3.csv\n?? docs/thor/multi-cta-context8192-seed3.json\n?? docs/thor/multi-cta-control20-racecheck.csv\n?? docs/thor/multi-cta-control20-racecheck.json\n?? docs/thor/multi-cta-control20-racecheck.txt\n?? docs/thor/multi-cta-extended-processes.json\n?? docs/thor/multi-cta-handoff-fence-build.json\n?? docs/thor/multi-cta-handoff-fence-racecheck.csv\n?? docs/thor/multi-cta-handoff-fence-racecheck.json\n?? docs/thor/multi-cta-handoff-fence-racecheck.txt\n?? docs/thor/multi-cta-joined-build.json\n?? docs/thor/multi-cta-joined-current/\n?? docs/thor/multi-cta-joined-page1-benchmark.csv\n?? docs/thor/multi-cta-joined-page1-benchmark.json\n?? docs/thor/multi-cta-joined-page1-racecheck.csv\n?? docs/thor/multi-cta-joined-page1-racecheck.json\n?? docs/thor/multi-cta-joined-page1-racecheck.txt\n?? docs/thor/multi-cta-joined-racecheck.csv\n?? docs/thor/multi-cta-joined-racecheck.json\n?? docs/thor/multi-cta-joined-racecheck.txt\n?? docs/thor/multi-cta-joined-unaligned/\n?? docs/thor/multi-cta-memcheck.csv\n?? docs/thor/multi-cta-memcheck.json\n?? docs/thor/multi-cta-memcheck.txt\n?? docs/thor/multi-cta-ordered-publication-build.json\n?? docs/thor/multi-cta-ordered-publication-racecheck.csv\n?? docs/thor/multi-cta-ordered-publication-racecheck.json\n?? docs/thor/multi-cta-ordered-publication-racecheck.txt\n?? docs/thor/multi-cta-page32-build.json\n?? docs/thor/multi-cta-page32-racecheck.csv\n?? docs/thor/multi-cta-page32-racecheck.json\n?? docs/thor/multi-cta-page32-racecheck.txt\n?? docs/thor/multi-cta-pilot/\n?? docs/thor/multi-cta-proxy-fence-build.json\n?? docs/thor/multi-cta-proxy-fence-racecheck.csv\n?? docs/thor/multi-cta-proxy-fence-racecheck.json\n?? docs/thor/multi-cta-proxy-fence-racecheck.txt\n?? docs/thor/multi-cta-qualified/\n?? docs/thor/multi-cta-racecheck-detail.csv\n?? docs/thor/multi-cta-racecheck-detail.json\n?? docs/thor/multi-cta-racecheck-detail.txt\n?? docs/thor/multi-cta-racecheck.csv\n?? docs/thor/multi-cta-racecheck.json\n?? docs/thor/multi-cta-racecheck.txt\n?? docs/thor/multi-cta-residency-rejection.csv\n?? docs/thor/multi-cta-residency-rejection.json\n?? docs/thor/multi-cta-synccheck.csv\n?? docs/thor/multi-cta-synccheck.json\n?? docs/thor/multi-cta-synccheck.txt\n?? docs/thor/multi-cta-temporal-workers20.json\n?? docs/thor/multi-cta-temporal-workers40.json",
+        "stderr": ""
+      },
+      "submodules": {
+        "returncode": 0,
+        "stdout": "664c108d16f12707a73d3072ab525f26fb2b4f62 ThunderKittens (664c108d)",
+        "stderr": ""
+      }
+    },
+    "jetpack_release": "# R39 (release), REVISION: 2.1, GCID: 46758480, BOARD: generic, EABI: aarch64, DATE: Fri Aug  7 05:54:22 AM UTC 2026\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia\n"
+  },
+  "protocol": {
+    "timeout": 300,
+    "worker": true,
+    "run_id": "ec056f62-f9d4-4a7f-a133-56fdcac47e3f",
+    "adapter": "tools.thor.model_bench:make_adapter",
+    "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/multi-cta-joined-unaligned/context1024-seed2.json",
+    "dry_run": false,
+    "warmups": 0,
+    "repeats": 5,
+    "batches": 1
+  },
+  "status": "PASS",
+  "errors": [],
+  "summary": {
+    "p50_ms": 17.104448318481445,
+    "p95_ms": 17.395898056030273,
+    "p99_ms": 17.419455184936524,
+    "mean_ms": 16.796032333374022,
+    "min_ms": 15.073984146118164,
+    "max_ms": 17.425344467163086,
+    "tokens_per_s": 59.537870620371564
+  },
+  "metadata": {
+    "model": "Llama-3.2-1B-Instruct",
+    "model_provenance": {
+      "path": "/home/thor-guest/ml-perf/Megakernels/local/models/Llama-3.2-1B-Instruct",
+      "config": {
+        "architectures": [
+          "LlamaForCausalLM"
+        ],
+        "attention_bias": false,
+        "attention_dropout": 0.0,
+        "bos_token_id": 128000,
+        "eos_token_id": [
+          128001,
+          128008,
+          128009
+        ],
+        "head_dim": 64,
+        "hidden_act": "silu",
+        "hidden_size": 2048,
+        "initializer_range": 0.02,
+        "intermediate_size": 8192,
+        "max_position_embeddings": 131072,
+        "mlp_bias": false,
+        "model_type": "llama",
+        "num_attention_heads": 32,
+        "num_hidden_layers": 16,
+        "num_key_value_heads": 8,
+        "pretraining_tp": 1,
+        "rms_norm_eps": 1e-05,
+        "rope_scaling": {
+          "factor": 32.0,
+          "high_freq_factor": 4.0,
+          "low_freq_factor": 1.0,
+          "original_max_position_embeddings": 8192,
+          "rope_type": "llama3"
+        },
+        "rope_theta": 500000.0,
+        "tie_word_embeddings": true,
+        "torch_dtype": "bfloat16",
+        "transformers_version": "4.45.0.dev0",
+        "use_cache": true,
+        "vocab_size": 128256
+      },
+      "config_sha256": "2febf68cea25bf4611be02b7536f2488a5ba523bb1134986e3610152abe74fdb",
+      "download_revision": "9213176726f574b556790deb65791e0c5aa438b6",
+      "tensor_count": 146,
+      "weights": [
+        {
+          "file": "model.safetensors",
+          "bytes": 2471645608,
+          "sha256": "1ff795ff6a07e6a68085d206fb84417da2f083f68391c2843cd2b8ac6df8538f"
+        }
+      ]
+    },
+    "precision": "bf16",
+    "reference_attention": "flash",
+    "prefill_attention": "flash",
+    "float32_matmul_precision": "highest",
+    "context": 1024,
+    "batch": 1,
+    "seed": 2,
+    "measurement_scope": "decode",
+    "tokens_per_run": 1,
+    "engine": "native",
+    "variant": "native:multi-cta-joined",
+    "config": {
+      "name": "multi-cta-joined",
+      "consumer_warps": 8,
+      "consumer_registers": 104,
+      "service_registers": 64,
+      "register_mode": "static",
+      "static_registers": 64,
+      "workers": 40,
+      "backoff_ns": 20,
+      "scheduler": "rr",
+      "instruction_parties": 32,
+      "ordered_downproj": false,
+      "fp32_downproj": true,
+      "match_torch_bf16_epilogues": true,
+      "compensated_attention": true,
+      "fp64_rms": false,
+      "match_torch_bf16_rms": true,
+      "timing": false,
+      "allow_multi_cta": true,
+      "serial_instruction_handoff": true,
+      "arch": "sm_110a",
+      "page_size": 8192,
+      "page_count": 9,
+      "weight_stages": 1,
+      "tile_width": 256,
+      "architecture": "static",
+      "precision": "bf16"
+    },
+    "power_mode": "NV Power Mode: 120W\n1",
+    "concurrent_workload": "uncontrolled-existing",
+    "same_cache_replay": true,
+    "input_hash": "a974a2dc0143f12c165b78a1de0f48d563c828b280b8d17621cbf21f5ceb850d",
+    "native_resources": {
+      "cooperative_launch": true,
+      "cooperative_launch_supported": true,
+      "build_source_hash": "a7ed4336a9561e1e19a8f3fd5e63ec625dd2b754d84cc1c33e6182cc0f1cc444",
+      "portable_gmem_barriers": true,
+      "physical_sms": 20,
+      "allow_multi_cta": true,
+      "serial_instruction_handoff": true,
+      "full_cta_barrier_id": 7,
+      "resident_worker_capacity": 40,
+      "register_mode": "static",
+      "register_bootstrap": false,
+      "initial_cta_registers": 24576,
+      "role_target_registers": 34816,
+      "static_register_cap": 64,
+      "consumer_register_target": 104,
+      "service_register_target": 64,
+      "ordered_downproj": false,
+      "fp32_downproj": true,
+      "fp64_rms": false,
+      "compensated_attention": true,
+      "match_torch_bf16_epilogues": true,
+      "match_torch_bf16_rms": true,
+      "consumer_warps": 8,
+      "threads_per_cta": 384,
+      "instruction_barrier_parties_per_warp": 32,
+      "page_barrier_parties_per_warp": 1,
+      "backoff_ns": 20,
+      "timing_enabled": false,
+      "active_workers": 40,
+      "weight_pipeline_stages": 1,
+      "page_count": 9,
+      "page_size": 8192,
+      "weight_chunk_width": 256,
+      "resident_ctas_per_sm": 2,
+      "static_smem_bytes": 10352,
+      "dynamic_smem_bytes": 74751,
+      "registers_per_thread": 64,
+      "local_bytes_per_thread": 464
+    },
+    "native_build": {
+      "timestamp": "2026-10-28T02:49:04.587108+00:00",
+      "binary": "/home/thor-guest/ml-perf/Megakernels/local/multi-cta-joined-unaligned/mk_llama.cpython-312-aarch64-linux-gnu.so",
+      "binary_sha256": "cf304d4e8263d9ef65f28e9fd55ca58ac22d35e2299fc12dd44dfed6a0a71d51",
+      "source_hash": "a7ed4336a9561e1e19a8f3fd5e63ec625dd2b754d84cc1c33e6182cc0f1cc444",
+      "gpu_target": "THOR",
+      "compiler": {
+        "returncode": 0,
+        "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_May_08_10:52:52_AM_PDT_2026\nCuda compilation tools, release 13.2, V13.2.86\nBuild cuda_13.2.r13.2/compiler.37953736_0",
+        "stderr": ""
+      },
+      "flags": [
+        "-DNDEBUG",
+        "-Xcompiler=-fPIE",
+        "--expt-extended-lambda",
+        "--expt-relaxed-constexpr",
+        "-Xcompiler=-Wno-psabi",
+        "-Xcompiler=-fno-strict-aliasing",
+        "--use_fast_math",
+        "-forward-unknown-to-host-compiler",
+        "-O3",
+        "-Xnvlink=--verbose",
+        "-Xptxas=--verbose",
+        "-Xptxas=--warn-on-spills",
+        "-std=c++20",
+        "-x",
+        "cu",
+        "-lrt",
+        "-lpthread",
+        "-ldl",
+        "-lcuda",
+        "-lcudadevrt",
+        "-lcudart_static",
+        "-lcublas",
+        "-lineinfo",
+        "-I/home/thor-guest/ml-perf/Megakernels/local/thunderkittens/include",
+        "-I/home/thor-guest/ml-perf/Megakernels/include",
+        "-I/usr/include/python3.12",
+        "-I/home/thor-guest/ml-perf/Megakernels/local/thor-venv/lib/python3.12/site-packages/pybind11/include",
+        "-L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/python3.12/config-3.12-aarch64-linux-gnu",
+        "-L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/aarch64-linux-gnu",
+        "-ldl",
+        "-lm",
+        "-shared",
+        "-fPIC",
+        "-DMK_BUILD_SOURCE_HASH=\"a7ed4336a9561e1e19a8f3fd5e63ec625dd2b754d84cc1c33e6182cc0f1cc444\"",
+        "-DKITTENS_HOPPER",
+        "-DMK_THOR",
+        "-DMK_ACTIVE_WORKERS=40",
+        "-gencode=arch=compute_110a,code=sm_110a",
+        "-DMK_THOR_DYNAMIC_REGISTERS=0",
+        "-DMK_THOR_STATIC_REGISTERS=64",
+        "-maxrregcount=64",
+        "-DMK_WEIGHT_PIPELINE_STAGES=1",
+        "-DMK_PAGE_COUNT=9",
+        "-DMK_PAGE_SIZE=8192",
+        "-DMK_WEIGHT_CHUNK_WIDTH=256",
+        "-DMK_THOR_DYNAMIC_REGISTERS=0",
+        "-DMK_CONSUMER_WARPS=8",
+        "-DMK_CONSUMER_REGISTERS=104",
+        "-DMK_SERVICE_REGISTERS=64",
+        "-DMK_BACKOFF_NS=20",
+        "-DMK_RECORD_TIMING=0",
+        "-DMK_ALLOW_MULTI_CTA=1",
+        "-DMK_SERIAL_INSTRUCTION_HANDOFF=1",
+        "-DMK_MATCH_TORCH_BF16_RMS=1",
+        "-DMK_ORDERED_DOWNPROJ=0",
+        "-DMK_FP32_DOWNPROJ=1",
+        "-DMK_FP64_RMS=0",
+        "-DMK_COMPENSATED_ATTENTION=1",
+        "-DMK_MATCH_TORCH_BF16_EPILOGUES=1",
+        "-DMK_INSTRUCTION_BARRIER_PARTIES=32"
+      ]
+    },
+    "gate": {
+      "logit_nrmse_limit": 0.03,
+      "state_nrmse_limit": 0.02
+    },
+    "timing_includes": [
+      "embedding",
+      "runtime_dispatch",
+      "decoder",
+      "lm_head",
+      "argmax"
+    ],
+    "timing_excludes": [
+      "model_loading",
+      "prefill",
+      "frozen_KV_restore",
+      "correctness_checks"
+    ],
+    "cuda_event_note": "interval includes CPU enqueue gaps; all work uses current stream",
+    "dram_gb_s": null,
+    "gpu_power_w": null,
+    "energy_per_token_j": null
+  },
+  "correctness": {
+    "passed": true,
+    "metrics": {
+      "logits": {
+        "passed": true,
+        "max_absolute_error": 0.125,
+        "mean_absolute_error": 0.02132301963865757,
+        "max_relative_error": 1602.6226806640625,
+        "mean_relative_error": 0.13097234070301056,
+        "normalized_rmse": 0.01879042200744152,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.03
+      },
+      "hidden": {
+        "passed": true,
+        "max_absolute_error": 0.05078125,
+        "mean_absolute_error": 0.0070355236530303955,
+        "max_relative_error": 17578.125,
+        "mean_relative_error": 12.485420227050781,
+        "normalized_rmse": 0.010431020520627499,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.02
+      },
+      "k_cache": {
+        "passed": true,
+        "max_absolute_error": 0.06640625,
+        "mean_absolute_error": 0.008764592930674553,
+        "max_relative_error": 59.743961334228516,
+        "mean_relative_error": 0.040960486978292465,
+        "normalized_rmse": 0.005405782256275415,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.02
+      },
+      "v_cache": {
+        "passed": true,
+        "max_absolute_error": 0.046875,
+        "mean_absolute_error": 0.0030499696731567383,
+        "max_relative_error": 121.43478393554688,
+        "mean_relative_error": 0.07985974848270416,
+        "normalized_rmse": 0.014650830067694187,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.02
+      }
+    },
+    "greedy_token_matches": true
+  },
+  "trials": [
+    {
+      "batch_index": 0,
+      "samples_ms": [
+        17.425344467163086,
+        17.0982723236084,
+        17.104448318481445,
+        17.278112411499023,
+        15.073984146118164
+      ],
+      "correctness_checks": [
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.02132301963865757,
+              "max_relative_error": 1602.6226806640625,
+              "mean_relative_error": 0.13097234070301056,
+              "normalized_rmse": 0.01879042200744152,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.05078125,
+              "mean_absolute_error": 0.0070355236530303955,
+              "max_relative_error": 17578.125,
+              "mean_relative_error": 12.485420227050781,
+              "normalized_rmse": 0.010431020520627499,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.06640625,
+              "mean_absolute_error": 0.008764592930674553,
+              "max_relative_error": 59.743961334228516,
+              "mean_relative_error": 0.040960486978292465,
+              "normalized_rmse": 0.005405782256275415,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.046875,
+              "mean_absolute_error": 0.0030499696731567383,
+              "max_relative_error": 121.43478393554688,
+              "mean_relative_error": 0.07985974848270416,
+              "normalized_rmse": 0.014650830067694187,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.02132301963865757,
+              "max_relative_error": 1602.6226806640625,
+              "mean_relative_error": 0.13097234070301056,
+              "normalized_rmse": 0.01879042200744152,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.05078125,
+              "mean_absolute_error": 0.0070355236530303955,
+              "max_relative_error": 17578.125,
+              "mean_relative_error": 12.485420227050781,
+              "normalized_rmse": 0.010431020520627499,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.06640625,
+              "mean_absolute_error": 0.008764592930674553,
+              "max_relative_error": 59.743961334228516,
+              "mean_relative_error": 0.040960486978292465,
+              "normalized_rmse": 0.005405782256275415,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.046875,
+              "mean_absolute_error": 0.0030499696731567383,
+              "max_relative_error": 121.43478393554688,
+              "mean_relative_error": 0.07985974848270416,
+              "normalized_rmse": 0.014650830067694187,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.02132301963865757,
+              "max_relative_error": 1602.6226806640625,
+              "mean_relative_error": 0.13097234070301056,
+              "normalized_rmse": 0.01879042200744152,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.05078125,
+              "mean_absolute_error": 0.0070355236530303955,
+              "max_relative_error": 17578.125,
+              "mean_relative_error": 12.485420227050781,
+              "normalized_rmse": 0.010431020520627499,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.06640625,
+              "mean_absolute_error": 0.008764592930674553,
+              "max_relative_error": 59.743961334228516,
+              "mean_relative_error": 0.040960486978292465,
+              "normalized_rmse": 0.005405782256275415,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.046875,
+              "mean_absolute_error": 0.0030499696731567383,
+              "max_relative_error": 121.43478393554688,
+              "mean_relative_error": 0.07985974848270416,
+              "normalized_rmse": 0.014650830067694187,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.02132301963865757,
+              "max_relative_error": 1602.6226806640625,
+              "mean_relative_error": 0.13097234070301056,
+              "normalized_rmse": 0.01879042200744152,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.05078125,
+              "mean_absolute_error": 0.0070355236530303955,
+              "max_relative_error": 17578.125,
+              "mean_relative_error": 12.485420227050781,
+              "normalized_rmse": 0.010431020520627499,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.06640625,
+              "mean_absolute_error": 0.008764592930674553,
+              "max_relative_error": 59.743961334228516,
+              "mean_relative_error": 0.040960486978292465,
+              "normalized_rmse": 0.005405782256275415,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.046875,
+              "mean_absolute_error": 0.0030499696731567383,
+              "max_relative_error": 121.43478393554688,
+              "mean_relative_error": 0.07985974848270416,
+              "normalized_rmse": 0.014650830067694187,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.02132301963865757,
+              "max_relative_error": 1602.6226806640625,
+              "mean_relative_error": 0.13097234070301056,
+              "normalized_rmse": 0.01879042200744152,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.05078125,
+              "mean_absolute_error": 0.0070355236530303955,
+              "max_relative_error": 17578.125,
+              "mean_relative_error": 12.485420227050781,
+              "normalized_rmse": 0.010431020520627499,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.06640625,
+              "mean_absolute_error": 0.008764592930674553,
+              "max_relative_error": 59.743961334228516,
+              "mean_relative_error": 0.040960486978292465,
+              "normalized_rmse": 0.005405782256275415,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.046875,
+              "mean_absolute_error": 0.0030499696731567383,
+              "max_relative_error": 121.43478393554688,
+              "mean_relative_error": 0.07985974848270416,
+              "normalized_rmse": 0.014650830067694187,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        }
+      ],
+      "p50_ms": 17.104448318481445,
+      "p95_ms": 17.395898056030273,
+      "p99_ms": 17.419455184936524,
+      "mean_ms": 16.796032333374022,
+      "min_ms": 15.073984146118164,
+      "max_ms": 17.425344467163086
+    }
+  ],
+  "warmups_completed": 0,
+  "process": {
+    "returncode": 0,
+    "output": "\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.04it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.04it/s]\n{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/multi-cta-joined-unaligned/context1024-seed2.json\", \"errors\": []}\n"
+  }
+}

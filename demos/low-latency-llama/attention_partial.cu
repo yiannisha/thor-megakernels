@@ -96,14 +96,19 @@ template <typename config, typename globals> struct attention_partial {
         if constexpr (SPLIT_KV) s.wait_page_ready(s.pid(V_PAGE));
     }
     __device__ static inline void finish_QOL_page(megakernel::state<config> &s) {
-        if (kittens::warp::laneid() == 0)
-            s.finish_page(s.pid(QOL_PAGE), config::NUM_CONSUMER_WARPS);
+        s.warp_finish_page(s.pid(QOL_PAGE), config::NUM_CONSUMER_WARPS);
     }
     __device__ static inline void finish_KV_page(megakernel::state<config> &s) {
         if (kittens::warp::laneid() == 0) {
             s.finish_page(s.pid(KV_PAGE), config::NUM_CONSUMER_WARPS);
             if constexpr (SPLIT_KV) s.finish_page(s.pid(V_PAGE), config::NUM_CONSUMER_WARPS);
         }
+    }
+    // The consumer warp collectively releases pages it read. The launcher's
+    // empty-partition path above uses bulk release because it never reads KV.
+    __device__ static inline void finish_KV_page_warp(megakernel::state<config> &s) {
+        s.warp_finish_page(s.pid(KV_PAGE), config::NUM_CONSUMER_WARPS);
+        if constexpr (SPLIT_KV) s.warp_finish_page(s.pid(V_PAGE), config::NUM_CONSUMER_WARPS);
     }
     __device__ static inline q_st &get_Q_smem(megakernel::state<config> &s) {
         int pid = s.pid(QOL_PAGE);
@@ -538,7 +543,7 @@ template <typename config, typename globals> struct attention_partial {
                 kittens::warp::sync();
 
                 if (start_blk_idx < end_blk_idx) {
-                    finish_KV_page(s);
+                    finish_KV_page_warp(s);
                     kittens::warp::div_row(O_reg, O_reg, norm_vec_reg);
                     kittens::warp::log2(L_reg, norm_vec_reg);
                     kittens::warp::add(
@@ -552,6 +557,7 @@ template <typename config, typename globals> struct attention_partial {
 
                 // Store the results
                 store_4_rows(O_smem, O_reg, q_head_local_idx);
+                megakernel::fence_shared_to_async();
                 kittens::warp::sync();
 
                 s.warp_arrive(O_arrived(s));
@@ -584,6 +590,8 @@ template <typename config, typename globals> struct attention_partial {
                 kittens::warp::sync();
             }
 
+            megakernel::fence_shared_to_async();
+            kittens::warp::sync();
             if (kittens::laneid() == 0) {
                 for (int head_offset = 0; head_offset < GQA_RATIO;
                      head_offset++) {
@@ -661,8 +669,10 @@ template <typename config, typename globals> struct attention_partial {
             kittens::warp::sync();
             if (laneid == 0) {
                 s.record(123 + laneid);
-                finish_QOL_page(s);
             }
+            // Every writer participates in release before another instruction
+            // can reuse this page as a weight tile.
+            finish_QOL_page(s);
 
             // Wait and finish
             if (laneid < GQA_RATIO) {

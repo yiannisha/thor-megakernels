@@ -47,6 +47,11 @@ class ConfigTests(unittest.TestCase):
         self.assertTrue(replace(multi, allow_multi_cta=1).validate(DEVICE))
         self.assertIn('-DMK_ALLOW_MULTI_CTA=1', multi.defines())
         self.assertNotEqual(cache_key(Config(), {}, 's'), cache_key(multi, {}, 's'))
+        joined = replace(multi, serial_instruction_handoff=True)
+        self.assertFalse(joined.validate(DEVICE))
+        self.assertTrue(replace(joined, serial_instruction_handoff=1).validate(DEVICE))
+        self.assertIn('-DMK_SERIAL_INSTRUCTION_HANDOFF=1', joined.defines())
+        self.assertNotEqual(cache_key(multi, {}, 's'), cache_key(joined, {}, 's'))
 
     def test_reject_overcommitted_registers_and_workers(self):
         self.assertTrue(replace(Config(), consumer_registers=128).validate(DEVICE))

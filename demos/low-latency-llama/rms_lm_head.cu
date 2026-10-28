@@ -61,6 +61,7 @@ template <typename Config, typename Globals> struct rms_lm_head {
 
             kittens::warp::sync();
             kittens::warp::store(logits_smem_bf, logits_rv);
+                megakernel::fence_shared_to_async();
             kittens::warp::sync();
 
             if (kittens::warp::laneid() == 0) {

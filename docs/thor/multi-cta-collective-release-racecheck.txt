@@ -1,0 +1,55 @@
+========= COMPUTE-SANITIZER
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.07it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.07it/s]
+========= Error: Race reported between Read access at kittens::move<__nv_bfloat162>::ldsm4(__nv_bfloat162 &, __nv_bfloat162 &, __nv_bfloat162 &, __nv_bfloat162 &, unsigned int)+0xdc10 in util.cuh:91
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17640 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x176f0 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x177b0 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17850 in util.cuh:24 [4096 hazards]
+========= 
+========= Error: Race reported between Read access at kittens::move<__nv_bfloat162>::ldsm4(__nv_bfloat162 &, __nv_bfloat162 &, __nv_bfloat162 &, __nv_bfloat162 &, unsigned int)+0xdd40 in util.cuh:91
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17640 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x176f0 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x177b0 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17850 in util.cuh:24 [4096 hazards]
+========= 
+========= Error: Race reported between Read access at kittens::move<__nv_bfloat162>::ldsm4(__nv_bfloat162 &, __nv_bfloat162 &, __nv_bfloat162 &, __nv_bfloat162 &, unsigned int)+0xde80 in util.cuh:91
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17650 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17700 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x177a0 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17840 in util.cuh:24 [4096 hazards]
+========= 
+========= Error: Race reported between Read access at kittens::st<__nv_bfloat16, (int)16, (int)256>::idx(unsigned int, int2)+0xe0b0 in util.cuh:91
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17650 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17700 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x177a0 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17840 in util.cuh:24 [4096 hazards]
+========= 
+========= Error: Race reported between Read access at kittens::move<__nv_bfloat162>::ldsm4(__nv_bfloat162 &, __nv_bfloat162 &, __nv_bfloat162 &, __nv_bfloat162 &, unsigned int)+0xdc10 in util.cuh:91
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17640 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x176f0 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x177b0 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17850 in util.cuh:24 [4096 hazards]
+========= 
+========= Error: Race reported between Read access at kittens::move<__nv_bfloat162>::ldsm4(__nv_bfloat162 &, __nv_bfloat162 &, __nv_bfloat162 &, __nv_bfloat162 &, unsigned int)+0xdd40 in util.cuh:91
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17640 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x176f0 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x177b0 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17850 in util.cuh:24 [4096 hazards]
+========= 
+========= Error: Race reported between Read access at kittens::move<__nv_bfloat162>::ldsm4(__nv_bfloat162 &, __nv_bfloat162 &, __nv_bfloat162 &, __nv_bfloat162 &, unsigned int)+0xde80 in util.cuh:91
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17650 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17700 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x177a0 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17840 in util.cuh:24 [4096 hazards]
+========= 
+========= Error: Race reported between Read access at kittens::st<__nv_bfloat16, (int)16, (int)256>::idx(unsigned int, int2)+0xe0b0 in util.cuh:91
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17650 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17700 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x177a0 in util.cuh:24 [4096 hazards]
+=========     and Write access at kittens::move<__nv_bfloat16>::sts(unsigned int, const __nv_bfloat16 &)+0x17840 in util.cuh:24 [4096 hazards]
+========= 
+{"status": "PASS", "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/multi-cta-collective-release-racecheck.json", "errors": []}
+========= RACECHECK SUMMARY: 8 hazards displayed (8 errors, 0 warnings)

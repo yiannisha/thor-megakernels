@@ -96,9 +96,7 @@ template <typename Config, typename Globals> struct attention_reduction {
         }
     }
     __device__ static inline void finish_shared_page(megakernel::state<Config> &s) {
-        if (kittens::warp::laneid() == 0) {
-            s.finish_page(s.pid(SHARED_DATA_PAGE), Config::NUM_CONSUMER_WARPS);
-        }
+        s.warp_finish_page(s.pid(SHARED_DATA_PAGE), Config::NUM_CONSUMER_WARPS);
     }
 
     // --- Shared Memory Layout and Access Helpers (Single Page) ---
@@ -295,6 +293,7 @@ template <typename Config, typename Globals> struct attention_reduction {
                 o_final_sv &O_final_smem =
                     get_O_final_smem(s, q_head_local_idx);
                 kittens::warp::store(O_final_smem, accumulated_out);
+                megakernel::fence_shared_to_async();
                 kittens::warp::sync();
 
                 s.warp_arrive(final_O_ready(s, q_head_local_idx));

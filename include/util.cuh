@@ -4,6 +4,14 @@
 #include "config.cuh"
 
 namespace megakernel {
+// Call from every generic shared-memory producer before its warp publishes
+// data to an asynchronous TMA reader or hands a page to another TMA writer.
+__device__ inline void fence_shared_to_async() {
+#ifdef MK_THOR
+    asm volatile("fence.proxy.async.shared::cta;\n" ::: "memory");
+#endif
+}
+
 
 // pid -- physical page id
 // lid -- logical page id
@@ -130,6 +138,15 @@ template <typename config> struct state {
     }
     __device__ inline void next_instruction() {
         __syncwarp();
+        if constexpr (config::SERIAL_INSTRUCTION_HANDOFF) {
+            // All execution roles join before any role advances. The controller
+            // is excluded and retains its asynchronous instruction prefetch.
+            // ID 6 is disjoint from consumer collectives and the full-CTA ID.
+            // Roles reach separate call sites under divergent control flow;
+            // bar.sync would imply .aligned and require CTA convergence.
+            asm volatile("barrier.sync 6, %0;\n"
+                         :: "n"((config::NUM_WARPS - 1) * 32) : "memory");
+        }
         if (kittens::laneid() < config::INSTRUCTION_BARRIER_PARTIES_PER_WARP) {
 #ifdef MK_DEBUG
             printf("Thread %d: arriving at instruction finished %d\n",
@@ -161,6 +178,9 @@ template <typename config> struct state {
             auto bit = (instruction_index >> i) & 1;
             kittens::wait(page_finished[pid][i], bit);
         }
+        // Ownership can pass from generic shared-memory writers to a TMA
+        // loader in a different warp. Order the acquired accesses with async.
+        fence_shared_to_async();
     }
 
     __device__ inline void finish_page(int pid, int count) {
@@ -176,6 +196,10 @@ template <typename config> struct state {
     }
 
     __device__ inline void warp_finish_page(int pid, int count) {
+#ifdef MK_THOR
+        fence_shared_to_async();
+        __syncwarp();
+#endif
         if (kittens::warp::laneid() < config::PAGE_BARRIER_PARTIES_PER_WARP) {
 #pragma unroll
             for (int i = 0; i < config::INSTRUCTION_PIPELINE_STAGES_BITS; i++)
