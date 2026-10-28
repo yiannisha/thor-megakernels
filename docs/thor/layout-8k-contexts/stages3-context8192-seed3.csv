@@ -1,0 +1,6 @@
+run_id,status,batch_index,sample_index,elapsed_ms
+debe13af-ee9a-4fe8-bc9d-811b9a9acf2a,PASS,0,0,19.67487907409668
+debe13af-ee9a-4fe8-bc9d-811b9a9acf2a,PASS,0,1,19.46873664855957
+debe13af-ee9a-4fe8-bc9d-811b9a9acf2a,PASS,0,2,19.288576126098633
+debe13af-ee9a-4fe8-bc9d-811b9a9acf2a,PASS,0,3,19.167808532714844
+debe13af-ee9a-4fe8-bc9d-811b9a9acf2a,PASS,0,4,19.305599212646484

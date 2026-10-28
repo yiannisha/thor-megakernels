@@ -1,0 +1,77 @@
+[
+  {
+    "phase": "control-16k",
+    "command": [
+      "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+      "-m",
+      "tools.thor.stage_matrix",
+      "--config",
+      "configs/thor/compensated-attention.json",
+      "--benchmark",
+      "--timeout",
+      "300",
+      "--output",
+      "docs/thor/layout-16k-control"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "matrix": "docs/thor/layout-16k-control/matrix.json"
+  },
+  {
+    "phase": "8k-racecheck",
+    "command": [
+      "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+      "-m",
+      "tools.thor.stage_matrix",
+      "--config",
+      "configs/thor/8k-256-compensated.json",
+      "--sanitizer",
+      "racecheck",
+      "--timeout",
+      "300",
+      "--output",
+      "docs/thor/layout-8k-racecheck"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "matrix": "docs/thor/layout-8k-racecheck/matrix.json"
+  },
+  {
+    "phase": "8k-memcheck",
+    "command": [
+      "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+      "-m",
+      "tools.thor.stage_matrix",
+      "--config",
+      "configs/thor/8k-256-compensated.json",
+      "--sanitizer",
+      "memcheck",
+      "--timeout",
+      "300",
+      "--output",
+      "docs/thor/layout-8k-memcheck"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "matrix": "docs/thor/layout-8k-memcheck/matrix.json"
+  },
+  {
+    "phase": "8k-synccheck",
+    "command": [
+      "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+      "-m",
+      "tools.thor.stage_matrix",
+      "--config",
+      "configs/thor/8k-256-compensated.json",
+      "--sanitizer",
+      "synccheck",
+      "--timeout",
+      "300",
+      "--output",
+      "docs/thor/layout-8k-synccheck"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "matrix": "docs/thor/layout-8k-synccheck/matrix.json"
+  }
+]
