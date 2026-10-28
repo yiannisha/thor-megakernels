@@ -50,7 +50,7 @@ def main():
     manifest = directory / 'matrix.json'
     write(manifest, result)
     for stages in dict.fromkeys(args.stages):
-        pages = args.pages if args.pages is not None else 1 + 4 * stages
+        pages = args.pages if args.pages is not None else 1 + (2048 // base.tile_width) * stages
         config = replace(base, name=f'{base.name}-stage-{stages}-pages-{pages}', weight_stages=stages, page_count=pages)
         folder = directory / config.name
         folder.mkdir(exist_ok=True)

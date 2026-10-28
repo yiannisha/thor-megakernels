@@ -60,10 +60,14 @@ class Config:
         # launch_bounds may lower it; reject actual occupancy at native preflight.
         if not 1 <= self.workers <= device['sm_count']:
             errors.append('workers exceed physical SM count or are zero')
-        if self.weight_stages not in (1, 2, 3) or not 1 + 4 * self.weight_stages <= self.page_count <= 13:
-            errors.append('weight stages require 1..3 stages and at least one activation plus four pages per stage')
-        if (self.page_size, self.tile_width) != (16384, 512):
-            errors.append('only 16KiB pages and 512-wide weight chunks currently supported')
+        stage_pages = 2048 // self.tile_width if self.tile_width in (256, 512) else 0
+        max_pages = 25 if self.page_size == 8192 else 13
+        if self.weight_stages not in (1, 2, 3) or not 1 + stage_pages * self.weight_stages <= self.page_count <= max_pages:
+            errors.append('weight stages require 1..3 stages and sufficient activation/weight pages')
+        if (self.page_size, self.tile_width) not in ((16384, 512), (8192, 256)):
+            errors.append('supported page/chunk pairs are 16KiB/512 and 8KiB/256')
+        if stage_pages and self.consumer_warps % stage_pages:
+            errors.append('consumer warps must divide evenly across weight-stage pages')
         if self.scheduler not in ('rr', 'zz', 'wave', 'dag'):
             errors.append('unsupported static scheduler')
         if self.arch not in ('sm_110', 'sm_110a'):
@@ -80,6 +84,8 @@ class Config:
         return [f'-D{key}={value}' for key, value in {
             'MK_WEIGHT_PIPELINE_STAGES': self.weight_stages,
             'MK_PAGE_COUNT': self.page_count,
+            'MK_PAGE_SIZE': self.page_size,
+            'MK_WEIGHT_CHUNK_WIDTH': self.tile_width,
             'MK_THOR_DYNAMIC_REGISTERS': int(self.register_mode == 'dynamic'),
             'MK_CONSUMER_WARPS': self.consumer_warps,
             'MK_CONSUMER_REGISTERS': self.consumer_registers,

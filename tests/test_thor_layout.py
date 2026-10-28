@@ -44,28 +44,29 @@ class LayoutTests(unittest.TestCase):
 
     def test_lifetime_order_and_random_reallocation(self):
         rng = random.Random(91)
-        for stages in (1, 2, 3):
-            for pages in range(1 + 4 * stages, 14):
-                physical = list(range(pages))
-                for _ in range(300):
-                    iterations = rng.randrange(101)
-                    last_use = [-1] * pages
-                    last_use[0] = 0  # activation consumed before matvec
-                    for iteration in range(iterations):
-                        for offset in range(4):
-                            last_use[1 + (iteration % stages) * 4 + offset] = iteration + 1
-                    order = [self.lib.release(pages, stages, 4, iterations, q) for q in range(pages)]
-                    self.assertEqual(sorted(order), list(range(pages)))
-                    times = [last_use[page] for page in order]
-                    self.assertEqual(times, sorted(times))
-                    physical = [physical[page] for page in order]
-                    self.assertEqual(sorted(physical), list(range(pages)))
+        for stage_pages, max_pages in ((4, 13), (8, 25)):
+            for stages in (1, 2, 3):
+                for pages in range(1 + stage_pages * stages, max_pages + 1):
+                    physical = list(range(pages))
+                    for _ in range(300):
+                        iterations = rng.randrange(101)
+                        last_use = [-1] * pages
+                        last_use[0] = 0
+                        for iteration in range(iterations):
+                            for offset in range(stage_pages):
+                                last_use[1 + (iteration % stages) * stage_pages + offset] = iteration + 1
+                        order = [self.lib.release(pages, stages, stage_pages, iterations, q) for q in range(pages)]
+                        self.assertEqual(sorted(order), list(range(pages)))
+                        times = [last_use[page] for page in order]
+                        self.assertEqual(times, sorted(times))
+                        physical = [physical[page] for page in order]
+                        self.assertEqual(sorted(physical), list(range(pages)))
 
     def test_every_opcode_page_release(self):
         # Attention partial uses 2 pages, reduction 1, NoOp returns identity;
         # all other opcodes delegate to the tested matvec release helper.
-        for pages in range(5, 14):
-            for used in (0, 1, 2):
+        for pages in range(5, 26):
+            for used in (0, 1, 2, 3):
                 actual = [self.lib.prefix(pages, used, q) for q in range(pages)]
                 self.assertEqual(actual, list(range(used, pages)) + list(range(used)))
 

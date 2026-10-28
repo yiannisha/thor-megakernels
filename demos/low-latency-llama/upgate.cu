@@ -38,7 +38,7 @@ template <typename Config, typename Globals> struct rms_upgate_silu {
 
         static __device__ inline void
         load_iter(megakernel::state<Config> &s, const globals &g, parsed_instruction &inst,
-                  int iter, int col_idx, kittens::st_bf<16, 512> &weight_chunk,
+                  int iter, int col_idx, kittens::st_bf<16, Config::WEIGHT_CHUNK_WIDTH> &weight_chunk,
                   kittens::semaphore &sem) {
             auto block_idx = inst.block_idxs[iter / 2];
             if (iter % 2 == 0) {

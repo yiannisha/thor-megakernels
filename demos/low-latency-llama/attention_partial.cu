@@ -37,10 +37,13 @@ template <typename config, typename globals> struct attention_partial {
     using o_sv = kittens::sv_fl<LLAMA_1B_HEAD_DIM>;
     using o_sv_bf = kittens::sv_bf<LLAMA_1B_HEAD_DIM>;
 
-    static_assert(config::NUM_PAGES >= 2);
+    static constexpr bool SPLIT_KV = 2 * NUM_STAGES * sizeof(kv_st) > config::PAGE_SIZE;
+    static constexpr int V_PAGE = SPLIT_KV ? 2 : KV_PAGE;
+    static constexpr int USED_PAGES = SPLIT_KV ? 3 : 2;
+    static_assert(config::NUM_PAGES >= USED_PAGES);
     static_assert(sizeof(q_st) + 4 * sizeof(o_sv) + sizeof(l_sv) <= config::PAGE_SIZE,
                   "attention Q/output buffers exceed one page");
-    static_assert(2 * NUM_STAGES * sizeof(kv_st) <= config::PAGE_SIZE,
+    static_assert((SPLIT_KV ? 1 : 2) * NUM_STAGES * sizeof(kv_st) <= config::PAGE_SIZE,
                   "attention KV stages exceed one page");
     static_assert(3 + 4 * NUM_STAGES <= config::DYNAMIC_SEMAPHORES);
 
@@ -90,14 +93,17 @@ template <typename config, typename globals> struct attention_partial {
     }
     __device__ static inline void wait_KV_page(megakernel::state<config> &s) {
         s.wait_page_ready(s.pid(KV_PAGE));
+        if constexpr (SPLIT_KV) s.wait_page_ready(s.pid(V_PAGE));
     }
     __device__ static inline void finish_QOL_page(megakernel::state<config> &s) {
         if (kittens::warp::laneid() == 0)
             s.finish_page(s.pid(QOL_PAGE), config::NUM_CONSUMER_WARPS);
     }
     __device__ static inline void finish_KV_page(megakernel::state<config> &s) {
-        if (kittens::warp::laneid() == 0)
+        if (kittens::warp::laneid() == 0) {
             s.finish_page(s.pid(KV_PAGE), config::NUM_CONSUMER_WARPS);
+            if constexpr (SPLIT_KV) s.finish_page(s.pid(V_PAGE), config::NUM_CONSUMER_WARPS);
+        }
     }
     __device__ static inline q_st &get_Q_smem(megakernel::state<config> &s) {
         int pid = s.pid(QOL_PAGE);
@@ -118,13 +124,13 @@ template <typename config, typename globals> struct attention_partial {
         int pid = s.pid(KV_PAGE);
         return *reinterpret_cast<kv_st *>(
             reinterpret_cast<char *>(s.pages[pid].data) +
-            sizeof(kv_st) * (stage * 2));
+            sizeof(kv_st) * (SPLIT_KV ? stage : stage * 2));
     }
     __device__ static inline kv_st &get_V_smem(megakernel::state<config> &s, int stage) {
-        int pid = s.pid(KV_PAGE);
+        int pid = s.pid(V_PAGE);
         return *reinterpret_cast<kv_st *>(
             reinterpret_cast<char *>(s.pages[pid].data) +
-            sizeof(kv_st) * (1 + stage * 2));
+            sizeof(kv_st) * (SPLIT_KV ? stage : 1 + stage * 2));
     }
 
     template <ducks::sv::all SV, ducks::rt::all RT>
@@ -285,7 +291,7 @@ template <typename config, typename globals> struct attention_partial {
         static __device__ int
         release_lid(const globals &g,
                     typename config::instruction_t &instruction, int &query) {
-            return mk_prefix_release_lid(config::NUM_PAGES, 2, query);
+            return mk_prefix_release_lid(config::NUM_PAGES, USED_PAGES, query);
         }
         static __device__ int init_semaphores(const globals &g,
                                               megakernel::state<config> &s) {
@@ -304,7 +310,7 @@ template <typename config, typename globals> struct attention_partial {
     struct loader {
         static __device__ void run(const globals &g, megakernel::state<config> &s) {
             auto laneid = kittens::warp::laneid();
-            if (laneid >= 2 && laneid < config::NUM_PAGES) {
+            if (laneid >= USED_PAGES && laneid < config::NUM_PAGES) {
                 int unused_page = s.pid(laneid);
                 s.wait_page_ready(unused_page);
                 s.finish_page(unused_page, config::NUM_CONSUMER_WARPS);

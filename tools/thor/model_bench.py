@@ -63,7 +63,7 @@ class ModelAdapter:
                 raise RuntimeError('stale native binary; rebuild before benchmarking')
             expected = {'active_workers': self.config.workers,
                         'weight_pipeline_stages': self.config.weight_stages, 'page_count': self.config.page_count,
-                        'page_size': self.config.page_size, 'consumer_warps': self.config.consumer_warps,
+                        'page_size': self.config.page_size, 'weight_chunk_width': self.config.tile_width, 'consumer_warps': self.config.consumer_warps,
                         'backoff_ns': self.config.backoff_ns, 'timing_enabled': self.config.timing,
                         'ordered_downproj': self.config.ordered_downproj,
                         'fp32_downproj': self.config.fp32_downproj,

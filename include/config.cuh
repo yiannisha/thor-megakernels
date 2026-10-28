@@ -42,6 +42,7 @@ struct default_config {
     // Shared memory declared dynamically
     static constexpr int WEIGHT_PIPELINE_STAGES = 3;
     static constexpr int PAGE_SIZE = 16384;
+    static constexpr int WEIGHT_CHUNK_WIDTH = 512;
     static constexpr int NUM_PAGES = DYNAMIC_SHARED_MEMORY / PAGE_SIZE;
     static_assert(NUM_PAGES == 13, "NUM_PAGES must be 13");
 
@@ -64,8 +65,14 @@ struct default_config {
 #ifndef MK_WEIGHT_PIPELINE_STAGES
 #define MK_WEIGHT_PIPELINE_STAGES 3
 #endif
+#ifndef MK_PAGE_SIZE
+#define MK_PAGE_SIZE 16384
+#endif
+#ifndef MK_WEIGHT_CHUNK_WIDTH
+#define MK_WEIGHT_CHUNK_WIDTH (MK_PAGE_SIZE / 32)
+#endif
 #ifndef MK_PAGE_COUNT
-#define MK_PAGE_COUNT (1 + 4 * MK_WEIGHT_PIPELINE_STAGES)
+#define MK_PAGE_COUNT (1 + (2048 / MK_WEIGHT_CHUNK_WIDTH) * MK_WEIGHT_PIPELINE_STAGES)
 #endif
 #ifndef MK_ACTIVE_WORKERS
 #define MK_ACTIVE_WORKERS 20
@@ -139,9 +146,16 @@ struct thor_config : default_config {
     static constexpr int ACTIVE_WORKERS = MK_ACTIVE_WORKERS;
     static_assert(ACTIVE_WORKERS > 0, "active workers must be positive");
     static constexpr int WEIGHT_PIPELINE_STAGES = MK_WEIGHT_PIPELINE_STAGES;
+    static constexpr int PAGE_SIZE = MK_PAGE_SIZE;
+    static constexpr int WEIGHT_CHUNK_WIDTH = MK_WEIGHT_CHUNK_WIDTH;
+    static_assert((PAGE_SIZE == 16384 && WEIGHT_CHUNK_WIDTH == 512) ||
+                  (PAGE_SIZE == 8192 && WEIGHT_CHUNK_WIDTH == 256));
+    static constexpr int WEIGHT_STAGE_PAGES = 2048 / WEIGHT_CHUNK_WIDTH;
+    static_assert(NUM_CONSUMER_WARPS % WEIGHT_STAGE_PAGES == 0,
+                  "consumer warps must cover all weight pages");
     static constexpr int NUM_PAGES = MK_PAGE_COUNT;
     static_assert(WEIGHT_PIPELINE_STAGES >= 1 && WEIGHT_PIPELINE_STAGES <= 3);
-    static_assert(NUM_PAGES >= 1 + 4 * WEIGHT_PIPELINE_STAGES && NUM_PAGES <= 13);
+    static_assert(NUM_PAGES >= 1 + WEIGHT_STAGE_PAGES * WEIGHT_PIPELINE_STAGES && NUM_PAGES <= (PAGE_SIZE == 8192 ? 25 : 13));
     // Selected page payload plus worst-case 1024-byte alignment loss.
     static constexpr int DYNAMIC_SHARED_MEMORY = NUM_PAGES * PAGE_SIZE + 1023;
 };

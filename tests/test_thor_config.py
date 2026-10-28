@@ -24,6 +24,20 @@ class ConfigTests(unittest.TestCase):
             self.assertTrue(replace(Config(), weight_stages=stages, page_count=4 * stages).validate(DEVICE))
         self.assertTrue(replace(Config(), weight_stages=4).validate(DEVICE))
 
+    def test_8k_layout_constraints_and_cache(self):
+        for stages in (1, 2, 3):
+            config = replace(Config(), page_size=8192, tile_width=256,
+                             page_count=1 + 8 * stages, weight_stages=stages)
+            self.assertFalse(config.validate(DEVICE))
+            self.assertTrue(replace(config, page_count=8 * stages).validate(DEVICE))
+            self.assertTrue(replace(config, consumer_warps=4).validate(DEVICE))
+            self.assertFalse(replace(config, consumer_warps=8).validate(DEVICE))
+            self.assertIn('-DMK_PAGE_SIZE=8192', config.defines())
+            self.assertIn('-DMK_WEIGHT_CHUNK_WIDTH=256', config.defines())
+            self.assertNotEqual(cache_key(config, {}, 's'), cache_key(Config(), {}, 's'))
+        self.assertTrue(replace(Config(), page_size=8192).validate(DEVICE))
+        self.assertTrue(replace(Config(), tile_width=256).validate(DEVICE))
+
     def test_reject_overcommitted_registers_and_workers(self):
         self.assertTrue(replace(Config(), consumer_registers=128).validate(DEVICE))
         self.assertTrue(replace(Config(), workers=21).validate(DEVICE))

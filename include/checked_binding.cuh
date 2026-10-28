@@ -106,6 +106,7 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
         result["weight_pipeline_stages"] = Config::WEIGHT_PIPELINE_STAGES;
         result["page_count"] = Config::NUM_PAGES;
         result["page_size"] = Config::PAGE_SIZE;
+        result["weight_chunk_width"] = Config::WEIGHT_CHUNK_WIDTH;
         result["resident_ctas_per_sm"] = resident;
         result["static_smem_bytes"] = attrs.sharedSizeBytes;
         result["dynamic_smem_bytes"] = dynamic;

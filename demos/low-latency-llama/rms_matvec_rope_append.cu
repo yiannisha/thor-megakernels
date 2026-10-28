@@ -59,7 +59,7 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
 
         static __device__ inline void
         load_iter(megakernel::state<Config> &s, const globals &g, parsed_instruction &inst,
-                  int iter, int col_idx, kittens::st_bf<16, 512> &weight_chunk,
+                  int iter, int col_idx, kittens::st_bf<16, Config::WEIGHT_CHUNK_WIDTH> &weight_chunk,
                   kittens::semaphore &sem) {
             auto block_idx = inst.start_block_idx + iter;
             kittens::tma::load_async<dim::ROW, cache_policy::EVICT_FIRST>(

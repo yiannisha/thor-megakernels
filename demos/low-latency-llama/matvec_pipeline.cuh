@@ -8,11 +8,13 @@ template <typename Config, typename Globals, typename parsed_instruction,
 struct matvec_pipeline {
     static constexpr int INPUT_PIPELINE_STAGES = Config::WEIGHT_PIPELINE_STAGES;
     static constexpr int OUTPUT_PIPELINE_STAGES = 3;
-    static constexpr int STAGE_PAGES = 4;
+    static constexpr int STAGE_PAGES = Globals::hidden_dim / Config::WEIGHT_CHUNK_WIDTH;
     static_assert(Config::NUM_PAGES >= 1 + INPUT_PIPELINE_STAGES * STAGE_PAGES,
                   "weight pipeline exceeds page budget");
     static_assert(Globals::hidden_dim % Config::NUM_CONSUMER_WARPS == 0,
                   "consumer reduction must divide hidden dimension");
+    static_assert(sizeof(kittens::sv_bf<Globals::hidden_dim>) <= Config::PAGE_SIZE);
+    static_assert(sizeof(kittens::st_bf<16, Config::WEIGHT_CHUNK_WIDTH>) <= Config::PAGE_SIZE);
     static constexpr int ACTIVATION_PAGE = 0;
     static constexpr int WEIGHTS_START_PAGE = 1;
 
@@ -121,7 +123,7 @@ struct matvec_pipeline {
                     if (iter < INPUT_PIPELINE_STAGES) {
                         s.wait_page_ready(weight_page);
                     }
-                    auto &weight_chunk = reinterpret_cast<kittens::st_bf<16, 512> &>(
+                    auto &weight_chunk = reinterpret_cast<kittens::st_bf<16, Config::WEIGHT_CHUNK_WIDTH> &>(
                         s.pages[weight_page]);
 
                     if (iter == 0 && i == 0) {
