@@ -1,0 +1,289 @@
+{
+  "inventory": {
+    "platform": "Linux-6.8.12-1021-tegra-aarch64-with-glibc2.39",
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.13.0+cu132",
+      "transformers": "4.48.3",
+      "pybind11": "2.13.6"
+    },
+    "cuda_driver": {
+      "devices": [
+        {
+          "ordinal": 0,
+          "name": "NVIDIA Thor",
+          "sm_count": 20,
+          "cc_major": 11,
+          "cc_minor": 0,
+          "max_threads_per_block": 1024,
+          "shared_memory_per_block": 49152,
+          "shared_memory_per_sm": 233472,
+          "shared_memory_optin": 232448,
+          "max_blocks_per_sm": 24,
+          "cooperative_launch": 1
+        }
+      ]
+    },
+    "tools": {
+      "nvcc": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc",
+      "tegrastats": "/usr/bin/tegrastats",
+      "nsys": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/opt/nvidia/nsight-systems/2025.6.3/bin/nsys",
+      "ncu": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/opt/nvidia/nsight-compute/2026.1.1/ncu",
+      "jtop": null
+    },
+    "commands": {
+      "nvcc": {
+        "returncode": 0,
+        "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_May_08_10:52:52_AM_PDT_2026\nCuda compilation tools, release 13.2, V13.2.86\nBuild cuda_13.2.r13.2/compiler.37953736_0",
+        "stderr": ""
+      },
+      "nvcc_targets": {
+        "returncode": 0,
+        "stdout": "sm_75\nsm_80\nsm_86\nsm_87\nsm_88\nsm_89\nsm_90\nsm_100\nsm_110\nsm_103\nsm_120\nsm_121",
+        "stderr": ""
+      },
+      "nvidia_smi": {
+        "returncode": 0,
+        "stdout": "==============NVSMI LOG==============\n\nTimestamp                                              : Tue Oct 27 17:37:25 2026\nDriver Version                                         : 595.78\nCUDA Version                                           : 13.2\n\nAttached GPUs                                          : 1\nGPU 00000000:01:00.0\n    Product Name                                       : NVIDIA Thor\n    Product Brand                                      : GeForce\n    Product Architecture                               : Blackwell\n    Display Mode                                       : Requested functionality has been deprecated\n    Display Attached                                   : No\n    Display Active                                     : Disabled\n    Persistence Mode                                   : Disabled\n    Addressing Mode                                    : ATS\n    MIG Mode\n        Current                                        : Disabled\n        Pending                                        : Disabled\n    Accounting Mode                                    : Disabled\n    Accounting Mode Buffer Size                        : 4000\n    Driver Model\n        Current                                        : N/A\n        Pending                                        : N/A\n    Serial Number                                      : N/A\n    GPU UUID                                           : GPU-a7c66ad2-6dbb-0ab8-c1a2-37ba6dba3600\n    GPU PDI                                            : 0xf7df299c60122a9d\n    Minor Number                                       : 0\n    VBIOS Version                                      : N/A\n    MultiGPU Board                                     : No\n    Board ID                                           : 0x100\n    Board Part Number                                  : N/A\n    GPU Part Number                                    : 2B00--A1\n    FRU Part Number                                    : N/A\n    Platform Info\n        Chassis Serial Number                          : N/A\n        Slot Number                                    : N/A\n        Tray Index                                     : N/A\n        Host ID                                        : N/A\n        Peer Type                                      : N/A\n        Module Id                                      : N/A\n        GPU Fabric GUID                                : N/A\n    Inforom Version\n        Image Version                                  : N/A\n        OEM Object                                     : N/A\n        ECC Object                                     : N/A\n        Power Management Object                        : N/A\n    Inforom BBX Object Flush\n        Latest Timestamp                               : N/A\n        Latest Duration                                : N/A\n    GPU Operation Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    GPU C2C Mode                                       : Disabled\n    GPU Virtualization Mode\n        Virtualization Mode                            : None\n        Host VGPU Mode                                 : N/A\n        vGPU Heterogeneous Mode                        : N/A\n    GPU Recovery Action                                : None\n    GSP Firmware Version                               : 595.78\n    IBMNPU\n        Relaxed Ordering Mode                          : N/A\n    PCI\n        Bus                                            : 0x01\n        Device                                         : 0x00\n        Domain                                         : 0x0000\n        Base Classcode                                 : 0x3\n        Sub Classcode                                  : 0x2\n        Device Id                                      : 0x2B0010DE\n        Bus Id                                         : 00000000:01:00.0\n        Sub System Id                                  : 0x00000000\n        GPU Link Info\n            PCIe Generation\n                Max                                    : 1\n                Current                                : 1\n                Device Current                         : 1\n                Device Max                             : 5\n                Host Max                               : 1\n            Link Width\n                Max                                    : 16x\n                Current                                : 1x\n        Bridge Chip\n            Type                                       : N/A\n            Firmware                                   : N/A\n        Replays Since Reset                            : 0\n        Replay Number Rollovers                        : 0\n        Tx Throughput                                  : N/A\n        Rx Throughput                                  : N/A\n        Atomic Caps Outbound                           : FETCHADD_32 FETCHADD_64 SWAP_32 SWAP_64 CAS_32 CAS_64 \n        Atomic Caps Inbound                            : N/A\n    Fan Speed                                          : N/A\n    Performance State                                  : N/A\n    Clocks Event Reasons                               : N/A\n    Clocks Event Reasons Counters\n        SW Power Capping                               : N/A\n        Sync Boost                                     : N/A\n        SW Thermal Slowdown                            : N/A\n        HW Thermal Slowdown                            : N/A\n        HW Power Braking                               : N/A\n    Sparse Operation Mode                              : N/A\n    FB Memory Usage\n        Total                                          : N/A\n        Reserved                                       : N/A\n        Used                                           : N/A\n        Free                                           : N/A\n    BAR1 Memory Usage\n        Total                                          : N/A\n        Used                                           : N/A\n        Free                                           : N/A\n    Conf Compute Protected Memory Usage\n        Total                                          : 0 MiB\n        Used                                           : 0 MiB\n        Free                                           : 0 MiB\n    Compute Mode                                       : Default\n    Utilization\n        GPU                                            : 0 %\n        Memory                                         : 0 %\n        Encoder                                        : 0 %\n        Decoder                                        : 0 %\n        JPEG                                           : 0 %\n        OFA                                            : 0 %\n    Encoder Stats\n        Active Sessions                                : 0\n        Average FPS                                    : 0\n        Average Latency                                : 0\n    FBC Stats\n        Active Sessions                                : 0\n        Average FPS                                    : 0\n        Average Latency                                : 0\n    DRAM Encryption Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    ECC Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    ECC Errors\n        Volatile\n            SRAM Correctable                           : N/A\n            SRAM Uncorrectable Parity                  : N/A\n            SRAM Uncorrectable SEC-DED                 : N/A\n            DRAM Correctable                           : N/A\n            DRAM Uncorrectable                         : N/A\n        Aggregate\n            SRAM Correctable                           : N/A\n            SRAM Uncorrectable Parity                  : N/A\n            SRAM Uncorrectable SEC-DED                 : N/A\n            DRAM Correctable                           : N/A\n            DRAM Uncorrectable                         : N/A\n            SRAM Threshold Exceeded                    : N/A\n        Aggregate Uncorrectable SRAM Sources\n            SRAM L2                                    : N/A\n            SRAM SM                                    : N/A\n            SRAM Microcontroller                       : N/A\n            SRAM PCIE                                  : N/A\n            SRAM Other                                 : N/A\n        Channel Repair Pending                         : N/A\n        TPC Repair Pending                             : N/A\n        Unrepairable Memory                            : N/A\n    Retired Pages\n        Single Bit ECC                                 : N/A\n        Double Bit ECC                                 : N/A\n        Pending Page Blacklist                         : N/A\n    Remapped Rows                                      : N/A\n    Temperature\n        GPU Current Temp                               : 35 C\n        GPU T.Limit Temp                               : N/A\n        GPU Shutdown Temp                              : N/A\n        GPU Slowdown Temp                              : N/A\n        GPU Max Operating Temp                         : N/A\n        GPU Target Temperature                         : N/A\n        Memory Current Temp                            : N/A\n        Memory Max Operating Temp                      : N/A\n    GPU Power Readings\n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : 2.77 W\n        Current Power Limit                            : N/A\n        Requested Power Limit                          : N/A\n        Default Power Limit                            : N/A\n        Min Power Limit                                : N/A\n        Max Power Limit                                : N/A\n    GPU Memory Power Readings \n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : N/A\n    Module Power Readings\n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : N/A\n        Current Power Limit                            : N/A\n        Requested Power Limit                          : N/A\n        Default Power Limit                            : N/A\n        Min Power Limit                                : N/A\n        Max Power Limit                                : N/A\n    Power Smoothing                                    : N/A\n    Workload Power Profiles\n        Requested Profiles                             : N/A\n        Enforced Profiles                              : N/A\n    EDPp Multiplier                                    : N/A\n    Clocks\n        Graphics                                       : 315 MHz\n        SM                                             : N/A\n        Memory                                         : N/A\n        Video                                          : 315 MHz\n    Applications Clocks\n        Graphics                                       : Requested functionality has been deprecated\n        Memory                                         : Requested functionality has been deprecated\n    Default Applications Clocks\n        Graphics                                       : Requested functionality has been deprecated\n        Memory                                         : Requested functionality has been deprecated\n    Deferred Clocks\n        Memory                                         : N/A\n    Max Clocks\n        Graphics                                       : N/A\n        SM                                             : N/A\n        Memory                                         : N/A\n        Video                                          : N/A\n    Max Customer Boost Clocks\n        Graphics                                       : N/A\n    Clock Policy\n        Auto Boost                                     : N/A\n        Auto Boost Default                             : N/A\n    Fabric\n        State                                          : N/A\n        Status                                         : N/A\n        CliqueId                                       : N/A\n        ClusterUUID                                    : N/A\n        Health\n            Summary                                    : N/A\n            Bandwidth                                  : N/A\n            Route Recovery in progress                 : N/A\n            Route Unhealthy                            : N/A\n            Access Timeout Recovery                    : N/A\n            Incorrect Configuration                    : N/A\n            Partition Assigned                         : N/A\n    Processes\n        GPU instance ID                   : N/A\n        Compute instance ID               : N/A\n        Process ID                        : 5564\n            Type                          : G\n            Name                          : /usr/lib/xorg/Xorg\n            Used GPU Memory               : 91 MiB\n        GPU instance ID                   : N/A\n        Compute instance ID               : N/A\n        Process ID                        : 5823\n            Type                          : G\n            Name                          : /usr/bin/gnome-shell\n            Used GPU Memory               : 48 MiB\n    Capabilities\n        EGM                                            : disabled",
+        "stderr": ""
+      },
+      "power_mode": {
+        "returncode": 0,
+        "stdout": "NV Power Mode: 120W\n1",
+        "stderr": ""
+      },
+      "git_sha": {
+        "returncode": 0,
+        "stdout": "cd2085f917475d222f05ad99a5388ac0b1ea724a",
+        "stderr": ""
+      },
+      "worktree": {
+        "returncode": 0,
+        "stdout": "M docs/thor/ROADMAP.md\n M include/checked_binding.cuh\n M include/megakernel.cuh",
+        "stderr": ""
+      },
+      "submodules": {
+        "returncode": 0,
+        "stdout": "664c108d16f12707a73d3072ab525f26fb2b4f62 ThunderKittens (664c108d)",
+        "stderr": ""
+      }
+    },
+    "jetpack_release": "# R39 (release), REVISION: 2.1, GCID: 46758480, BOARD: generic, EABI: aarch64, DATE: Fri Aug  7 05:54:22 AM UTC 2026\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia\n"
+  },
+  "toolchain": {
+    "nvcc": {
+      "returncode": 0,
+      "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_May_08_10:52:52_AM_PDT_2026\nCuda compilation tools, release 13.2, V13.2.86\nBuild cuda_13.2.r13.2/compiler.37953736_0",
+      "stderr": ""
+    },
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.13.0+cu132",
+      "transformers": "4.48.3",
+      "pybind11": "2.13.6"
+    },
+    "targets": {
+      "returncode": 0,
+      "stdout": "sm_75\nsm_80\nsm_86\nsm_87\nsm_88\nsm_89\nsm_90\nsm_100\nsm_110\nsm_103\nsm_120\nsm_121",
+      "stderr": ""
+    },
+    "host_compiler": {
+      "returncode": 0,
+      "stdout": "aarch64-linux-gnu-g++-13 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+      "stderr": ""
+    },
+    "tk_headers_sha256": {
+      "include/common/base_ops.cuh": "d5a47481b47f0c469a7f69c993e3df1bb5bbe1e92655452784059cd25b58f6ee",
+      "include/common/base_types.cuh": "32b65d9fd890187a9975833cc8ba0ebc3be88c9a2ca4c6370501e4033e0a4550",
+      "include/common/common.cuh": "ee66f4c51eb00d4739bf5490120f99faba6e8345f41187ec2c6bbe084e5b72b0",
+      "include/common/debug.cuh": "0924809d50559ecedbff73ce6c8643034644258b55610123905074cc073bac0c",
+      "include/common/util.cuh": "cb3aa1b951641b30e6ca9a931022742c36a5f1c0bbc443736c9415bc71cb4e29",
+      "include/kittens.cuh": "d7a9e0a36e23834509ac63337ab161f2a4c5356723bef71784d48b00faf13677",
+      "include/ops/group/group.cuh": "8e001e6d947fc6f05b98f0f2b214da2cd99d415b27ee61ae91da893f54cb1e74",
+      "include/ops/group/memory/memory.cuh": "05c960ad9fd5a0d77405f2f41b5c0648317ba053dbde2d8740ce018c0ced406e",
+      "include/ops/group/memory/tile/complex/complex_global_to_register.cuh": "22bba11c9854f6ff4f43d9c5a522f34e64adbda4de0623268680c2a7cbc7e7c1",
+      "include/ops/group/memory/tile/complex/complex_global_to_shared.cuh": "2f7fb802ef46cb9362e35d402b4f3711a5f435e4738d703ea06fe6fdf23a5dfe",
+      "include/ops/group/memory/tile/complex/complex_shared_to_register.cuh": "62d4db32b771f9d560f17534c66d8831f673baf08ae4d085a53d5ce9fa11768c",
+      "include/ops/group/memory/tile/global_to_register.cuh": "fbfa890eb9af11d794ddefce26be32d36c8faf2244d6f776d29205dba3ed18ab",
+      "include/ops/group/memory/tile/global_to_shared.cuh": "9566df54d55e08b6e639b35d2759ca4d2c42b5347585b970a55f6aeea3d55d56",
+      "include/ops/group/memory/tile/shared_to_register.cuh": "ea605eefeb919197c08583e0819506d391486f6bbc764537c6a05c3caea62128",
+      "include/ops/group/memory/tile/tensor_to_register.cuh": "d9c91ce5bd8b391aa4bfe7b7660296b290f61b82b750bf0f0652c27d38131f3b",
+      "include/ops/group/memory/tile/tile.cuh": "01e3b4232d338d30120088ca3859d4bf5384b7dd605e1d37a988fc33f747daec",
+      "include/ops/group/memory/tile/tma.cuh": "b4c1cde27f67f698b7cbcaf6822d0bf496ae24a98291919c857d39bd7b365464",
+      "include/ops/group/memory/tile/tma_cluster.cuh": "e1fe443ea282d3758b341db6125ea434c5addf091646b9d21639b0378c2ff89e",
+      "include/ops/group/memory/util/tma.cuh": "a2eb8f0ccce2b4f84b7964353b597758b3d0a6d645bb1abfe92543da496b6cf3",
+      "include/ops/group/memory/util/tma_cluster.cuh": "ad17e823071f219e18f7e592c7301706db1e912eab03225f46fd4a31040f1fe3",
+      "include/ops/group/memory/util/util.cuh": "5df40e6573ade5ee1de7e6852b85e0d7f9dcc2b0cf403085fe670a8282e545ce",
+      "include/ops/group/memory/vec/global_to_register.cuh": "d8930187c05617a6febd0da7e89dfc1021fe0cd993cd4dfa6637b54e619ba1e8",
+      "include/ops/group/memory/vec/global_to_shared.cuh": "2f94da7415ee739f9c3efa6778246ce818ce6077ae6c1b2a2e3a5f6dabe88c55",
+      "include/ops/group/memory/vec/shared_to_register.cuh": "79773f5b56269f9bbb6e7f913c250cc1502ec75afcbfd09b3c59eec8ed7299e5",
+      "include/ops/group/memory/vec/tma.cuh": "278edea9385569dbf6e3261415a34cfdfb47cd6d6c332d8f1ece1e4d278472dc",
+      "include/ops/group/memory/vec/tma_cluster.cuh": "dbb43ae38ff4340648fc534e1fb7286066b345b45b4af4669756dd80de02e69d",
+      "include/ops/group/memory/vec/vec.cuh": "1e34f89f659a7f9e4cf69a37f7cfd5ccb2f082a5e0e919b420a2eb169a4492d2",
+      "include/ops/group/mma/mma.cuh": "9d440c05cc81db995b800bfad395bd4562e4db966e4214fd5053ff47c86007ef",
+      "include/ops/group/mma/tensor/tensor.cuh": "693be8c0f44df0ce88854b1cde8e97daff2a9c026a11441503be134660eb3cba",
+      "include/ops/group/mma/warp/warp.cuh": "1546cb1592edb3941b784970915a582e65d979bfabdd207168f47406c0f3e57b",
+      "include/ops/group/mma/warpgroup/base/64x112.impl": "a9aaff495dc01203d7703e90bc935fcdb1c5df389444c436c4c9b96280af6a01",
+      "include/ops/group/mma/warpgroup/base/64x128.impl": "3e4289b5b804df791e834694d3d80f8169f5d8d11398ac9403e9143f6688e7d7",
+      "include/ops/group/mma/warpgroup/base/64x144.impl": "32caa22b864a25809b5010847a1a3e6473e4029324f8a44854c3503820b6f61d",
+      "include/ops/group/mma/warpgroup/base/64x16.impl": "026bcbd592559a85166a761c023837bb29b798fe10f106444309931fbbd27fa2",
+      "include/ops/group/mma/warpgroup/base/64x160.impl": "1b5632e554e18b8d75006cd4e3767dc236621beebd336c4373479071cbe69078",
+      "include/ops/group/mma/warpgroup/base/64x176.impl": "13db564d000d2b9105cd83c5a82bece3d401cf442d5d3f3105cbf966209034d6",
+      "include/ops/group/mma/warpgroup/base/64x192.impl": "f5e01a7042dd1c8c1b0e754882177c4433d6398eacad564269bfbda13d3bd61f",
+      "include/ops/group/mma/warpgroup/base/64x208.impl": "18285f84e7978678a1dc26d4c71ef7b6ef0fb6c3cade0e62db4a945c5f9169c8",
+      "include/ops/group/mma/warpgroup/base/64x224.impl": "f0c77bf1acc790b4ef740cc85c07762aecef9c6f29b0ef31cb2d7752727cd9bb",
+      "include/ops/group/mma/warpgroup/base/64x240.impl": "0210555fa309989ef50854476ec1d84edbd4d837ca5b2e8a809d4b67eb797d67",
+      "include/ops/group/mma/warpgroup/base/64x256.impl": "7a9d28d9962b91e71aebcd05723104f4ff4217e3c4728a4512eac5fb55cfc498",
+      "include/ops/group/mma/warpgroup/base/64x32.impl": "40b7ce914e7f54abf7bcda7834bf388722c72aca4362b5d41af29b40bd36a2d4",
+      "include/ops/group/mma/warpgroup/base/64x48.impl": "0dfca5903898b10ee55c262cb71ab5df9a931b0e95c641bb49696c6388569c33",
+      "include/ops/group/mma/warpgroup/base/64x64.impl": "2446cb3c4c468322d84a3282d3c8b4d6f80f3b41de5b95791692b8602031de31",
+      "include/ops/group/mma/warpgroup/base/64x80.impl": "bd752a13579a9f3c88d390770777de99820998f80df12e1ca6c9ae08354507b1",
+      "include/ops/group/mma/warpgroup/base/64x96.impl": "0f120f41b9cdd474a5149f60457e78b3b5b5f0361cd0546c5dcc88e45f986a4f",
+      "include/ops/group/mma/warpgroup/base/base.cuh": "ea11771706c1997570857481d02b329a6ba26389c9686e7a0bbad3ecb7f35811",
+      "include/ops/group/mma/warpgroup/warpgroup.cuh": "5861d574defe708c6ee84bc0bb75ece1d838a29022bf1c3eedabaf183971d264",
+      "include/ops/group/register/register.cuh": "446a67af95bd0899496c0a166c00312f50a6c55b1950f7b74429ebfc963d02b9",
+      "include/ops/group/register/tile/complex/complex_conversions.cuh": "73964b4cf32a0fea01cf528e75c6ef43d82af9b7a0002c17a789ac6e8c476718",
+      "include/ops/group/register/tile/complex/complex_maps.cuh": "930479bf9df2553f1865c9020786a6ecc99bdbc7cc71d668e4e35fd191938c25",
+      "include/ops/group/register/tile/conversions.cuh": "f5a82f5d727c750b28355979aa38e1123f44785a920b6d9cf9e53385a7a20c98",
+      "include/ops/group/register/tile/maps.cuh": "8dd3584e5cae686e127b5da798ed315e1e3eda90456a82108635c7bc063dcd80",
+      "include/ops/group/register/tile/reductions.cuh": "3395014047f27242445d914c1da4f6bda6556f797db5988f4dc463ba804d564c",
+      "include/ops/group/register/tile/tile.cuh": "6a2cbd1969e68999153e259269dfc0a109e69d74a59dc4777fbb54d77987d8d3",
+      "include/ops/group/register/vec/conversions.cuh": "53ecf1e64caf52adb1e1eb38ea0ace34bbc41c46d70a73eb7765b0a361782a62",
+      "include/ops/group/register/vec/maps.cuh": "a11cff1affe66dc7ef05910e819660f42c7807957be4a9f02f184e254b6f42b4",
+      "include/ops/group/register/vec/reductions.cuh": "620c52f0c831d7ddc67a217258561dfea4a7c7c869f40e72feb5307aede868b5",
+      "include/ops/group/register/vec/vec.cuh": "ad4d8c07a137fd3f0eccd9d4940bd924baa1fb0fc896a74d9c2c42b42b8e7ef7",
+      "include/ops/group/shared/shared.cuh": "30f76466d094e2de794b9fbd6a9030259d65bc0219a75b0a095ab6cd799da47f",
+      "include/ops/group/shared/tile/conversions.cuh": "d3f1232e9015d7a7d2f1a31e67ede3770b93369054630a04a340a2988330c8c1",
+      "include/ops/group/shared/tile/maps.cuh": "a02947fef24091cbe70bb5380906f74b47dc674f1e0badcba0edd5ed33ef02d5",
+      "include/ops/group/shared/tile/reductions.cuh": "f2810c1bc9904a300a45dca491c2b99d2cc53fac094afe2c99a28cb0aa1c9407",
+      "include/ops/group/shared/tile/tile.cuh": "1a62630b1ca6a18a5d4230ce685ce4af2b17dfc83127bc798a3323434cc07c8d",
+      "include/ops/group/shared/vec/conversions.cuh": "272f60e390a5368e7cd051c374f1b191f2019ed13d7777ac0cc8325cbfd14550",
+      "include/ops/group/shared/vec/maps.cuh": "794075651fd562709e24481061aba13b6c682dd38f386282149a5582943f02c0",
+      "include/ops/group/shared/vec/reductions.cuh": "e5132a0d810900b993ffb890ed71368c860914dde0d62b98691c2f47fc895364",
+      "include/ops/group/shared/vec/vec.cuh": "05bf15735b04b23e6f924a71ca4d592dd43e3da09a7890dde15f8afa28798273",
+      "include/ops/ops.cuh": "a0c75586aafc6f1aa6a5bfec0b1c73f680c4506486734f939541eb9ef9a885c6",
+      "include/ops/thread/memory/memory.cuh": "237f28474d9892108da3ad6e7cee51b095858f89a2e5569a48a135a986d00a47",
+      "include/ops/thread/memory/tile/tile.cuh": "93e6aece9cb43cfb6da81b5e757ab5fffe31cb92038e072677ae12df4f97b5e0",
+      "include/ops/thread/memory/tile/tma.cuh": "3fe3dba5649b31a18b4e5fe4152cd512b8c82869add833d1d371aac1e938d624",
+      "include/ops/thread/memory/util/tensor.cuh": "8ba4754119edb272f635a6c4853ce78808d1166e3b715db6644746fb1c96c1c5",
+      "include/ops/thread/memory/util/tma.cuh": "5d1d1a7d1b20ff29627f079e0687d7e408e77ddbbcc1a98237cdeb4b5533b471",
+      "include/ops/thread/memory/util/util.cuh": "3a5f5c6ffc6e1a305bf8e77a598222a56fb44cface2ecb01ba8e6a5bf25b1186",
+      "include/ops/thread/memory/vec/tma.cuh": "75632d899ef52081df94344f93655ad9704dd17ff5bea4f22184357c2f8fada6",
+      "include/ops/thread/memory/vec/vec.cuh": "72107cef3810bc810daa0b8c85c4b6b2ae8fd2e1a01775b2f760094e0f403d88",
+      "include/ops/thread/mma/mma.cuh": "79c0518c21683b486957f999151f44abced39fa99ef9896e8338dfbc5bfef0bd",
+      "include/ops/thread/mma/tensor/tensor.cuh": "47d6e5b152c4afa1bf237f2ca7eed97c9090d8611399402b97ece42a5dd9d388",
+      "include/ops/thread/thread.cuh": "b01ec7fffda2e2c08a4214276034b6b90cdf4d148272cb8d15902ebab4fc0973",
+      "include/pyutils/pyutils.cuh": "cb15031e7c2b1df164fce90049b51849fb9a8d31df0cd62b6fbf2c8209f1154a",
+      "include/pyutils/torch_helpers.cuh": "d8aea826ac33d0e1c0e057d3f5585f0d5b9bd51b6e0fac18b68ecbdaca68afc7",
+      "include/pyutils/util.cuh": "839b0b341d14a6e2783e02035683788dbf2ff6a1b965aa04e9ac34046d291998",
+      "include/types/global/cgl.cuh": "05eca00a40f2504ad886c2002f1c465bf6a9fdb0395b7e05058dc7b29c49cfe2",
+      "include/types/global/gl.cuh": "cc487d6a2a739c4c04533087f451cf688cb43693f049ebe4ce62f582dcdd38e0",
+      "include/types/global/global.cuh": "378ff6ed6318747bcad935c6fb12f983da0f0b7e1e4c0d07e0711d7684dc72d7",
+      "include/types/global/tma.cuh": "3eeac8152871ea8510c66ab03bee30b2052f3b0850c4df0b2dfed5d3e36241fe",
+      "include/types/global/util.cuh": "be46ae45cc6f94f1932fc6640ad58ef3e398c1faed7bf3bfcab3dbb1a91ce543",
+      "include/types/register/crt.cuh": "f710701182ae8904d917c043545c83b66074e90452e3cfb7826d37d04090684d",
+      "include/types/register/crv.cuh": "62b9a97c57d5e92c09b26090a0bb7e3d77cad683070423856b0985e9988e1660",
+      "include/types/register/register.cuh": "5102ec7e7aa6b66312297c24f7df9b27395e9122fe549fc024b0bf8d17b8d666",
+      "include/types/register/rt.cuh": "027ece293fc118231c7441af6ca7390613e5e68bfc05feebea6baa49660100dd",
+      "include/types/register/rt_base.cuh": "2cb273415d24145e51996b0f4d86df75daf5225a1d920160e29917b6f0488ee3",
+      "include/types/register/rt_layout.cuh": "8f27d8b9f3516269b09b24195eb2fb382fd63daf770534b6285696c925d649b6",
+      "include/types/register/rv.cuh": "e932d1f2d49dce659e83066c340f47af3376a04e15164219e4d831558c762e1e",
+      "include/types/register/rv_layout.cuh": "8205aa7b6941852c093e32a113be35390fd292a440b69c6be357fd7cb3003d30",
+      "include/types/shared/cst.cuh": "b07d82506f6fae3a5ce00cf9c63338ea40ae6d2de498e52b6d5e3f1ea0e3f4a4",
+      "include/types/shared/csv.cuh": "5dec6ef6a3ea9dcc6e771a09cf112824dfb960e477e0267a440c8719b36b11d2",
+      "include/types/shared/shared.cuh": "fa882939ee51f9343402bd223eed2e9b36d20f3a2942762626f59758c64f55df",
+      "include/types/shared/st.cuh": "6cd161a4a760f6c68a9365de0f5fafd763052e5eafd332441435413eb2dbf9b7",
+      "include/types/shared/st_descriptor.cuh": "178a2bf1a2aa5a1db283b38b4c0447bf5c0a01393164abf3d604a1c3f66cadb1",
+      "include/types/shared/sv.cuh": "c203c3f548b5a9348c599c022dac6ad80bd03c04ed1ef232aaf606b8455e9402",
+      "include/types/tensor/tensor.cuh": "d0c9e4f5565410ddd2c4df2da59a5b055d5a65099dbf00920026aa29ebdd4596",
+      "include/types/tensor/tt.cuh": "9ed2edb5b903a67b7508763902cd5dd9408cabed1a87395c608258d728c10b51",
+      "include/types/types.cuh": "91a7f289bec15ea36b26096c8527d71d17c26d92165f04b9c93759cde8ec4195"
+    }
+  },
+  "source_hash": "37d797985d3f24085793761c763c94f63fc15f5ac6496c26100ff6d349252958",
+  "variants": [
+    {
+      "config": {
+        "name": "dynamic-pool-rejection",
+        "consumer_warps": 16,
+        "consumer_registers": 104,
+        "service_registers": 72,
+        "register_mode": "dynamic",
+        "static_registers": 96,
+        "workers": 20,
+        "backoff_ns": 20,
+        "scheduler": "rr",
+        "instruction_parties": 32,
+        "ordered_downproj": false,
+        "fp32_downproj": true,
+        "match_torch_bf16_epilogues": true,
+        "compensated_attention": true,
+        "fp64_rms": false,
+        "match_torch_bf16_rms": true,
+        "timing": false,
+        "arch": "sm_110a",
+        "page_size": 16384,
+        "page_count": 13,
+        "weight_stages": 3,
+        "tile_width": 512,
+        "architecture": "static",
+        "precision": "bf16"
+      },
+      "cache_key": "d561ec6719b7bbe76afd9828c9288f6aae7e1ea22ee79b5a351c733970e9e743",
+      "errors": [],
+      "status": "PILOT_FAIL",
+      "attempts": [
+        {
+          "phase": "build",
+          "returncode": 0,
+          "output": "make: Entering directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc llama.cu -DNDEBUG -Xcompiler=-fPIE --expt-extended-lambda --expt-relaxed-constexpr -Xcompiler=-Wno-psabi -Xcompiler=-fno-strict-aliasing --use_fast_math -forward-unknown-to-host-compiler -O3 -Xnvlink=--verbose -Xptxas=--verbose -Xptxas=--warn-on-spills -std=c++20 -x cu -lrt -lpthread -ldl -lcuda -lcudadevrt -lcudart_static -lcublas -lineinfo -I/home/thor-guest/ml-perf/Megakernels/local/thunderkittens/include -I/home/thor-guest/ml-perf/Megakernels/include -I/usr/include/python3.12 -I/home/thor-guest/ml-perf/Megakernels/local/thor-venv/lib/python3.12/site-packages/pybind11/include -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/python3.12/config-3.12-aarch64-linux-gnu -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/aarch64-linux-gnu  -ldl  -lm  -shared -fPIC -DMK_BUILD_SOURCE_HASH='\"37d797985d3f24085793761c763c94f63fc15f5ac6496c26100ff6d349252958\"' -DKITTENS_HOPPER -DMK_THOR -DMK_ACTIVE_WORKERS=20 -gencode=arch=compute_110a,code=sm_110a -DMK_THOR_DYNAMIC_REGISTERS=1 -DMK_WEIGHT_PIPELINE_STAGES=3 -DMK_PAGE_COUNT=13 -DMK_THOR_DYNAMIC_REGISTERS=1 -DMK_CONSUMER_WARPS=16 -DMK_CONSUMER_REGISTERS=104 -DMK_SERVICE_REGISTERS=72 -DMK_BACKOFF_NS=20 -DMK_RECORD_TIMING=0 -DMK_MATCH_TORCH_BF16_RMS=1 -DMK_ORDERED_DOWNPROJ=0 -DMK_FP32_DOWNPROJ=1 -DMK_FP64_RMS=0 -DMK_COMPENSATED_ATTENTION=1 -DMK_MATCH_TORCH_BF16_EPILOGUES=1 -DMK_INSTRUCTION_BARRIER_PARTIES=32 -o /home/thor-guest/ml-perf/Megakernels/local/thor-dynamic-pool-rejection/d561ec6719b7bbe76afd9828c9288f6aae7e1ea22ee79b5a351c733970e9e743/mk_llama.cpython-312-aarch64-linux-gnu.so\nptxas warning : Registers are spilled to local memory in function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_', 252 bytes spill stores, 308 bytes spill loads\nptxas info    : 6 bytes gmem\nptxas info    : Compiling entry function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_' for 'sm_110a'\nptxas info    : Function properties for _ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_\n    368 bytes stack frame, 252 bytes spill stores, 308 bytes spill loads\nptxas info    : Used 96 registers, used 16 barriers, 368 bytes cumulative stack size, 10384 bytes smem\nptxas info    : Compile time = 800.738 ms\nnvlink info    : 0 bytes gmem\npython3 ../../tools/thor/build_manifest.py --binary \"/home/thor-guest/ml-perf/Megakernels/local/thor-dynamic-pool-rejection/d561ec6719b7bbe76afd9828c9288f6aae7e1ea22ee79b5a351c733970e9e743/mk_llama.cpython-312-aarch64-linux-gnu.so\" --compiler \"/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc\" --gpu \"THOR\"\nmake: Leaving directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n"
+        },
+        {
+          "phase": "pilot",
+          "returncode": 1,
+          "output": "{\"status\": \"FAIL\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/local/thor-dynamic-pool-rejection/d561ec6719b7bbe76afd9828c9288f6aae7e1ea22ee79b5a351c733970e9e743/pilot.json\", \"errors\": [\"RuntimeError: dynamic register targets exceed initial CTA register pool\", \"benchmark worker failed\"]}\n"
+        }
+      ]
+    },
+    {
+      "config": {
+        "name": "register_mode-static",
+        "consumer_warps": 16,
+        "consumer_registers": 104,
+        "service_registers": 72,
+        "register_mode": "static",
+        "static_registers": 96,
+        "workers": 20,
+        "backoff_ns": 20,
+        "scheduler": "rr",
+        "instruction_parties": 32,
+        "ordered_downproj": false,
+        "fp32_downproj": true,
+        "match_torch_bf16_epilogues": true,
+        "compensated_attention": true,
+        "fp64_rms": false,
+        "match_torch_bf16_rms": true,
+        "timing": false,
+        "arch": "sm_110a",
+        "page_size": 16384,
+        "page_count": 13,
+        "weight_stages": 3,
+        "tile_width": 512,
+        "architecture": "static",
+        "precision": "bf16"
+      },
+      "cache_key": "85a50207be54f62a3ec8a3ca1af2df1f88cb07aa6c122fee226eff4e38c77e9b",
+      "errors": [
+        "separate consumer/service budgets require dynamic register mode"
+      ],
+      "status": "INVALID",
+      "attempts": []
+    }
+  ],
+  "selected": null,
+  "exploratory_fastest": null,
+  "observed_pareto_frontier": [],
+  "selection_notes": [
+    "Independent validation is required before promoting a default."
+  ]
+}
