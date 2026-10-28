@@ -1,0 +1,4 @@
+========= COMPUTE-SANITIZER
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]Loading safetensors files: 100%|██████████| 1/1 [00:01<00:00,  1.03s/it]Loading safetensors files: 100%|██████████| 1/1 [00:01<00:00,  1.03s/it]
+{"status": "PASS", "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/register-cap32-model-memcheck.json", "errors": []}
+========= ERROR SUMMARY: 0 errors

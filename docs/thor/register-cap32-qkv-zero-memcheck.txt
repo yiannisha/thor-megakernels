@@ -1,0 +1,18 @@
+========= COMPUTE-SANITIZER
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/thor-guest/ml-perf/Megakernels/tools/thor/synthetic.py", line 322, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/thor-guest/ml-perf/Megakernels/tools/thor/synthetic.py", line 306, in main
+    adapter = SyntheticAdapter(args.op, args.iterations, args.seed, context=args.context,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/thor-guest/ml-perf/Megakernels/tools/thor/synthetic.py", line 105, in __init__
+    self.globs, self.config = fixture(op, iterations, seed, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/thor-guest/ml-perf/Megakernels/tools/thor/synthetic.py", line 37, in fixture
+    raise ValueError('synthetic fixture currently requires the verified default build (20 workers, 16 warps, static cap 96)')
+ValueError: synthetic fixture currently requires the verified default build (20 workers, 16 warps, static cap 96)
+========= Target application returned an error
+========= ERROR SUMMARY: 0 errors
