@@ -106,6 +106,9 @@ struct default_config {
 #ifndef MK_ORDERED_DOWNPROJ
 #define MK_ORDERED_DOWNPROJ 0
 #endif
+#ifndef MK_THOR_STATIC_REGISTERS
+#define MK_THOR_STATIC_REGISTERS 96
+#endif
 #ifndef MK_THOR_DYNAMIC_REGISTERS
 #define MK_THOR_DYNAMIC_REGISTERS 0
 #endif

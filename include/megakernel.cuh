@@ -168,7 +168,13 @@ struct megakernel_wrapper {
 };
 
 template <typename config, typename globals, typename... ops>
+#if defined(MK_THOR) && !MK_THOR_DYNAMIC_REGISTERS
+// CUDA ignores command-line maxrregcount on kernels carrying launch bounds.
+// The per-kernel cap and launch_bounds attributes are mutually exclusive.
+__maxnreg__(MK_THOR_STATIC_REGISTERS)
+#else
 __launch_bounds__(config::NUM_THREADS, 1)
+#endif
     __cluster_dims__(config::CLUSTER_BLOCKS) __global__
     void mk(const __grid_constant__ globals g) {
     if constexpr (requires { config::COOPERATIVE_LAUNCH; }) {

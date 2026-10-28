@@ -42,6 +42,12 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
                    "opt-in shared memory attribute");
         cudaFuncAttributes attrs;
         check_cuda(cudaFuncGetAttributes(&attrs, kernel), "cudaFuncGetAttributes");
+#ifdef MK_THOR
+        if constexpr (Config::STATIC_REGISTER_ALLOCATION) {
+            if (attrs.numRegs > MK_THOR_STATIC_REGISTERS)
+                throw std::runtime_error("compiled register usage exceeds explicit static cap");
+        }
+#endif
         const int dynamic = g.dynamic_shared_memory();
         if (dynamic < Config::NUM_PAGES * Config::PAGE_SIZE + 1023 ||
             dynamic + attrs.sharedSizeBytes > static_cast<size_t>(optin))
@@ -68,6 +74,9 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
         result["portable_gmem_barriers"] = MK_PORTABLE_GMEM_BARRIERS != 0;
         result["physical_sms"] = prop.multiProcessorCount;
         result["register_mode"] = Config::STATIC_REGISTER_ALLOCATION ? "static" : "dynamic";
+#ifdef MK_THOR
+        result["static_register_cap"] = Config::STATIC_REGISTER_ALLOCATION ? MK_THOR_STATIC_REGISTERS : 0;
+#endif
         result["consumer_register_target"] = Config::CONSUMER_REGISTERS;
         result["service_register_target"] = Config::NON_CONSUMER_REGISTERS;
         result["ordered_downproj"] = Config::ORDERED_DOWNPROJ;

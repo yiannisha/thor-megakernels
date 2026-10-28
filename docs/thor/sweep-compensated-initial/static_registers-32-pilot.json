@@ -1,0 +1,894 @@
+{
+  "schema_version": 1,
+  "run_id": "f1a54c3e-9edd-431e-9cbb-d429a3d8c642",
+  "timestamp": "2026-10-28T00:24:28.385823+00:00",
+  "inventory": {
+    "platform": "Linux-6.8.12-1021-tegra-aarch64-with-glibc2.39",
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.13.0+cu132",
+      "transformers": "4.48.3",
+      "pybind11": "2.13.6"
+    },
+    "cuda_driver": {
+      "devices": [
+        {
+          "ordinal": 0,
+          "name": "NVIDIA Thor",
+          "sm_count": 20,
+          "cc_major": 11,
+          "cc_minor": 0,
+          "max_threads_per_block": 1024,
+          "shared_memory_per_block": 49152,
+          "shared_memory_per_sm": 233472,
+          "shared_memory_optin": 232448,
+          "max_blocks_per_sm": 24,
+          "cooperative_launch": 1
+        }
+      ]
+    },
+    "tools": {
+      "nvcc": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc",
+      "tegrastats": "/usr/bin/tegrastats",
+      "nsys": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/opt/nvidia/nsight-systems/2025.6.3/bin/nsys",
+      "ncu": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/opt/nvidia/nsight-compute/2026.1.1/ncu",
+      "jtop": null
+    },
+    "commands": {
+      "nvcc": {
+        "returncode": 0,
+        "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_May_08_10:52:52_AM_PDT_2026\nCuda compilation tools, release 13.2, V13.2.86\nBuild cuda_13.2.r13.2/compiler.37953736_0",
+        "stderr": ""
+      },
+      "nvcc_targets": {
+        "returncode": 0,
+        "stdout": "sm_75\nsm_80\nsm_86\nsm_87\nsm_88\nsm_89\nsm_90\nsm_100\nsm_110\nsm_103\nsm_120\nsm_121",
+        "stderr": ""
+      },
+      "nvidia_smi": {
+        "returncode": 0,
+        "stdout": "==============NVSMI LOG==============\n\nTimestamp                                              : Tue Oct 27 17:24:28 2026\nDriver Version                                         : 595.78\nCUDA Version                                           : 13.2\n\nAttached GPUs                                          : 1\nGPU 00000000:01:00.0\n    Product Name                                       : NVIDIA Thor\n    Product Brand                                      : GeForce\n    Product Architecture                               : Blackwell\n    Display Mode                                       : Requested functionality has been deprecated\n    Display Attached                                   : No\n    Display Active                                     : Disabled\n    Persistence Mode                                   : Disabled\n    Addressing Mode                                    : ATS\n    MIG Mode\n        Current                                        : Disabled\n        Pending                                        : Disabled\n    Accounting Mode                                    : Disabled\n    Accounting Mode Buffer Size                        : 4000\n    Driver Model\n        Current                                        : N/A\n        Pending                                        : N/A\n    Serial Number                                      : N/A\n    GPU UUID                                           : GPU-a7c66ad2-6dbb-0ab8-c1a2-37ba6dba3600\n    GPU PDI                                            : 0xf7df299c60122a9d\n    Minor Number                                       : 0\n    VBIOS Version                                      : N/A\n    MultiGPU Board                                     : No\n    Board ID                                           : 0x100\n    Board Part Number                                  : N/A\n    GPU Part Number                                    : 2B00--A1\n    FRU Part Number                                    : N/A\n    Platform Info\n        Chassis Serial Number                          : N/A\n        Slot Number                                    : N/A\n        Tray Index                                     : N/A\n        Host ID                                        : N/A\n        Peer Type                                      : N/A\n        Module Id                                      : N/A\n        GPU Fabric GUID                                : N/A\n    Inforom Version\n        Image Version                                  : N/A\n        OEM Object                                     : N/A\n        ECC Object                                     : N/A\n        Power Management Object                        : N/A\n    Inforom BBX Object Flush\n        Latest Timestamp                               : N/A\n        Latest Duration                                : N/A\n    GPU Operation Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    GPU C2C Mode                                       : Disabled\n    GPU Virtualization Mode\n        Virtualization Mode                            : None\n        Host VGPU Mode                                 : N/A\n        vGPU Heterogeneous Mode                        : N/A\n    GPU Recovery Action                                : None\n    GSP Firmware Version                               : 595.78\n    IBMNPU\n        Relaxed Ordering Mode                          : N/A\n    PCI\n        Bus                                            : 0x01\n        Device                                         : 0x00\n        Domain                                         : 0x0000\n        Base Classcode                                 : 0x3\n        Sub Classcode                                  : 0x2\n        Device Id                                      : 0x2B0010DE\n        Bus Id                                         : 00000000:01:00.0\n        Sub System Id                                  : 0x00000000\n        GPU Link Info\n            PCIe Generation\n                Max                                    : 1\n                Current                                : 1\n                Device Current                         : 1\n                Device Max                             : 5\n                Host Max                               : 1\n            Link Width\n                Max                                    : 16x\n                Current                                : 1x\n        Bridge Chip\n            Type                                       : N/A\n            Firmware                                   : N/A\n        Replays Since Reset                            : 0\n        Replay Number Rollovers                        : 0\n        Tx Throughput                                  : N/A\n        Rx Throughput                                  : N/A\n        Atomic Caps Outbound                           : FETCHADD_32 FETCHADD_64 SWAP_32 SWAP_64 CAS_32 CAS_64 \n        Atomic Caps Inbound                            : N/A\n    Fan Speed                                          : N/A\n    Performance State                                  : N/A\n    Clocks Event Reasons                               : N/A\n    Clocks Event Reasons Counters\n        SW Power Capping                               : N/A\n        Sync Boost                                     : N/A\n        SW Thermal Slowdown                            : N/A\n        HW Thermal Slowdown                            : N/A\n        HW Power Braking                               : N/A\n    Sparse Operation Mode                              : N/A\n    FB Memory Usage\n        Total                                          : N/A\n        Reserved                                       : N/A\n        Used                                           : N/A\n        Free                                           : N/A\n    BAR1 Memory Usage\n        Total                                          : N/A\n        Used                                           : N/A\n        Free                                           : N/A\n    Conf Compute Protected Memory Usage\n        Total                                          : 0 MiB\n        Used                                           : 0 MiB\n        Free                                           : 0 MiB\n    Compute Mode                                       : Default\n    Utilization\n        GPU                                            : 0 %\n        Memory                                         : 0 %\n        Encoder                                        : 0 %\n        Decoder                                        : 0 %\n        JPEG                                           : 0 %\n        OFA                                            : 0 %\n    Encoder Stats\n        Active Sessions                                : 0\n        Average FPS                                    : 0\n        Average Latency                                : 0\n    FBC Stats\n        Active Sessions                                : 0\n        Average FPS                                    : 0\n        Average Latency                                : 0\n    DRAM Encryption Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    ECC Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    ECC Errors\n        Volatile\n            SRAM Correctable                           : N/A\n            SRAM Uncorrectable Parity                  : N/A\n            SRAM Uncorrectable SEC-DED                 : N/A\n            DRAM Correctable                           : N/A\n            DRAM Uncorrectable                         : N/A\n        Aggregate\n            SRAM Correctable                           : N/A\n            SRAM Uncorrectable Parity                  : N/A\n            SRAM Uncorrectable SEC-DED                 : N/A\n            DRAM Correctable                           : N/A\n            DRAM Uncorrectable                         : N/A\n            SRAM Threshold Exceeded                    : N/A\n        Aggregate Uncorrectable SRAM Sources\n            SRAM L2                                    : N/A\n            SRAM SM                                    : N/A\n            SRAM Microcontroller                       : N/A\n            SRAM PCIE                                  : N/A\n            SRAM Other                                 : N/A\n        Channel Repair Pending                         : N/A\n        TPC Repair Pending                             : N/A\n        Unrepairable Memory                            : N/A\n    Retired Pages\n        Single Bit ECC                                 : N/A\n        Double Bit ECC                                 : N/A\n        Pending Page Blacklist                         : N/A\n    Remapped Rows                                      : N/A\n    Temperature\n        GPU Current Temp                               : 34 C\n        GPU T.Limit Temp                               : N/A\n        GPU Shutdown Temp                              : N/A\n        GPU Slowdown Temp                              : N/A\n        GPU Max Operating Temp                         : N/A\n        GPU Target Temperature                         : N/A\n        Memory Current Temp                            : N/A\n        Memory Max Operating Temp                      : N/A\n    GPU Power Readings\n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : 2.77 W\n        Current Power Limit                            : N/A\n        Requested Power Limit                          : N/A\n        Default Power Limit                            : N/A\n        Min Power Limit                                : N/A\n        Max Power Limit                                : N/A\n    GPU Memory Power Readings \n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : N/A\n    Module Power Readings\n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : N/A\n        Current Power Limit                            : N/A\n        Requested Power Limit                          : N/A\n        Default Power Limit                            : N/A\n        Min Power Limit                                : N/A\n        Max Power Limit                                : N/A\n    Power Smoothing                                    : N/A\n    Workload Power Profiles\n        Requested Profiles                             : N/A\n        Enforced Profiles                              : N/A\n    EDPp Multiplier                                    : N/A\n    Clocks\n        Graphics                                       : 315 MHz\n        SM                                             : N/A\n        Memory                                         : N/A\n        Video                                          : 315 MHz\n    Applications Clocks\n        Graphics                                       : Requested functionality has been deprecated\n        Memory                                         : Requested functionality has been deprecated\n    Default Applications Clocks\n        Graphics                                       : Requested functionality has been deprecated\n        Memory                                         : Requested functionality has been deprecated\n    Deferred Clocks\n        Memory                                         : N/A\n    Max Clocks\n        Graphics                                       : N/A\n        SM                                             : N/A\n        Memory                                         : N/A\n        Video                                          : N/A\n    Max Customer Boost Clocks\n        Graphics                                       : N/A\n    Clock Policy\n        Auto Boost                                     : N/A\n        Auto Boost Default                             : N/A\n    Fabric\n        State                                          : N/A\n        Status                                         : N/A\n        CliqueId                                       : N/A\n        ClusterUUID                                    : N/A\n        Health\n            Summary                                    : N/A\n            Bandwidth                                  : N/A\n            Route Recovery in progress                 : N/A\n            Route Unhealthy                            : N/A\n            Access Timeout Recovery                    : N/A\n            Incorrect Configuration                    : N/A\n            Partition Assigned                         : N/A\n    Processes\n        GPU instance ID                   : N/A\n        Compute instance ID               : N/A\n        Process ID                        : 5564\n            Type                          : G\n            Name                          : /usr/lib/xorg/Xorg\n            Used GPU Memory               : 91 MiB\n        GPU instance ID                   : N/A\n        Compute instance ID               : N/A\n        Process ID                        : 5823\n            Type                          : G\n            Name                          : /usr/bin/gnome-shell\n            Used GPU Memory               : 48 MiB\n    Capabilities\n        EGM                                            : disabled",
+        "stderr": ""
+      },
+      "power_mode": {
+        "returncode": 0,
+        "stdout": "NV Power Mode: 120W\n1",
+        "stderr": ""
+      },
+      "git_sha": {
+        "returncode": 0,
+        "stdout": "223874b765b0d8d23bbc6f7dddd28b4eddf87291",
+        "stderr": ""
+      },
+      "worktree": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "submodules": {
+        "returncode": 0,
+        "stdout": "664c108d16f12707a73d3072ab525f26fb2b4f62 ThunderKittens (664c108d)",
+        "stderr": ""
+      }
+    },
+    "jetpack_release": "# R39 (release), REVISION: 2.1, GCID: 46758480, BOARD: generic, EABI: aarch64, DATE: Fri Aug  7 05:54:22 AM UTC 2026\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia\n"
+  },
+  "protocol": {
+    "timeout": 300,
+    "worker": true,
+    "run_id": "f1a54c3e-9edd-431e-9cbb-d429a3d8c642",
+    "adapter": "tools.thor.model_bench:make_adapter",
+    "output": "/home/thor-guest/ml-perf/Megakernels/local/thor-sweep-compensated-static/f1f5063a62a660d0423642f1537149cb2e179e832d8bf1c54b7d55a4f78948c9/pilot.json",
+    "dry_run": false,
+    "warmups": 5,
+    "repeats": 10,
+    "batches": 1
+  },
+  "status": "PASS",
+  "errors": [],
+  "summary": {
+    "p50_ms": 14.551727771759033,
+    "p95_ms": 14.768491458892822,
+    "p99_ms": 14.820296802520751,
+    "mean_ms": 14.531004810333252,
+    "min_ms": 14.303232192993164,
+    "max_ms": 14.833248138427734,
+    "tokens_per_s": 68.81836549175749
+  },
+  "metadata": {
+    "model": "Llama-3.2-1B-Instruct",
+    "model_provenance": {
+      "path": "/home/thor-guest/ml-perf/Megakernels/local/models/Llama-3.2-1B-Instruct",
+      "config": {
+        "architectures": [
+          "LlamaForCausalLM"
+        ],
+        "attention_bias": false,
+        "attention_dropout": 0.0,
+        "bos_token_id": 128000,
+        "eos_token_id": [
+          128001,
+          128008,
+          128009
+        ],
+        "head_dim": 64,
+        "hidden_act": "silu",
+        "hidden_size": 2048,
+        "initializer_range": 0.02,
+        "intermediate_size": 8192,
+        "max_position_embeddings": 131072,
+        "mlp_bias": false,
+        "model_type": "llama",
+        "num_attention_heads": 32,
+        "num_hidden_layers": 16,
+        "num_key_value_heads": 8,
+        "pretraining_tp": 1,
+        "rms_norm_eps": 1e-05,
+        "rope_scaling": {
+          "factor": 32.0,
+          "high_freq_factor": 4.0,
+          "low_freq_factor": 1.0,
+          "original_max_position_embeddings": 8192,
+          "rope_type": "llama3"
+        },
+        "rope_theta": 500000.0,
+        "tie_word_embeddings": true,
+        "torch_dtype": "bfloat16",
+        "transformers_version": "4.45.0.dev0",
+        "use_cache": true,
+        "vocab_size": 128256
+      },
+      "config_sha256": "2febf68cea25bf4611be02b7536f2488a5ba523bb1134986e3610152abe74fdb",
+      "download_revision": "9213176726f574b556790deb65791e0c5aa438b6",
+      "tensor_count": 146,
+      "weights": [
+        {
+          "file": "model.safetensors",
+          "bytes": 2471645608,
+          "sha256": "1ff795ff6a07e6a68085d206fb84417da2f083f68391c2843cd2b8ac6df8538f"
+        }
+      ]
+    },
+    "precision": "bf16",
+    "reference_attention": "flash",
+    "prefill_attention": "flash",
+    "float32_matmul_precision": "highest",
+    "context": 1024,
+    "batch": 1,
+    "seed": 1,
+    "measurement_scope": "decode",
+    "tokens_per_run": 1,
+    "engine": "native",
+    "variant": "native:static_registers-32",
+    "config": {
+      "name": "static_registers-32",
+      "consumer_warps": 16,
+      "consumer_registers": 104,
+      "service_registers": 64,
+      "register_mode": "static",
+      "static_registers": 32,
+      "workers": 20,
+      "backoff_ns": 20,
+      "scheduler": "rr",
+      "instruction_parties": 32,
+      "ordered_downproj": false,
+      "fp32_downproj": true,
+      "match_torch_bf16_epilogues": true,
+      "compensated_attention": true,
+      "fp64_rms": false,
+      "match_torch_bf16_rms": true,
+      "timing": false,
+      "arch": "sm_110a",
+      "page_size": 16384,
+      "page_count": 13,
+      "weight_stages": 3,
+      "tile_width": 512,
+      "architecture": "static",
+      "precision": "bf16"
+    },
+    "power_mode": "NV Power Mode: 120W\n1",
+    "concurrent_workload": "uncontrolled-existing",
+    "same_cache_replay": true,
+    "input_hash": "4b9ed18b09b88ae7189a9b3becf50a049d93a8cc5ccd6b328f98f537eaf4305a",
+    "native_resources": {
+      "cooperative_launch": true,
+      "cooperative_launch_supported": true,
+      "build_source_hash": "bc5210fef0090f09c7697b1cc6859d133e6babdf2eabb439f65f51fa6751f016",
+      "portable_gmem_barriers": true,
+      "physical_sms": 20,
+      "register_mode": "static",
+      "consumer_register_target": 104,
+      "service_register_target": 64,
+      "ordered_downproj": false,
+      "fp32_downproj": true,
+      "fp64_rms": false,
+      "compensated_attention": true,
+      "match_torch_bf16_epilogues": true,
+      "match_torch_bf16_rms": true,
+      "consumer_warps": 16,
+      "threads_per_cta": 640,
+      "instruction_barrier_parties_per_warp": 32,
+      "backoff_ns": 20,
+      "timing_enabled": false,
+      "active_workers": 20,
+      "weight_pipeline_stages": 3,
+      "page_count": 13,
+      "page_size": 16384,
+      "resident_ctas_per_sm": 1,
+      "static_smem_bytes": 10384,
+      "dynamic_smem_bytes": 214015,
+      "registers_per_thread": 96,
+      "local_bytes_per_thread": 208
+    },
+    "native_build": {
+      "timestamp": "2026-10-28T00:24:28.228859+00:00",
+      "binary": "/home/thor-guest/ml-perf/Megakernels/local/thor-sweep-compensated-static/f1f5063a62a660d0423642f1537149cb2e179e832d8bf1c54b7d55a4f78948c9/mk_llama.cpython-312-aarch64-linux-gnu.so",
+      "binary_sha256": "9b6fd8188d05a2bb47de6d8ba4e8a254908ba7c33cd85871bc78dc53bec146ea",
+      "source_hash": "bc5210fef0090f09c7697b1cc6859d133e6babdf2eabb439f65f51fa6751f016",
+      "gpu_target": "THOR",
+      "compiler": {
+        "returncode": 0,
+        "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_May_08_10:52:52_AM_PDT_2026\nCuda compilation tools, release 13.2, V13.2.86\nBuild cuda_13.2.r13.2/compiler.37953736_0",
+        "stderr": ""
+      },
+      "flags": [
+        "-DNDEBUG",
+        "-Xcompiler=-fPIE",
+        "--expt-extended-lambda",
+        "--expt-relaxed-constexpr",
+        "-Xcompiler=-Wno-psabi",
+        "-Xcompiler=-fno-strict-aliasing",
+        "--use_fast_math",
+        "-forward-unknown-to-host-compiler",
+        "-O3",
+        "-Xnvlink=--verbose",
+        "-Xptxas=--verbose",
+        "-Xptxas=--warn-on-spills",
+        "-std=c++20",
+        "-x",
+        "cu",
+        "-lrt",
+        "-lpthread",
+        "-ldl",
+        "-lcuda",
+        "-lcudadevrt",
+        "-lcudart_static",
+        "-lcublas",
+        "-lineinfo",
+        "-I/home/thor-guest/ml-perf/Megakernels/local/thunderkittens/include",
+        "-I/home/thor-guest/ml-perf/Megakernels/include",
+        "-I/usr/include/python3.12",
+        "-I/home/thor-guest/ml-perf/Megakernels/local/thor-venv/lib/python3.12/site-packages/pybind11/include",
+        "-L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/python3.12/config-3.12-aarch64-linux-gnu",
+        "-L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/aarch64-linux-gnu",
+        "-ldl",
+        "-lm",
+        "-shared",
+        "-fPIC",
+        "-DMK_BUILD_SOURCE_HASH=\"bc5210fef0090f09c7697b1cc6859d133e6babdf2eabb439f65f51fa6751f016\"",
+        "-DKITTENS_HOPPER",
+        "-DMK_THOR",
+        "-DMK_ACTIVE_WORKERS=20",
+        "-gencode=arch=compute_110a,code=sm_110a",
+        "-DMK_THOR_DYNAMIC_REGISTERS=0",
+        "-maxrregcount=32",
+        "-DMK_WEIGHT_PIPELINE_STAGES=3",
+        "-DMK_PAGE_COUNT=13",
+        "-DMK_THOR_DYNAMIC_REGISTERS=0",
+        "-DMK_CONSUMER_WARPS=16",
+        "-DMK_CONSUMER_REGISTERS=104",
+        "-DMK_SERVICE_REGISTERS=64",
+        "-DMK_BACKOFF_NS=20",
+        "-DMK_RECORD_TIMING=0",
+        "-DMK_MATCH_TORCH_BF16_RMS=1",
+        "-DMK_ORDERED_DOWNPROJ=0",
+        "-DMK_FP32_DOWNPROJ=1",
+        "-DMK_FP64_RMS=0",
+        "-DMK_COMPENSATED_ATTENTION=1",
+        "-DMK_MATCH_TORCH_BF16_EPILOGUES=1",
+        "-DMK_INSTRUCTION_BARRIER_PARTIES=32"
+      ]
+    },
+    "gate": {
+      "logit_nrmse_limit": 0.03,
+      "state_nrmse_limit": 0.02
+    },
+    "timing_includes": [
+      "embedding",
+      "runtime_dispatch",
+      "decoder",
+      "lm_head",
+      "argmax"
+    ],
+    "timing_excludes": [
+      "model_loading",
+      "prefill",
+      "frozen_KV_restore",
+      "correctness_checks"
+    ],
+    "cuda_event_note": "interval includes CPU enqueue gaps; all work uses current stream",
+    "dram_gb_s": null,
+    "gpu_power_w": null,
+    "energy_per_token_j": null
+  },
+  "correctness": {
+    "passed": true,
+    "metrics": {
+      "logits": {
+        "passed": true,
+        "max_absolute_error": 0.08984375,
+        "mean_absolute_error": 0.020043637603521347,
+        "max_relative_error": 1914.90478515625,
+        "mean_relative_error": 0.13827502727508545,
+        "normalized_rmse": 0.016105184331536293,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.03
+      },
+      "hidden": {
+        "passed": true,
+        "max_absolute_error": 0.0625,
+        "mean_absolute_error": 0.0048392415046691895,
+        "max_relative_error": 6103.515625,
+        "mean_relative_error": 3.022614002227783,
+        "normalized_rmse": 0.005903955549001694,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.02
+      },
+      "k_cache": {
+        "passed": true,
+        "max_absolute_error": 0.125,
+        "mean_absolute_error": 0.008603425696492195,
+        "max_relative_error": 25.955665588378906,
+        "mean_relative_error": 0.026324983686208725,
+        "normalized_rmse": 0.005396516062319279,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.02
+      },
+      "v_cache": {
+        "passed": true,
+        "max_absolute_error": 0.03125,
+        "mean_absolute_error": 0.0026629362255334854,
+        "max_relative_error": 144.15789794921875,
+        "mean_relative_error": 0.08368092775344849,
+        "normalized_rmse": 0.013292677700519562,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.02
+      }
+    },
+    "greedy_token_matches": true
+  },
+  "trials": [
+    {
+      "batch_index": 0,
+      "samples_ms": [
+        14.68934440612793,
+        14.413503646850586,
+        14.303232192993164,
+        14.833248138427734,
+        14.642175674438477,
+        14.478879928588867,
+        14.6245756149292,
+        14.33011245727539,
+        14.659968376159668,
+        14.335007667541504
+      ],
+      "correctness_checks": [
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.08984375,
+              "mean_absolute_error": 0.020043637603521347,
+              "max_relative_error": 1914.90478515625,
+              "mean_relative_error": 0.13827502727508545,
+              "normalized_rmse": 0.016105184331536293,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0625,
+              "mean_absolute_error": 0.0048392415046691895,
+              "max_relative_error": 6103.515625,
+              "mean_relative_error": 3.022614002227783,
+              "normalized_rmse": 0.005903955549001694,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.008603425696492195,
+              "max_relative_error": 25.955665588378906,
+              "mean_relative_error": 0.026324983686208725,
+              "normalized_rmse": 0.005396516062319279,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.03125,
+              "mean_absolute_error": 0.0026629362255334854,
+              "max_relative_error": 144.15789794921875,
+              "mean_relative_error": 0.08368092775344849,
+              "normalized_rmse": 0.013292677700519562,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.08984375,
+              "mean_absolute_error": 0.020043637603521347,
+              "max_relative_error": 1914.90478515625,
+              "mean_relative_error": 0.13827502727508545,
+              "normalized_rmse": 0.016105184331536293,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0625,
+              "mean_absolute_error": 0.0048392415046691895,
+              "max_relative_error": 6103.515625,
+              "mean_relative_error": 3.022614002227783,
+              "normalized_rmse": 0.005903955549001694,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.008603425696492195,
+              "max_relative_error": 25.955665588378906,
+              "mean_relative_error": 0.026324983686208725,
+              "normalized_rmse": 0.005396516062319279,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.03125,
+              "mean_absolute_error": 0.0026629362255334854,
+              "max_relative_error": 144.15789794921875,
+              "mean_relative_error": 0.08368092775344849,
+              "normalized_rmse": 0.013292677700519562,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.08984375,
+              "mean_absolute_error": 0.020043637603521347,
+              "max_relative_error": 1914.90478515625,
+              "mean_relative_error": 0.13827502727508545,
+              "normalized_rmse": 0.016105184331536293,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0625,
+              "mean_absolute_error": 0.0048392415046691895,
+              "max_relative_error": 6103.515625,
+              "mean_relative_error": 3.022614002227783,
+              "normalized_rmse": 0.005903955549001694,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.008603425696492195,
+              "max_relative_error": 25.955665588378906,
+              "mean_relative_error": 0.026324983686208725,
+              "normalized_rmse": 0.005396516062319279,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.03125,
+              "mean_absolute_error": 0.0026629362255334854,
+              "max_relative_error": 144.15789794921875,
+              "mean_relative_error": 0.08368092775344849,
+              "normalized_rmse": 0.013292677700519562,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.08984375,
+              "mean_absolute_error": 0.020043637603521347,
+              "max_relative_error": 1914.90478515625,
+              "mean_relative_error": 0.13827502727508545,
+              "normalized_rmse": 0.016105184331536293,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0625,
+              "mean_absolute_error": 0.0048392415046691895,
+              "max_relative_error": 6103.515625,
+              "mean_relative_error": 3.022614002227783,
+              "normalized_rmse": 0.005903955549001694,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.008603425696492195,
+              "max_relative_error": 25.955665588378906,
+              "mean_relative_error": 0.026324983686208725,
+              "normalized_rmse": 0.005396516062319279,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.03125,
+              "mean_absolute_error": 0.0026629362255334854,
+              "max_relative_error": 144.15789794921875,
+              "mean_relative_error": 0.08368092775344849,
+              "normalized_rmse": 0.013292677700519562,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.08984375,
+              "mean_absolute_error": 0.020043637603521347,
+              "max_relative_error": 1914.90478515625,
+              "mean_relative_error": 0.13827502727508545,
+              "normalized_rmse": 0.016105184331536293,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0625,
+              "mean_absolute_error": 0.0048392415046691895,
+              "max_relative_error": 6103.515625,
+              "mean_relative_error": 3.022614002227783,
+              "normalized_rmse": 0.005903955549001694,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.008603425696492195,
+              "max_relative_error": 25.955665588378906,
+              "mean_relative_error": 0.026324983686208725,
+              "normalized_rmse": 0.005396516062319279,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.03125,
+              "mean_absolute_error": 0.0026629362255334854,
+              "max_relative_error": 144.15789794921875,
+              "mean_relative_error": 0.08368092775344849,
+              "normalized_rmse": 0.013292677700519562,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.08984375,
+              "mean_absolute_error": 0.020043637603521347,
+              "max_relative_error": 1914.90478515625,
+              "mean_relative_error": 0.13827502727508545,
+              "normalized_rmse": 0.016105184331536293,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0625,
+              "mean_absolute_error": 0.0048392415046691895,
+              "max_relative_error": 6103.515625,
+              "mean_relative_error": 3.022614002227783,
+              "normalized_rmse": 0.005903955549001694,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.008603425696492195,
+              "max_relative_error": 25.955665588378906,
+              "mean_relative_error": 0.026324983686208725,
+              "normalized_rmse": 0.005396516062319279,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.03125,
+              "mean_absolute_error": 0.0026629362255334854,
+              "max_relative_error": 144.15789794921875,
+              "mean_relative_error": 0.08368092775344849,
+              "normalized_rmse": 0.013292677700519562,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.08984375,
+              "mean_absolute_error": 0.020043637603521347,
+              "max_relative_error": 1914.90478515625,
+              "mean_relative_error": 0.13827502727508545,
+              "normalized_rmse": 0.016105184331536293,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0625,
+              "mean_absolute_error": 0.0048392415046691895,
+              "max_relative_error": 6103.515625,
+              "mean_relative_error": 3.022614002227783,
+              "normalized_rmse": 0.005903955549001694,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.008603425696492195,
+              "max_relative_error": 25.955665588378906,
+              "mean_relative_error": 0.026324983686208725,
+              "normalized_rmse": 0.005396516062319279,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.03125,
+              "mean_absolute_error": 0.0026629362255334854,
+              "max_relative_error": 144.15789794921875,
+              "mean_relative_error": 0.08368092775344849,
+              "normalized_rmse": 0.013292677700519562,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.08984375,
+              "mean_absolute_error": 0.020043637603521347,
+              "max_relative_error": 1914.90478515625,
+              "mean_relative_error": 0.13827502727508545,
+              "normalized_rmse": 0.016105184331536293,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0625,
+              "mean_absolute_error": 0.0048392415046691895,
+              "max_relative_error": 6103.515625,
+              "mean_relative_error": 3.022614002227783,
+              "normalized_rmse": 0.005903955549001694,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.008603425696492195,
+              "max_relative_error": 25.955665588378906,
+              "mean_relative_error": 0.026324983686208725,
+              "normalized_rmse": 0.005396516062319279,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.03125,
+              "mean_absolute_error": 0.0026629362255334854,
+              "max_relative_error": 144.15789794921875,
+              "mean_relative_error": 0.08368092775344849,
+              "normalized_rmse": 0.013292677700519562,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.08984375,
+              "mean_absolute_error": 0.020043637603521347,
+              "max_relative_error": 1914.90478515625,
+              "mean_relative_error": 0.13827502727508545,
+              "normalized_rmse": 0.016105184331536293,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0625,
+              "mean_absolute_error": 0.0048392415046691895,
+              "max_relative_error": 6103.515625,
+              "mean_relative_error": 3.022614002227783,
+              "normalized_rmse": 0.005903955549001694,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.008603425696492195,
+              "max_relative_error": 25.955665588378906,
+              "mean_relative_error": 0.026324983686208725,
+              "normalized_rmse": 0.005396516062319279,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.03125,
+              "mean_absolute_error": 0.0026629362255334854,
+              "max_relative_error": 144.15789794921875,
+              "mean_relative_error": 0.08368092775344849,
+              "normalized_rmse": 0.013292677700519562,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        },
+        {
+          "passed": true,
+          "metrics": {
+            "logits": {
+              "passed": true,
+              "max_absolute_error": 0.08984375,
+              "mean_absolute_error": 0.020043637603521347,
+              "max_relative_error": 1914.90478515625,
+              "mean_relative_error": 0.13827502727508545,
+              "normalized_rmse": 0.016105184331536293,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.03
+            },
+            "hidden": {
+              "passed": true,
+              "max_absolute_error": 0.0625,
+              "mean_absolute_error": 0.0048392415046691895,
+              "max_relative_error": 6103.515625,
+              "mean_relative_error": 3.022614002227783,
+              "normalized_rmse": 0.005903955549001694,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "k_cache": {
+              "passed": true,
+              "max_absolute_error": 0.125,
+              "mean_absolute_error": 0.008603425696492195,
+              "max_relative_error": 25.955665588378906,
+              "mean_relative_error": 0.026324983686208725,
+              "normalized_rmse": 0.005396516062319279,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            },
+            "v_cache": {
+              "passed": true,
+              "max_absolute_error": 0.03125,
+              "mean_absolute_error": 0.0026629362255334854,
+              "max_relative_error": 144.15789794921875,
+              "mean_relative_error": 0.08368092775344849,
+              "normalized_rmse": 0.013292677700519562,
+              "atol": 0.25,
+              "rtol": 0.05,
+              "nrmse_limit": 0.02
+            }
+          },
+          "greedy_token_matches": true
+        }
+      ],
+      "p50_ms": 14.551727771759033,
+      "p95_ms": 14.768491458892822,
+      "p99_ms": 14.820296802520751,
+      "mean_ms": 14.531004810333252,
+      "min_ms": 14.303232192993164,
+      "max_ms": 14.833248138427734
+    }
+  ],
+  "warmups_completed": 5,
+  "process": {
+    "returncode": 0,
+    "output": "\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.06it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.06it/s]\n{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/local/thor-sweep-compensated-static/f1f5063a62a660d0423642f1537149cb2e179e832d8bf1c54b7d55a4f78948c9/pilot.json\", \"errors\": []}\n"
+  }
+}

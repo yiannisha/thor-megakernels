@@ -75,6 +75,8 @@ class ModelAdapter:
                         'service_register_target': self.config.service_registers,
                         'match_torch_bf16_rms': self.config.match_torch_bf16_rms,
                         'instruction_barrier_parties_per_warp': self.config.instruction_parties}
+            if self.config.register_mode == 'static':
+                expected['static_register_cap'] = self.config.static_registers
             if any(resources.get(k) != value for k, value in expected.items()):
                 raise RuntimeError(f'compiled configuration does not match requested config: {resources}')
             device = driver_devices()['devices'][0]
