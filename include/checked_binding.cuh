@@ -43,6 +43,14 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
         cudaFuncAttributes attrs;
         check_cuda(cudaFuncGetAttributes(&attrs, kernel), "cudaFuncGetAttributes");
 #ifdef MK_THOR
+        if constexpr (!Config::STATIC_REGISTER_ALLOCATION) {
+            const int role_registers = 32 * (Config::NUM_CONSUMER_WARPS * Config::CONSUMER_REGISTERS +
+                                           4 * Config::NON_CONSUMER_REGISTERS);
+            // Redistribution draws from this CTA's initial pool, not free SM
+            // registers. Conservatively exclude allocation-granularity slack.
+            if (attrs.numRegs < 24 || role_registers > attrs.numRegs * Config::NUM_THREADS)
+                throw std::runtime_error("dynamic register targets exceed initial CTA register pool");
+        }
         if constexpr (Config::STATIC_REGISTER_ALLOCATION) {
             if (attrs.numRegs > MK_THOR_STATIC_REGISTERS)
                 throw std::runtime_error("compiled register usage exceeds explicit static cap");
@@ -75,6 +83,10 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
         result["physical_sms"] = prop.multiProcessorCount;
         result["register_mode"] = Config::STATIC_REGISTER_ALLOCATION ? "static" : "dynamic";
 #ifdef MK_THOR
+        result["register_bootstrap"] = !Config::STATIC_REGISTER_ALLOCATION;
+        result["initial_cta_registers"] = attrs.numRegs * Config::NUM_THREADS;
+        result["role_target_registers"] = 32 * (Config::NUM_CONSUMER_WARPS * Config::CONSUMER_REGISTERS +
+                                              4 * Config::NON_CONSUMER_REGISTERS);
         result["static_register_cap"] = Config::STATIC_REGISTER_ALLOCATION ? MK_THOR_STATIC_REGISTERS : 0;
 #endif
         result["consumer_register_target"] = Config::CONSUMER_REGISTERS;

@@ -118,12 +118,16 @@ __device__ inline void mk_internal(const globals &g) {
 #endif
 
     if (kittens::warpid() < config::NUM_CONSUMER_WARPS) {
+#ifndef MK_THOR
         if constexpr (!config::STATIC_REGISTER_ALLOCATION)
             kittens::warpgroup::increase_registers<config::CONSUMER_REGISTERS>();
+#endif
         ::megakernel::consumer::main_loop<config, globals, ops...>(g, mks);
     } else {
+#ifndef MK_THOR
         if constexpr (!config::STATIC_REGISTER_ALLOCATION)
             kittens::warpgroup::decrease_registers<config::NON_CONSUMER_REGISTERS>();
+#endif
         switch (kittens::warpgroup::warpid()) {
         case 0:
             ::megakernel::loader::main_loop<config, globals, ops...>(g, mks);
@@ -181,6 +185,19 @@ __launch_bounds__(config::NUM_THREADS, 1)
         if constexpr (config::COOPERATIVE_LAUNCH)
             cooperative_groups::this_grid().sync();
     }
+#ifdef MK_THOR
+    if constexpr (!config::STATIC_REGISTER_ALLOCATION) {
+        // Establish a known allocation before either role requests its target.
+        // No VM state is live here. The CTA barrier synchronizes all warps in
+        // each warpgroup between successive setmaxnreg instructions.
+        kittens::warpgroup::decrease_registers<24>();
+        __syncthreads();
+        if (threadIdx.x < config::NUM_CONSUMER_WARPS * kittens::WARP_THREADS)
+            kittens::warpgroup::increase_registers<config::CONSUMER_REGISTERS>();
+        else
+            kittens::warpgroup::increase_registers<config::NON_CONSUMER_REGISTERS>();
+    }
+#endif
     megakernel_wrapper<config, globals, ops...>::run(g);
 }
 
