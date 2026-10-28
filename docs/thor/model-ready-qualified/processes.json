@@ -1,0 +1,588 @@
+{
+  "source_hash": "1912d5bedae6db74526725def5e638e8a620ded398c671e70645175351e693b0",
+  "processes": [
+    {
+      "name": "build-static",
+      "command": [
+        "make",
+        "-B",
+        "-C",
+        "/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama",
+        "GPU=THOR",
+        "THOR_WORKERS=20",
+        "THOR_STATIC_REGISTERS=96",
+        "TARGET=/home/thor-guest/ml-perf/Megakernels/local/model-ready-qualified-static/mk_llama",
+        "EXTRA_NVCCFLAGS=-DMK_WEIGHT_PIPELINE_STAGES=3 -DMK_PAGE_COUNT=13 -DMK_PAGE_SIZE=16384 -DMK_WEIGHT_CHUNK_WIDTH=512 -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_CONSUMER_WARPS=16 -DMK_CONSUMER_REGISTERS=104 -DMK_SERVICE_REGISTERS=64 -DMK_BACKOFF_NS=20 -DMK_RECORD_TIMING=0 -DMK_ALLOW_MULTI_CTA=0 -DMK_READY_QUEUE=0 -DMK_SERIAL_INSTRUCTION_HANDOFF=0 -DMK_MATCH_TORCH_BF16_RMS=1 -DMK_ORDERED_DOWNPROJ=0 -DMK_FP32_DOWNPROJ=1 -DMK_FP64_RMS=0 -DMK_TENSORCORE_MATVEC=0 -DMK_COMPENSATED_ATTENTION=1 -DMK_MATCH_TORCH_BF16_EPILOGUES=1 -DMK_INSTRUCTION_BARRIER_PARTIES=32"
+      ],
+      "returncode": 0,
+      "output": "make: Entering directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc llama.cu -DNDEBUG -Xcompiler=-fPIE --expt-extended-lambda --expt-relaxed-constexpr -Xcompiler=-Wno-psabi -Xcompiler=-fno-strict-aliasing --use_fast_math -forward-unknown-to-host-compiler -O3 -Xnvlink=--verbose -Xptxas=--verbose -Xptxas=--warn-on-spills -std=c++20 -x cu -lrt -lpthread -ldl -lcuda -lcudadevrt -lcudart_static -lcublas -lineinfo -I/home/thor-guest/ml-perf/Megakernels/local/thunderkittens/include -I/home/thor-guest/ml-perf/Megakernels/include -I/usr/include/python3.12 -I/home/thor-guest/ml-perf/Megakernels/local/thor-venv/lib/python3.12/site-packages/pybind11/include -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/python3.12/config-3.12-aarch64-linux-gnu -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/aarch64-linux-gnu  -ldl  -lm  -shared -fPIC -DMK_BUILD_SOURCE_HASH='\"1912d5bedae6db74526725def5e638e8a620ded398c671e70645175351e693b0\"' -DKITTENS_HOPPER -DMK_THOR -DMK_ACTIVE_WORKERS=20 -gencode=arch=compute_110a,code=sm_110a -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_THOR_STATIC_REGISTERS=96 -maxrregcount=96 -DMK_WEIGHT_PIPELINE_STAGES=3 -DMK_PAGE_COUNT=13 -DMK_PAGE_SIZE=16384 -DMK_WEIGHT_CHUNK_WIDTH=512 -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_CONSUMER_WARPS=16 -DMK_CONSUMER_REGISTERS=104 -DMK_SERVICE_REGISTERS=64 -DMK_BACKOFF_NS=20 -DMK_RECORD_TIMING=0 -DMK_ALLOW_MULTI_CTA=0 -DMK_READY_QUEUE=0 -DMK_SERIAL_INSTRUCTION_HANDOFF=0 -DMK_MATCH_TORCH_BF16_RMS=1 -DMK_ORDERED_DOWNPROJ=0 -DMK_FP32_DOWNPROJ=1 -DMK_FP64_RMS=0 -DMK_TENSORCORE_MATVEC=0 -DMK_COMPENSATED_ATTENTION=1 -DMK_MATCH_TORCH_BF16_EPILOGUES=1 -DMK_INSTRUCTION_BARRIER_PARTIES=32 -o /home/thor-guest/ml-perf/Megakernels/local/model-ready-qualified-static/mk_llama.cpython-312-aarch64-linux-gnu.so\nptxas warning : Registers are spilled to local memory in function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_', 64 bytes spill stores, 108 bytes spill loads\nptxas info    : 6 bytes gmem\nptxas info    : Compiling entry function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_' for 'sm_110a'\nptxas info    : Function properties for _ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_\n    208 bytes stack frame, 64 bytes spill stores, 108 bytes spill loads\nptxas info    : Used 96 registers, used 16 barriers, 208 bytes cumulative stack size, 10384 bytes smem\nptxas info    : Compile time = 674.653 ms\nnvlink info    : 0 bytes gmem\npython3 ../../tools/thor/build_manifest.py --binary \"/home/thor-guest/ml-perf/Megakernels/local/model-ready-qualified-static/mk_llama.cpython-312-aarch64-linux-gnu.so\" --compiler \"/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc\" --gpu \"THOR\"\nmake: Leaving directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n"
+    },
+    {
+      "name": "build-joined",
+      "command": [
+        "make",
+        "-B",
+        "-C",
+        "/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama",
+        "GPU=THOR",
+        "THOR_WORKERS=20",
+        "THOR_STATIC_REGISTERS=96",
+        "TARGET=/home/thor-guest/ml-perf/Megakernels/local/model-ready-qualified-joined/mk_llama",
+        "EXTRA_NVCCFLAGS=-DMK_WEIGHT_PIPELINE_STAGES=3 -DMK_PAGE_COUNT=13 -DMK_PAGE_SIZE=16384 -DMK_WEIGHT_CHUNK_WIDTH=512 -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_CONSUMER_WARPS=16 -DMK_CONSUMER_REGISTERS=104 -DMK_SERVICE_REGISTERS=64 -DMK_BACKOFF_NS=20 -DMK_RECORD_TIMING=0 -DMK_ALLOW_MULTI_CTA=0 -DMK_READY_QUEUE=0 -DMK_SERIAL_INSTRUCTION_HANDOFF=1 -DMK_MATCH_TORCH_BF16_RMS=1 -DMK_ORDERED_DOWNPROJ=0 -DMK_FP32_DOWNPROJ=1 -DMK_FP64_RMS=0 -DMK_TENSORCORE_MATVEC=0 -DMK_COMPENSATED_ATTENTION=1 -DMK_MATCH_TORCH_BF16_EPILOGUES=1 -DMK_INSTRUCTION_BARRIER_PARTIES=32"
+      ],
+      "returncode": 0,
+      "output": "make: Entering directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc llama.cu -DNDEBUG -Xcompiler=-fPIE --expt-extended-lambda --expt-relaxed-constexpr -Xcompiler=-Wno-psabi -Xcompiler=-fno-strict-aliasing --use_fast_math -forward-unknown-to-host-compiler -O3 -Xnvlink=--verbose -Xptxas=--verbose -Xptxas=--warn-on-spills -std=c++20 -x cu -lrt -lpthread -ldl -lcuda -lcudadevrt -lcudart_static -lcublas -lineinfo -I/home/thor-guest/ml-perf/Megakernels/local/thunderkittens/include -I/home/thor-guest/ml-perf/Megakernels/include -I/usr/include/python3.12 -I/home/thor-guest/ml-perf/Megakernels/local/thor-venv/lib/python3.12/site-packages/pybind11/include -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/python3.12/config-3.12-aarch64-linux-gnu -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/aarch64-linux-gnu  -ldl  -lm  -shared -fPIC -DMK_BUILD_SOURCE_HASH='\"1912d5bedae6db74526725def5e638e8a620ded398c671e70645175351e693b0\"' -DKITTENS_HOPPER -DMK_THOR -DMK_ACTIVE_WORKERS=20 -gencode=arch=compute_110a,code=sm_110a -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_THOR_STATIC_REGISTERS=96 -maxrregcount=96 -DMK_WEIGHT_PIPELINE_STAGES=3 -DMK_PAGE_COUNT=13 -DMK_PAGE_SIZE=16384 -DMK_WEIGHT_CHUNK_WIDTH=512 -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_CONSUMER_WARPS=16 -DMK_CONSUMER_REGISTERS=104 -DMK_SERVICE_REGISTERS=64 -DMK_BACKOFF_NS=20 -DMK_RECORD_TIMING=0 -DMK_ALLOW_MULTI_CTA=0 -DMK_READY_QUEUE=0 -DMK_SERIAL_INSTRUCTION_HANDOFF=1 -DMK_MATCH_TORCH_BF16_RMS=1 -DMK_ORDERED_DOWNPROJ=0 -DMK_FP32_DOWNPROJ=1 -DMK_FP64_RMS=0 -DMK_TENSORCORE_MATVEC=0 -DMK_COMPENSATED_ATTENTION=1 -DMK_MATCH_TORCH_BF16_EPILOGUES=1 -DMK_INSTRUCTION_BARRIER_PARTIES=32 -o /home/thor-guest/ml-perf/Megakernels/local/model-ready-qualified-joined/mk_llama.cpython-312-aarch64-linux-gnu.so\nptxas warning : Registers are spilled to local memory in function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_', 64 bytes spill stores, 108 bytes spill loads\nptxas info    : 6 bytes gmem\nptxas info    : Compiling entry function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_' for 'sm_110a'\nptxas info    : Function properties for _ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_\n    208 bytes stack frame, 64 bytes spill stores, 108 bytes spill loads\nptxas info    : Used 96 registers, used 16 barriers, 208 bytes cumulative stack size, 10384 bytes smem\nptxas info    : Compile time = 670.011 ms\nnvlink info    : 0 bytes gmem\npython3 ../../tools/thor/build_manifest.py --binary \"/home/thor-guest/ml-perf/Megakernels/local/model-ready-qualified-joined/mk_llama.cpython-312-aarch64-linux-gnu.so\" --compiler \"/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc\" --gpu \"THOR\"\nmake: Leaving directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n"
+    },
+    {
+      "name": "build-ready",
+      "command": [
+        "make",
+        "-B",
+        "-C",
+        "/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama",
+        "GPU=THOR",
+        "THOR_WORKERS=20",
+        "THOR_STATIC_REGISTERS=96",
+        "TARGET=/home/thor-guest/ml-perf/Megakernels/local/model-ready-qualified-ready/mk_llama",
+        "EXTRA_NVCCFLAGS=-DMK_WEIGHT_PIPELINE_STAGES=3 -DMK_PAGE_COUNT=13 -DMK_PAGE_SIZE=16384 -DMK_WEIGHT_CHUNK_WIDTH=512 -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_CONSUMER_WARPS=16 -DMK_CONSUMER_REGISTERS=104 -DMK_SERVICE_REGISTERS=64 -DMK_BACKOFF_NS=20 -DMK_RECORD_TIMING=0 -DMK_ALLOW_MULTI_CTA=0 -DMK_READY_QUEUE=1 -DMK_SERIAL_INSTRUCTION_HANDOFF=1 -DMK_MATCH_TORCH_BF16_RMS=1 -DMK_ORDERED_DOWNPROJ=0 -DMK_FP32_DOWNPROJ=1 -DMK_FP64_RMS=0 -DMK_TENSORCORE_MATVEC=0 -DMK_COMPENSATED_ATTENTION=1 -DMK_MATCH_TORCH_BF16_EPILOGUES=1 -DMK_INSTRUCTION_BARRIER_PARTIES=32"
+      ],
+      "returncode": 0,
+      "output": "make: Entering directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc llama.cu -DNDEBUG -Xcompiler=-fPIE --expt-extended-lambda --expt-relaxed-constexpr -Xcompiler=-Wno-psabi -Xcompiler=-fno-strict-aliasing --use_fast_math -forward-unknown-to-host-compiler -O3 -Xnvlink=--verbose -Xptxas=--verbose -Xptxas=--warn-on-spills -std=c++20 -x cu -lrt -lpthread -ldl -lcuda -lcudadevrt -lcudart_static -lcublas -lineinfo -I/home/thor-guest/ml-perf/Megakernels/local/thunderkittens/include -I/home/thor-guest/ml-perf/Megakernels/include -I/usr/include/python3.12 -I/home/thor-guest/ml-perf/Megakernels/local/thor-venv/lib/python3.12/site-packages/pybind11/include -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/python3.12/config-3.12-aarch64-linux-gnu -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/aarch64-linux-gnu  -ldl  -lm  -shared -fPIC -DMK_BUILD_SOURCE_HASH='\"1912d5bedae6db74526725def5e638e8a620ded398c671e70645175351e693b0\"' -DKITTENS_HOPPER -DMK_THOR -DMK_ACTIVE_WORKERS=20 -gencode=arch=compute_110a,code=sm_110a -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_THOR_STATIC_REGISTERS=96 -maxrregcount=96 -DMK_WEIGHT_PIPELINE_STAGES=3 -DMK_PAGE_COUNT=13 -DMK_PAGE_SIZE=16384 -DMK_WEIGHT_CHUNK_WIDTH=512 -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_CONSUMER_WARPS=16 -DMK_CONSUMER_REGISTERS=104 -DMK_SERVICE_REGISTERS=64 -DMK_BACKOFF_NS=20 -DMK_RECORD_TIMING=0 -DMK_ALLOW_MULTI_CTA=0 -DMK_READY_QUEUE=1 -DMK_SERIAL_INSTRUCTION_HANDOFF=1 -DMK_MATCH_TORCH_BF16_RMS=1 -DMK_ORDERED_DOWNPROJ=0 -DMK_FP32_DOWNPROJ=1 -DMK_FP64_RMS=0 -DMK_TENSORCORE_MATVEC=0 -DMK_COMPENSATED_ATTENTION=1 -DMK_MATCH_TORCH_BF16_EPILOGUES=1 -DMK_INSTRUCTION_BARRIER_PARTIES=32 -o /home/thor-guest/ml-perf/Megakernels/local/model-ready-qualified-ready/mk_llama.cpython-312-aarch64-linux-gnu.so\nptxas warning : Registers are spilled to local memory in function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_', 52 bytes spill stores, 92 bytes spill loads\nptxas info    : 6 bytes gmem\nptxas info    : Compiling entry function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_' for 'sm_110a'\nptxas info    : Function properties for _ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_\n    208 bytes stack frame, 52 bytes spill stores, 92 bytes spill loads\nptxas info    : Used 96 registers, used 16 barriers, 208 bytes cumulative stack size, 10384 bytes smem\nptxas info    : Compile time = 961.330 ms\nnvlink info    : 0 bytes gmem\npython3 ../../tools/thor/build_manifest.py --binary \"/home/thor-guest/ml-perf/Megakernels/local/model-ready-qualified-ready/mk_llama.cpython-312-aarch64-linux-gnu.so\" --compiler \"/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc\" --gpu \"THOR\"\nmake: Leaving directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n"
+    },
+    {
+      "name": "noops-synccheck",
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "synccheck",
+        "--target-processes",
+        "all",
+        "--kernel-name",
+        "kns=megakernel",
+        "--error-exitcode",
+        "99",
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.experiments.model_ready_probe",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/noops-synccheck.json"
+      ],
+      "returncode": 0,
+      "output": "========= COMPUTE-SANITIZER\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.04it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.04it/s]\n{\"status\": \"PASS\", \"cases\": 18, \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/noops-synccheck.json\"}\n========= ERROR SUMMARY: 0 errors\n"
+    },
+    {
+      "name": "model-synccheck",
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "synccheck",
+        "--target-processes",
+        "all",
+        "--kernel-name",
+        "kns=megakernel",
+        "--error-exitcode",
+        "99",
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "1",
+        "--batches",
+        "1",
+        "--timeout",
+        "500",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/model-synccheck.json"
+      ],
+      "returncode": 0,
+      "output": "========= COMPUTE-SANITIZER\n{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/model-synccheck.json\", \"errors\": []}\n========= ERROR SUMMARY: 0 errors\n"
+    },
+    {
+      "name": "noops-memcheck",
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "memcheck",
+        "--target-processes",
+        "all",
+        "--kernel-name",
+        "kns=megakernel",
+        "--error-exitcode",
+        "99",
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.experiments.model_ready_probe",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/noops-memcheck.json"
+      ],
+      "returncode": 0,
+      "output": "========= COMPUTE-SANITIZER\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.19it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.19it/s]\n{\"status\": \"PASS\", \"cases\": 18, \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/noops-memcheck.json\"}\n========= ERROR SUMMARY: 0 errors\n"
+    },
+    {
+      "name": "model-memcheck",
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "memcheck",
+        "--target-processes",
+        "all",
+        "--kernel-name",
+        "kns=megakernel",
+        "--error-exitcode",
+        "99",
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "1",
+        "--batches",
+        "1",
+        "--timeout",
+        "500",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/model-memcheck.json"
+      ],
+      "returncode": 0,
+      "output": "========= COMPUTE-SANITIZER\n{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/model-memcheck.json\", \"errors\": []}\n========= ERROR SUMMARY: 0 errors\n"
+    },
+    {
+      "name": "noops-racecheck",
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--target-processes",
+        "all",
+        "--kernel-name",
+        "kns=megakernel",
+        "--error-exitcode",
+        "99",
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.experiments.model_ready_probe",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/noops-racecheck.json"
+      ],
+      "returncode": 0,
+      "output": "========= COMPUTE-SANITIZER\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.21it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.21it/s]\n{\"status\": \"PASS\", \"cases\": 18, \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/noops-racecheck.json\"}\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n"
+    },
+    {
+      "name": "model-racecheck",
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--target-processes",
+        "all",
+        "--kernel-name",
+        "kns=megakernel",
+        "--error-exitcode",
+        "99",
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "1",
+        "--batches",
+        "1",
+        "--timeout",
+        "500",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/model-racecheck.json"
+      ],
+      "returncode": 0,
+      "output": "========= COMPUTE-SANITIZER\n{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/model-racecheck.json\", \"errors\": []}\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n"
+    },
+    {
+      "name": "context128-seed1",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "5",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context128-seed1.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context128-seed1.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "context128-seed2",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "5",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context128-seed2.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context128-seed2.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "context128-seed3",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "5",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context128-seed3.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context128-seed3.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "context1024-seed1",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "5",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context1024-seed1.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context1024-seed1.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "context1024-seed2",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "5",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context1024-seed2.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context1024-seed2.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "context1024-seed3",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "5",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context1024-seed3.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context1024-seed3.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "context8192-seed1",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "5",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context8192-seed1.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context8192-seed1.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "context8192-seed2",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "5",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context8192-seed2.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context8192-seed2.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "context8192-seed3",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "0",
+        "--repeats",
+        "5",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context8192-seed3.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/context8192-seed3.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "temporal-native-past",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.teacher_forced",
+        "--context",
+        "1024",
+        "--steps",
+        "100",
+        "--reference-attention",
+        "math",
+        "--native-past",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/temporal-native-past.json"
+      ],
+      "returncode": 1,
+      "output": "{\"status\": \"FAIL\", \"steps_completed\": 100, \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/temporal-native-past.json\"}\n"
+    },
+    {
+      "name": "benchmark-ready-batch0",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-ready-batch0.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-ready-batch0.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-static-batch0",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-static-batch0.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-static-batch0.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-joined-batch0",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-joined-batch0.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-joined-batch0.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-ready-batch1",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-ready-batch1.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-ready-batch1.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-static-batch1",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-static-batch1.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-static-batch1.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-joined-batch1",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-joined-batch1.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-joined-batch1.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-ready-batch2",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-ready-batch2.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-ready-batch2.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-joined-batch2",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-joined-batch2.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-joined-batch2.json\", \"errors\": []}\n"
+    },
+    {
+      "name": "benchmark-static-batch2",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.bench",
+        "--adapter",
+        "tools.thor.model_bench:make_adapter",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-static-batch2.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-static-batch2.json\", \"errors\": []}\n"
+    }
+  ]
+}

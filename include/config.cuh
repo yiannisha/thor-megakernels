@@ -55,6 +55,7 @@ struct default_config {
     static constexpr bool ORDERED_DOWNPROJ = false;
     static constexpr bool COOPERATIVE_LAUNCH = false;
     static constexpr bool ALLOW_MULTI_CTA = false;
+    static constexpr bool READY_QUEUE = false;
     static constexpr bool SERIAL_INSTRUCTION_HANDOFF = false;
     static constexpr int FULL_CTA_BARRIER = 15;
     static constexpr bool FP32_DOWNPROJ = false;
@@ -85,6 +86,9 @@ struct default_config {
 #endif
 #ifndef MK_SERIAL_INSTRUCTION_HANDOFF
 #define MK_SERIAL_INSTRUCTION_HANDOFF 0
+#endif
+#ifndef MK_READY_QUEUE
+#define MK_READY_QUEUE 0
 #endif
 #ifndef MK_ALLOW_MULTI_CTA
 #define MK_ALLOW_MULTI_CTA 0
@@ -142,7 +146,9 @@ struct thor_config : default_config {
     static constexpr bool ORDERED_DOWNPROJ = MK_ORDERED_DOWNPROJ != 0;
     static constexpr bool COOPERATIVE_LAUNCH = true;
     static constexpr bool ALLOW_MULTI_CTA = MK_ALLOW_MULTI_CTA != 0;
+    static constexpr bool READY_QUEUE = MK_READY_QUEUE != 0;
     static constexpr bool SERIAL_INSTRUCTION_HANDOFF = MK_SERIAL_INSTRUCTION_HANDOFF != 0;
+    static_assert(!READY_QUEUE || (SERIAL_INSTRUCTION_HANDOFF && !ALLOW_MULTI_CTA && !MK_RECORD_TIMING && STATIC_REGISTER_ALLOCATION), "ready prototype requires static, serial, untimed single-CTA residency");
     // IDs 0, 3 and 4 belong to consumer collectives. Full-CTA use is
     // confined to initialization/teardown; a lower ID reduces reservation.
     static constexpr int FULL_CTA_BARRIER = ALLOW_MULTI_CTA ? 7 : 15;
@@ -155,6 +161,7 @@ struct thor_config : default_config {
     static constexpr bool MATCH_TORCH_BF16_RMS = MK_MATCH_TORCH_BF16_RMS != 0;
     static_assert(!TENSORCORE_MATVEC || MATCH_TORCH_BF16_RMS, "BF16 MMA matvec requires BF16-rounded normalized inputs");
     static constexpr int INSTRUCTION_BARRIER_PARTIES_PER_WARP = MK_INSTRUCTION_BARRIER_PARTIES;
+    static_assert(!READY_QUEUE || INSTRUCTION_BARRIER_PARTIES_PER_WARP==32, "ready dispatch requires per-thread instruction publication");
     static constexpr int PAGE_BARRIER_PARTIES_PER_WARP = 1;
     static_assert(INSTRUCTION_BARRIER_PARTIES_PER_WARP == 1 || INSTRUCTION_BARRIER_PARTIES_PER_WARP == 32);
     static constexpr int NUM_CONSUMER_WARPS = MK_CONSUMER_WARPS;

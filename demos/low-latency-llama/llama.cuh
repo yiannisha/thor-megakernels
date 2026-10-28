@@ -113,6 +113,8 @@ struct globals_t {
     barriers Bar;
     instruction_layout instructions;
     timing_layout timings;
+    kittens::gl<int,1,1,1,-1> ready_metadata;
+    kittens::gl<int,1,1,1,-1> ready_state;
 
     // model weights
     weights_t qkv_weights;

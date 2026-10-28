@@ -23,6 +23,7 @@ class Config:
     match_torch_bf16_rms: bool = True
     timing: bool = False
     allow_multi_cta: bool = False
+    ready_queue: bool = False
     serial_instruction_handoff: bool = False
     arch: str = 'sm_110a'
     page_size: int = 16384
@@ -34,8 +35,10 @@ class Config:
 
     def validate(self, device):
         errors = []
-        if any(type(value) is not bool for value in (self.timing, self.allow_multi_cta, self.serial_instruction_handoff, self.match_torch_bf16_rms, self.ordered_downproj, self.fp32_downproj, self.match_torch_bf16_epilogues, self.compensated_attention, self.fp64_rms, self.tensorcore_matvec)):
+        if any(type(value) is not bool for value in (self.timing, self.allow_multi_cta, self.ready_queue, self.serial_instruction_handoff, self.match_torch_bf16_rms, self.ordered_downproj, self.fp32_downproj, self.match_torch_bf16_epilogues, self.compensated_attention, self.fp64_rms, self.tensorcore_matvec)):
             errors.append('configuration switches must be booleans')
+        if self.ready_queue and (not self.serial_instruction_handoff or self.allow_multi_cta or self.timing or self.register_mode!='static'):
+            errors.append('ready prototype requires static, serial, untimed single-CTA residency')
         if self.tensorcore_matvec and not self.match_torch_bf16_rms:
             errors.append('BF16 MMA matvec requires BF16-rounded normalized inputs')
         if self.fp32_downproj and self.ordered_downproj:
@@ -100,6 +103,7 @@ class Config:
             'MK_BACKOFF_NS': self.backoff_ns,
             'MK_RECORD_TIMING': int(self.timing),
             'MK_ALLOW_MULTI_CTA': int(self.allow_multi_cta),
+            'MK_READY_QUEUE': int(self.ready_queue),
             'MK_SERIAL_INSTRUCTION_HANDOFF': int(self.serial_instruction_handoff),
             'MK_MATCH_TORCH_BF16_RMS': int(self.match_torch_bf16_rms),
             'MK_ORDERED_DOWNPROJ': int(self.ordered_downproj),

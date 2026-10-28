@@ -80,6 +80,8 @@ class BaseGlobals:
             raise
         # Existing queue tensors were built for the previous worker count.
         self.instructions = self.timings = None
+        if hasattr(self, 'ready_metadata'):
+            self.ready_metadata = self.ready_state = None
 
     def diff(self, other: "BaseGlobals", skip_kv_cache: bool = False):
         for field in fields(self):
@@ -88,6 +90,7 @@ class BaseGlobals:
             other_attr = getattr(other, name)
             if (
                 not isinstance(attr, Tensor)
+                or name.startswith("ready_")
                 or "weights" in name
                 or name in ["rope_cos", "rope_sin"]
                 or (skip_kv_cache and "cache" in name)

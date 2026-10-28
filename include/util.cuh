@@ -312,10 +312,16 @@ constexpr int TEVENT_TRIPLES_OUTPUT_READY = 125;
     __device__ void main_loop(const globals &g,                                \
                               ::megakernel::state<config> &mks) {              \
         MK_DEBUG_PRINT_START(#name);                                           \
-        int num_iters = g.instructions.rows();                                 \
+        int num_iters = g.instructions.rows() + (config::READY_QUEUE ? 1 : 0);  \
         for (mks.instruction_index = 0, mks.instruction_ring = 0;              \
              mks.instruction_index < num_iters; mks.next_instruction()) {      \
-            mks.await_instruction();                                           \
+            mks.await_instruction();                                          \
+            if constexpr (config::READY_QUEUE) {                              \
+                if (mks.instruction()[0] == -1) {                             \
+                    mks.next_instruction();                                   \
+                    break;                                                    \
+                }                                                             \
+            }                                                                 \
             if (kittens::laneid() == 0) {                                               \
                 if (is_consumer) {                                             \
                     mks.record(start_event + 2 * kittens::warpid());                    \

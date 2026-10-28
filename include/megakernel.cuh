@@ -5,6 +5,7 @@
 #include "config.cuh"
 #include "util.cuh"
 #include "controller/controller.cuh"
+#include "controller/ready_queue.cuh"
 #include "launcher.cuh"
 #include "storer.cuh"
 #include "loader.cuh"
@@ -139,8 +140,10 @@ __device__ inline void mk_internal(const globals &g) {
             ::megakernel::launcher::main_loop<config, globals, ops...>(g, mks);
             break;
         case 3:
-            ::megakernel::controller::main_loop<config, globals, ops...>(g,
-                                                                         mks);
+            if constexpr (config::READY_QUEUE)
+                ::megakernel::controller::ready_loop<config, globals, ops...>(g,mks);
+            else
+                ::megakernel::controller::main_loop<config, globals, ops...>(g,mks);
             break;
         default:
             asm volatile("trap;");
@@ -181,6 +184,11 @@ __launch_bounds__(config::NUM_THREADS, 1)
 #endif
     __cluster_dims__(config::CLUSTER_BLOCKS) __global__
     void mk(const __grid_constant__ globals g) {
+    if constexpr (config::READY_QUEUE) {
+        ready::initialize(g);
+        cooperative_groups::this_grid().sync();
+        ready::publish_roots(g);
+    }
     if constexpr (requires { config::COOPERATIVE_LAUNCH; }) {
         if constexpr (config::COOPERATIVE_LAUNCH)
             cooperative_groups::this_grid().sync();

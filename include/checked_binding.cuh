@@ -32,8 +32,13 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
         if (grid.x == 0 || grid.y != 1 || grid.z != 1 ||
             grid.x > static_cast<unsigned>(prop.multiProcessorCount * (Config::ALLOW_MULTI_CTA ? 2 : 1)))
             throw std::runtime_error("worker grid exceeds the explicitly enabled physical-SM residency budget");
-        if (g.instructions.depth() != grid.x || g.timings.depth() != grid.x ||
-            g.instructions.rows() != g.timings.rows())
+        if constexpr (Config::READY_QUEUE) {
+            int n=g.instructions.rows();
+            if (g.instructions.depth()!=1 || g.timings.depth()!=grid.x || g.timings.rows()!=n+1 ||
+                g.ready_metadata.cols()<2*n+1 || g.ready_state.cols()!=3+3*n)
+                throw std::runtime_error("invalid ready instruction/CSR/workspace dimensions");
+        } else if (g.instructions.depth() != grid.x || g.timings.depth() != grid.x ||
+                   g.instructions.rows() != g.timings.rows())
             throw std::runtime_error("instruction/timing queue dimensions do not match worker grid");
 #ifdef MK_PHYSICAL_WORKER_IDS
         if (grid.x != prop.multiProcessorCount)
@@ -111,6 +116,7 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
         result["backoff_ns"] = Config::GMEM_SPIN_LOOP_SLEEP_NANOS;
         result["timing_enabled"] = Config::TIMING_RECORD_ENABLED;
         result["active_workers"] = grid.x;
+        result["ready_queue"] = Config::READY_QUEUE;
         result["weight_pipeline_stages"] = Config::WEIGHT_PIPELINE_STAGES;
         result["page_count"] = Config::NUM_PAGES;
         result["page_size"] = Config::PAGE_SIZE;

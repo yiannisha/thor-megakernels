@@ -1,0 +1,1 @@
+{"status": "PASS", "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-joined-batch1.json", "errors": []}

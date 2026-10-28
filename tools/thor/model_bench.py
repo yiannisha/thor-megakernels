@@ -59,7 +59,12 @@ class ModelAdapter:
                     (self.globs.num_attention_heads, capacity, self.globs.head_dim), dtype=torch.float32, device=self.model.device)
             nodes, end = LatencyScheduleBuilder.make_dag(self.globs)
             self.schedule = Schedule(self.globs, nodes, end)
-            tensorize_instructions(self.globs, assign_to_sms(self.config.scheduler, schedule=self.schedule))
+            if self.config.ready_queue:
+                if engine!='native':raise ValueError('ready dispatch requires native execution')
+                from megakernels.demos.latency.ready_queue import tensorize_ready
+                self.ready_contract=tensorize_ready(self.schedule)
+            else:
+                tensorize_instructions(self.globs, assign_to_sms(self.config.scheduler, schedule=self.schedule))
         if engine == 'native':
             from megakernels.demos.latency.mk import interpret_with_mk
             sys.path.insert(0, os.environ.get('THOR_BINARY_DIR', str(ROOT / 'demos/low-latency-llama')))
@@ -70,7 +75,7 @@ class ModelAdapter:
             self.interpret(self.globs, lambda *a, **k: resources.update(self.native(*a, **k, dry_run=True)))
             if resources.get('build_source_hash') != source_hash():
                 raise RuntimeError('stale native binary; rebuild before benchmarking')
-            expected = {'active_workers': self.config.workers, 'allow_multi_cta': self.config.allow_multi_cta,
+            expected = {'ready_queue':self.config.ready_queue, 'active_workers': self.config.workers, 'allow_multi_cta': self.config.allow_multi_cta,
                         'serial_instruction_handoff': self.config.serial_instruction_handoff,
                         'full_cta_barrier_id': 7 if self.config.allow_multi_cta else 15,
                         'weight_pipeline_stages': self.config.weight_stages, 'page_count': self.config.page_count,
@@ -121,6 +126,8 @@ class ModelAdapter:
                          'timing_excludes': ['model_loading', 'prefill', 'frozen_KV_restore', 'correctness_checks'],
                          'cuda_event_note': 'interval includes CPU enqueue gaps; all work uses current stream',
                          'dram_gb_s': None, 'gpu_power_w': None, 'energy_per_token_j': None}
+        if self.config.ready_queue:
+            self.metadata['ready_contract']=self.ready_contract
         if engine == 'torch_graph':
             stream = torch.cuda.Stream()
             stream.wait_stream(torch.cuda.current_stream())
@@ -184,7 +191,12 @@ class ModelAdapter:
                    'hidden': errors(self.last_hidden, self.case.ref_hidden),
                    'k_cache': errors(self.model.stacked_kv_cache[0][:, 0, self.context], self.case.ref_cache[0]),
                    'v_cache': errors(self.model.stacked_kv_cache[1][:, 0, self.context], self.case.ref_cache[1])}
-        return {'passed': all(m['passed'] for m in metrics.values()), 'metrics': metrics,
+        coverage=None
+        if self.config.ready_queue:
+            from megakernels.demos.latency.ready_queue import completion_check
+            coverage=completion_check(self.globs)
+        return {'passed': all(m['passed'] for m in metrics.values()) and (coverage is None or coverage['passed']),
+                'metrics': metrics, 'ready_coverage':coverage,
                 'greedy_token_matches': bool(output.argmax() == reference.argmax())}
 
 

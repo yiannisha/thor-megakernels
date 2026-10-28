@@ -28,6 +28,8 @@ class Globals(BaseGlobals):
     qkv_block_size: int
     attn_kv_block_size: int
     attn_reduction_size: int
+    ready_metadata: Tensor | None = None
+    ready_state: Tensor | None = None
 
 
 @dataclass

@@ -1,0 +1,8 @@
+{
+  "name": "ready-queue",
+  "fp32_downproj": true,
+  "match_torch_bf16_epilogues": true,
+  "compensated_attention": true,
+  "serial_instruction_handoff": true,
+  "ready_queue": true
+}
