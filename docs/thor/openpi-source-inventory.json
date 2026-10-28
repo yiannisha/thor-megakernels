@@ -1,0 +1,50 @@
+{
+  "repo": "https://github.com/Physical-Intelligence/openpi",
+  "commit": "215abfb217dbac7d5f1273282331b9b1866c0479",
+  "commit_date": "2026-08-24T16:27:12Z",
+  "files": [
+    {
+      "path": "src/openpi/models/pi0_config.py",
+      "sha256": "d321858c30b398126035ea2b6da09e1c422eeeebb5ebf8df631daf9dc77647fa",
+      "bytes": 4435,
+      "url": "https://raw.githubusercontent.com/Physical-Intelligence/openpi/215abfb217dbac7d5f1273282331b9b1866c0479/src/openpi/models/pi0_config.py"
+    },
+    {
+      "path": "src/openpi/models/gemma.py",
+      "sha256": "7e42ada4ae7e9995f0ef3e33a0c224758323c2015e2d9d72ec15726a8a001d2a",
+      "bytes": 17146,
+      "url": "https://raw.githubusercontent.com/Physical-Intelligence/openpi/215abfb217dbac7d5f1273282331b9b1866c0479/src/openpi/models/gemma.py"
+    },
+    {
+      "path": "src/openpi/models/pi0.py",
+      "sha256": "24b32d7c6ed5e409459afa8ca5af96a4dae09c2dcdf48e828907e411f4f12342",
+      "bytes": 12887,
+      "url": "https://raw.githubusercontent.com/Physical-Intelligence/openpi/215abfb217dbac7d5f1273282331b9b1866c0479/src/openpi/models/pi0.py"
+    },
+    {
+      "path": "src/openpi/models_pytorch/pi0_pytorch.py",
+      "sha256": "dcd7b6f508808ce4b7170a1720a4c62c6da04edae3652d16c94a469dca924e16",
+      "bytes": 19128,
+      "url": "https://raw.githubusercontent.com/Physical-Intelligence/openpi/215abfb217dbac7d5f1273282331b9b1866c0479/src/openpi/models_pytorch/pi0_pytorch.py"
+    },
+    {
+      "path": "src/openpi/models_pytorch/gemma_pytorch.py",
+      "sha256": "225092e06509da0ae37bb9dca55c00d2804255bb1496f7c8700304b4c52a95eb",
+      "bytes": 13480,
+      "url": "https://raw.githubusercontent.com/Physical-Intelligence/openpi/215abfb217dbac7d5f1273282331b9b1866c0479/src/openpi/models_pytorch/gemma_pytorch.py"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "e1f457bd81622a47a4c4de17b92815977ac5fcd40116bec92398eb400bf76483",
+      "bytes": 3110,
+      "url": "https://raw.githubusercontent.com/Physical-Intelligence/openpi/215abfb217dbac7d5f1273282331b9b1866c0479/pyproject.toml"
+    }
+  ],
+  "local_dependencies": {
+    "openpi": false,
+    "jax": false,
+    "flax": false
+  },
+  "checkpoints": "No local robotics checkpoint; only Llama-3.2-1B-Instruct is installed",
+  "purpose": "Read-only source audit; no checkpoint download or dependencies installed"
+}
