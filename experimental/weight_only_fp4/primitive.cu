@@ -18,8 +18,9 @@ struct Shared {
 };
 constexpr int allocated_shared=128*1024;
 static_assert(sizeof(Shared)<=allocated_shared);
+template<bool Cached=false>
 __global__ __launch_bounds__(256,1) void linear(const unsigned char* weights,const unsigned char* scales,
- const __nv_bfloat16* input,__nv_bfloat16* output,int m,int k,float weight_scale){
+ const __nv_bfloat16* input,__nv_bfloat16* output,int m,int k,float weight_scale,const __nv_bfloat16* cache=nullptr){
  extern __shared__ __align__(128) char bytes[];auto& sm=*reinterpret_cast<Shared*>(bytes);
  int tid=threadIdx.x,lane=tid%32,warp=tid/32;
  auto mma=Mma{};auto cta=mma.get_slice(0);
@@ -39,10 +40,11 @@ __global__ __launch_bounds__(256,1) void linear(const unsigned char* weights,con
     int row=pair/64,col=(pair%64)*2,global_row=tile*128+row;
     float v0=0,v1=0;
     if(global_row<m){
-     unsigned char packed=weights[(global_row*k+start+col)/2];
+     if constexpr(Cached){v0=__bfloat162float(cache[global_row*k+start+col]);v1=__bfloat162float(cache[global_row*k+start+col+1]);}
+     else {unsigned char packed=weights[(global_row*k+start+col)/2];
      __half2 halfs=__half2(__nv_cvt_fp4x2_to_halfraw2(packed,__NV_E2M1));
      __nv_fp8_e4m3 scale;scale.__x=scales[global_row*(k/16)+(start+col)/16];
-     v0=__low2float(halfs)*float(scale);v1=__high2float(halfs)*float(scale);
+     v0=__low2float(halfs)*float(scale);v1=__high2float(halfs)*float(scale);}
     }
     sa(cute::make_coord(row,col%16),0,col/16)=BF(v0);
     sa(cute::make_coord(row,(col+1)%16),0,(col+1)/16)=BF(v1);
@@ -68,13 +70,30 @@ __global__ __launch_bounds__(256,1) void linear(const unsigned char* weights,con
 }
 }
 extern "C" int wo_initialize(){
- auto e=cudaFuncSetAttribute(weight_only::linear,cudaFuncAttributeMaxDynamicSharedMemorySize,weight_only::allocated_shared);
+ auto e=cudaFuncSetAttribute(weight_only::linear<false>,cudaFuncAttributeMaxDynamicSharedMemorySize,weight_only::allocated_shared);
  if(e!=cudaSuccess)return e;
- int occupancy;e=cudaOccupancyMaxActiveBlocksPerMultiprocessor(&occupancy,weight_only::linear,256,weight_only::allocated_shared);
+ int occupancy;e=cudaOccupancyMaxActiveBlocksPerMultiprocessor(&occupancy,weight_only::linear<false>,256,weight_only::allocated_shared);
  if(e!=cudaSuccess)return e;return occupancy==1?0:int(cudaErrorInvalidConfiguration);
 }
 extern "C" int wo_run(void* weights,void* scales,void* input,void* output,int m,int k,float weight_scale,int workers,void* stream){
  if(m<=0 || k<=0 || k%128 || workers<=0)return cudaErrorInvalidValue;
- weight_only::linear<<<workers,256,weight_only::allocated_shared,(cudaStream_t)stream>>>((unsigned char*)weights,(unsigned char*)scales,(__nv_bfloat16*)input,(__nv_bfloat16*)output,m,k,weight_scale);
+ weight_only::linear<false><<<workers,256,weight_only::allocated_shared,(cudaStream_t)stream>>>((unsigned char*)weights,(unsigned char*)scales,(__nv_bfloat16*)input,(__nv_bfloat16*)output,m,k,weight_scale);
  return cudaGetLastError();
+}
+
+// Cache decoded, unscaled weights once in global memory. Hardware may retain
+// them in L2; no residency or persistence is assumed by this experiment.
+__global__ void wo_unpack_kernel(const unsigned char* packed,const unsigned char* scales,__nv_bfloat16* cache,int count,int k){
+ int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=count/2)return;
+ __half2 h=__half2(__nv_cvt_fp4x2_to_halfraw2(packed[i],__NV_E2M1));
+ __nv_fp8_e4m3 sf;sf.__x=scales[(i*2)/16];
+ cache[2*i]=__float2bfloat16(__low2float(h)*float(sf));cache[2*i+1]=__float2bfloat16(__high2float(h)*float(sf));
+}
+extern "C" int wo_unpack(void* weights,void* scales,void* cache,int m,int k,void* stream){
+ wo_unpack_kernel<<<(m*k/2+255)/256,256,0,(cudaStream_t)stream>>>((unsigned char*)weights,(unsigned char*)scales,(__nv_bfloat16*)cache,m*k,k);return cudaGetLastError();
+}
+extern "C" int wo_cached_initialize(){return cudaFuncSetAttribute(weight_only::linear<true>,cudaFuncAttributeMaxDynamicSharedMemorySize,weight_only::allocated_shared);}
+extern "C" int wo_cached_run(void* cache,void* input,void* output,int m,int k,float weight_scale,int workers,void* stream){
+ if(m<=0 || k<=0 || k%128 || workers<=0)return cudaErrorInvalidValue;
+ weight_only::linear<true><<<workers,256,weight_only::allocated_shared,(cudaStream_t)stream>>>(nullptr,nullptr,(__nv_bfloat16*)input,(__nv_bfloat16*)output,m,k,weight_scale,(__nv_bfloat16*)cache);return cudaGetLastError();
 }
