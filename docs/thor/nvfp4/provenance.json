@@ -1,0 +1,22 @@
+{
+  "production_source_hash": "e168d6442cad29e215292f04c0e24f981a85feb4cf4925eb53ea5f908f9c4a76",
+  "files": {
+    "tools/analysis/nvfp4/bench.py": "a9ab0c94d78f4928ea78c74e03ecc09f80d72d451ff13cdd85dd4652e0e49ff6",
+    "tools/analysis/nvfp4/check.py": "e84221d5ef70c834d77849f850e8561e09fface226298ac7100f83376dbeeea2",
+    "tools/analysis/nvfp4/build_metadata.py": "ae4b8a032c590e88d8a476224e6a5f7c563eb22c4e570c6216f7649931264d1b",
+    "tools/analysis/nvfp4/report.py": "73134a7ac06251c7fccd3ce2aad3a095e7e5b637c8f1c6c198986df7b21ee229",
+    "tools/analysis/nvfp4/runtime_bench.py": "bc3848cb1f6f98d3e1fdc89c3203dd95c7d133fa70b412e16b4c7993d17e0a05",
+    "tools/analysis/nvfp4/cutlass_overlay.py": "3d24448b9dc2d7a31b0fc5292399ac6a7e2586c0cb3cb5304338564e9fe5f1fd",
+    "tools/analysis/nvfp4/qualify_runtime.py": "c223a273f1dc61533931146c5be2d763e15d967b0a3e09bba15bee01752610cb",
+    "tools/analysis/nvfp4/primitive.cu": "b56645de0c9f13d01eb7587ee1cab8d90cd2bde19732da1ecd54614f743e5fe0",
+    "tools/analysis/nvfp4/setup_cutlass.sh": "638d86916205a1f7e728b231884fbe4ae47817d1937a3de93d7253303d96a5e1",
+    "tools/analysis/nvfp4/build.sh": "26e638719c960e28434035642cf5ef55df72ecdc65262a4adc2c98488972201c",
+    "experimental/quantized_runtime/persistent.cu": "710c96b5ea7d824819b850c001967b64ecf31c65041176a65c45c057e105c3fb",
+    "experimental/quantized_runtime/format_storage.cuh": "3a5fc2eecf29b9e0b63ccd02fb95feadff86faadf08cf84e8fc920cab158175c",
+    "experimental/quantized_runtime/build.sh": "dfa5f96810cb475c724b3bc26cf90f466d37ff5e3cfbfe99fb9e0f289010c3d9",
+    "experimental/quantized_runtime/storage_check.cpp": "6604a374d6e6c58f09de655b0715a0f826a0f9df0a0d795984aa5adbaaa98c6b"
+  },
+  "primitive_seed": 71,
+  "runtime_seed": 91,
+  "runtime_warmup_graph_replays": 1000
+}

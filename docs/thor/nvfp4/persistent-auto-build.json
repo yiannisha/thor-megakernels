@@ -1,0 +1,13 @@
+{
+  "binary_sha256": "ebea4c7d7d16dc68ec25a545418cc84f038a0520181bc2bf2f733081d1f4a9b3",
+  "source_sha256": {
+    "tools/analysis/nvfp4/primitive.cu": "b56645de0c9f13d01eb7587ee1cab8d90cd2bde19732da1ecd54614f743e5fe0",
+    "experimental/quantized_runtime/persistent.cu": "710c96b5ea7d824819b850c001967b64ecf31c65041176a65c45c057e105c3fb",
+    "experimental/quantized_runtime/format_storage.cuh": "3a5fc2eecf29b9e0b63ccd02fb95feadff86faadf08cf84e8fc920cab158175c"
+  },
+  "cutlass_revision": "91843b71d90737e0a9b86f7d9df213cff5a3526f",
+  "cuda_arch": "sm_110a",
+  "stage_argument": "auto",
+  "overlay_sha256": "aea7eb1d21945d3821c898bcb1fbd2b8be05b2258260714bec4dd556bddccbc6",
+  "overlay_generator_sha256": "3d24448b9dc2d7a31b0fc5292399ac6a7e2586c0cb3cb5304338564e9fe5f1fd"
+}
