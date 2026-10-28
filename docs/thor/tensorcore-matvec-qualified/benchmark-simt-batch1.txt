@@ -1,0 +1,1 @@
+{"status": "PASS", "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/tensorcore-matvec-qualified/benchmark-simt-batch1.json", "errors": []}

@@ -1,0 +1,1 @@
+{"status": "PASS", "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/tensorcore-matvec-qualified/context8192-seed3.json", "errors": []}
