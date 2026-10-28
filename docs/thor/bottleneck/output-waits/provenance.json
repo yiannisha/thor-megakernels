@@ -1,0 +1,63 @@
+{
+  "analysis_sha256": {
+    "instrument_output_waits.py": "1077c910f64e6e531b7581a4d3fa41c54d62ab3bdfef53371b4b6c391ad5e365",
+    "report_output_waits.py": "a038ffc34bbfa8a32baa61f0f4ae3a8415fe674d0a6ef3e1102ffc1db01ed248",
+    "check_output_waits.py": "a2a8b570581d285ef442f4627577cb0305e0244c6bc74b391bd279318c69034b"
+  },
+  "build": {
+    "timestamp": "2026-10-28T14:41:52.881700+00:00",
+    "binary": "/home/thor-guest/ml-perf/Megakernels/local/thor-diagnostic-worktree/demos/low-latency-llama/mk_llama.cpython-312-aarch64-linux-gnu.so",
+    "binary_sha256": "e1faf5f8cc0184c7d52f1bed7bf3555ca00af9134d3c9cd115fc4cb6d19cd33a",
+    "source_hash": "180dbb1e6e9b3bcef5917822ceee3edf200ef7c44a0d84eb22910ff5e0ee4a24",
+    "gpu_target": "THOR",
+    "compiler": {
+      "returncode": 0,
+      "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_May_08_10:52:52_AM_PDT_2026\nCuda compilation tools, release 13.2, V13.2.86\nBuild cuda_13.2.r13.2/compiler.37953736_0",
+      "stderr": ""
+    },
+    "flags": [
+      "-DNDEBUG",
+      "-Xcompiler=-fPIE",
+      "--expt-extended-lambda",
+      "--expt-relaxed-constexpr",
+      "-Xcompiler=-Wno-psabi",
+      "-Xcompiler=-fno-strict-aliasing",
+      "--use_fast_math",
+      "-forward-unknown-to-host-compiler",
+      "-O3",
+      "-Xnvlink=--verbose",
+      "-Xptxas=--verbose",
+      "-Xptxas=--warn-on-spills",
+      "-std=c++20",
+      "-x",
+      "cu",
+      "-lrt",
+      "-lpthread",
+      "-ldl",
+      "-lcuda",
+      "-lcudadevrt",
+      "-lcudart_static",
+      "-lcublas",
+      "-lineinfo",
+      "-I/home/thor-guest/ml-perf/Megakernels/local/thunderkittens/include",
+      "-I/home/thor-guest/ml-perf/Megakernels/local/thor-diagnostic-worktree/include",
+      "-I/usr/include/python3.12",
+      "-I/home/thor-guest/ml-perf/Megakernels/local/thor-venv/lib/python3.12/site-packages/pybind11/include",
+      "-L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/python3.12/config-3.12-aarch64-linux-gnu",
+      "-L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/aarch64-linux-gnu",
+      "-ldl",
+      "-lm",
+      "-shared",
+      "-fPIC",
+      "-DMK_BUILD_SOURCE_HASH=\"180dbb1e6e9b3bcef5917822ceee3edf200ef7c44a0d84eb22910ff5e0ee4a24\"",
+      "-DKITTENS_HOPPER",
+      "-DMK_THOR",
+      "-DMK_ACTIVE_WORKERS=20",
+      "-gencode=arch=compute_110a,code=sm_110a",
+      "-maxrregcount=96"
+    ]
+  },
+  "excluded": [
+    "instrumented-initial-overlap.json"
+  ]
+}

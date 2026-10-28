@@ -1,0 +1,71 @@
+{
+  "scope": "Three final-token snapshots, position 1123; local SM cycles summed by role; not end-to-end critical-path fractions",
+  "families": {
+    "QKV": {
+      "opcode": 1,
+      "consumer_output_wait_pct": 57.06774433287083,
+      "storer_arrival_wait_pct": 36.37094961462228,
+      "storer_store_call_pct": 62.51514063097243,
+      "storer_slot_publication_pct": 0.28268929682490723,
+      "tma_completion_pct_of_store": 2.2583758200729136,
+      "global_publication_pct_of_store": 69.0620773261552,
+      "remaining_store_pct": 28.679546853771882
+    },
+    "O projection": {
+      "opcode": 4,
+      "consumer_output_wait_pct": 4.927544732102034,
+      "storer_arrival_wait_pct": 92.30360973632472,
+      "storer_store_call_pct": 5.414386311419146,
+      "storer_slot_publication_pct": 0.2641396010965685,
+      "tma_completion_pct_of_store": 14.561010263999307,
+      "global_publication_pct_of_store": 0.0,
+      "remaining_store_pct": 85.43898973600069
+    },
+    "Up/gate": {
+      "opcode": 5,
+      "consumer_output_wait_pct": 69.95750903968079,
+      "storer_arrival_wait_pct": 16.398138382052256,
+      "storer_store_call_pct": 81.65476759114405,
+      "storer_slot_publication_pct": 0.7865398024528143,
+      "tma_completion_pct_of_store": 0.9092507475346633,
+      "global_publication_pct_of_store": 83.79321654792508,
+      "remaining_store_pct": 15.297532704540256
+    },
+    "Down projection": {
+      "opcode": 6,
+      "consumer_output_wait_pct": 2.495855084350979,
+      "storer_arrival_wait_pct": 72.36916978546589,
+      "storer_store_call_pct": 25.663780095182787,
+      "storer_slot_publication_pct": 0.6749490072437992,
+      "tma_completion_pct_of_store": 70.39212451109488,
+      "global_publication_pct_of_store": 0.0,
+      "remaining_store_pct": 29.60787548890513
+    },
+    "Head": {
+      "opcode": 7,
+      "consumer_output_wait_pct": 1.8774995614102676,
+      "storer_arrival_wait_pct": 73.41133889288685,
+      "storer_store_call_pct": 25.3588447885818,
+      "storer_slot_publication_pct": 0.3001904567938148,
+      "tma_completion_pct_of_store": 76.83014523827487,
+      "global_publication_pct_of_store": 0.0,
+      "remaining_store_pct": 23.169854761725134
+    }
+  },
+  "control_ms": [
+    10.458285159838852,
+    10.444319800008088,
+    10.472100129991304,
+    10.423865700140595,
+    10.451608760049567,
+    10.3862981297425
+  ],
+  "instrumented_ms": [
+    10.52530229993863,
+    10.566162480099592,
+    10.547993720101658
+  ],
+  "control_median_ms": 10.447964280028827,
+  "instrumented_median_ms": 10.547993720101658,
+  "observer_change_pct": 0.9574060304172072
+}
