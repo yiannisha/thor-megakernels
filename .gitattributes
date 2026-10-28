@@ -2,3 +2,6 @@
 docs/thor/**/*.txt -whitespace
 # csv.writer uses RFC 4180 CRLF records; keep ordinary whitespace checks otherwise.
 docs/thor/**/*.csv whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Preserve unified-diff context prefixes in recorded implementation patches.
+docs/thor/output-protocol-results/*.patch -whitespace
