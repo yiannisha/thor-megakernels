@@ -9,10 +9,10 @@ import shlex
 
 try:
     from .inspect_device import command
-    from .sweep import source_hash
+    from .repro import source_hash
 except ImportError:
     from inspect_device import command
-    from sweep import source_hash
+    from repro import source_hash
 
 
 def main():

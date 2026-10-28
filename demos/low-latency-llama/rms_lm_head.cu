@@ -36,7 +36,7 @@ template <typename Config, typename Globals> struct rms_lm_head {
 
         static __device__ inline void
         load_iter(megakernel::state<Config> &s, const globals &g, parsed_instruction &inst,
-                  int iter, int col_idx, kittens::st_bf<16, Config::WEIGHT_CHUNK_WIDTH> &weight_chunk,
+                  int iter, int col_idx, kittens::st_bf<16, 512> &weight_chunk,
                   kittens::semaphore &sem) {
             auto block_idx = inst.start_block_idx + iter;
             kittens::tma::load_async<dim::ROW, cache_policy::EVICT_FIRST>(
@@ -61,7 +61,6 @@ template <typename Config, typename Globals> struct rms_lm_head {
 
             kittens::warp::sync();
             kittens::warp::store(logits_smem_bf, logits_rv);
-                megakernel::fence_shared_to_async();
             kittens::warp::sync();
 
             if (kittens::warp::laneid() == 0) {

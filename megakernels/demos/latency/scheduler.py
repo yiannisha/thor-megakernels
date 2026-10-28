@@ -60,7 +60,7 @@ def make_globals(
         device=device,
     )
 
-    result = Globals(
+    return Globals(
         # model params
         qkv_proj_weights=stacked_params.qkv_proj,
         o_proj_weights=stacked_params.o_proj,
@@ -89,7 +89,6 @@ def make_globals(
         ),
         silu_out=make_buffer(config.intermediate_size),
         logits=make_buffer(config.vocab_size),
-        down_partials=make_buffer([4, config.hidden_size], buffer_dtype=torch.float32),
         # scalars
         pos_id=0,
         attn_scale=1 / math.sqrt(config.head_dim),
@@ -114,8 +113,6 @@ def make_globals(
         device=device,
         barriers=barriers,
     )
-    result.ordered_downproj = getattr(model.extra_config, 'ordered_downproj', False)
-    return result
 
 
 def schedule_qkv(
@@ -349,17 +346,11 @@ def make_dag_layer(
     # oproj
     num_o_blocks = assert_div(globs.hidden_size, globs.o_proj_block_size)
     o_proj_nodes: list[DAG_Node] = []
-    # A range instruction retains the input activation vector across weight
-    # tiles. Group into balanced worker-sized ranges without changing the
-    # native 128-output-tile completion counter contract.
-    groups = min(globs.sm_count(), num_o_blocks) if getattr(globs, 'o_proj_grouped', False) else num_o_blocks
-    for group in range(groups):
-        start = round(group * num_o_blocks / groups)
-        end = round((group + 1) * num_o_blocks / groups)
+    for o_block_idx in range(num_o_blocks):
         ins = O_ProjResidual(
             layer_idx=layer_idx,
-            start_block_idx=start,
-            end_block_idx=end,
+            start_block_idx=o_block_idx,
+            end_block_idx=o_block_idx + 1,
             reduction_block_idx=0,
         )
 

@@ -38,7 +38,7 @@ template <typename Config, typename Globals> struct rms_upgate_silu {
 
         static __device__ inline void
         load_iter(megakernel::state<Config> &s, const globals &g, parsed_instruction &inst,
-                  int iter, int col_idx, kittens::st_bf<16, Config::WEIGHT_CHUNK_WIDTH> &weight_chunk,
+                  int iter, int col_idx, kittens::st_bf<16, 512> &weight_chunk,
                   kittens::semaphore &sem) {
             auto block_idx = inst.block_idxs[iter / 2];
             if (iter % 2 == 0) {
@@ -85,13 +85,7 @@ template <typename Config, typename Globals> struct rms_upgate_silu {
                           pipeline::SCRATCH_BYTES_PER_WARP>(
                 output_scratch_start, gate_out);
 
-            if constexpr (Config::MATCH_TORCH_BF16_EPILOGUES) {
-                kittens::rv_bf<16> rounded;
-                kittens::warp::copy(rounded, up_out);
-                kittens::warp::copy(up_out, rounded);
-                kittens::warp::copy(rounded, gate_out);
-                kittens::warp::copy(gate_out, rounded);
-            }
+
 
             // neg
             kittens::warp::mul(gate_scratch, gate_out, -1.f);
@@ -99,11 +93,7 @@ template <typename Config, typename Globals> struct rms_upgate_silu {
             kittens::warp::add(gate_scratch, gate_scratch, 1.f);
             kittens::warp::div(gate_out, gate_out, gate_scratch);
 
-            if constexpr (Config::MATCH_TORCH_BF16_EPILOGUES) {
-                kittens::rv_bf<16> rounded;
-                kittens::warp::copy(rounded, gate_out);
-                kittens::warp::copy(gate_out, rounded);
-            }
+
 
             // gating
             kittens::warp::mul(gate_out, up_out, gate_out);
@@ -112,7 +102,6 @@ template <typename Config, typename Globals> struct rms_upgate_silu {
             kittens::warp::sync();
 
             kittens::warp::store(out_smem, gate_out);
-                megakernel::fence_shared_to_async();
 
             // wait before we store results to global memory
             kittens::warp::sync();

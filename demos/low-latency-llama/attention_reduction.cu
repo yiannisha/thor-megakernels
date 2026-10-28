@@ -1,5 +1,4 @@
 #include "llama.cuh"
-#include "page_layout.h"
 #include <limits>
 
 using namespace kittens;
@@ -96,7 +95,9 @@ template <typename Config, typename Globals> struct attention_reduction {
         }
     }
     __device__ static inline void finish_shared_page(megakernel::state<Config> &s) {
-        s.warp_finish_page(s.pid(SHARED_DATA_PAGE), Config::NUM_CONSUMER_WARPS);
+        if (kittens::warp::laneid() == 0) {
+            s.finish_page(s.pid(SHARED_DATA_PAGE), Config::NUM_CONSUMER_WARPS);
+        }
     }
 
     // --- Shared Memory Layout and Access Helpers (Single Page) ---
@@ -136,7 +137,8 @@ template <typename Config, typename Globals> struct attention_reduction {
         static __device__ int
         release_lid(const Globals &g,
                     typename Config::instruction_t &instruction, int &query) {
-            return mk_prefix_release_lid(Config::NUM_PAGES, 1, query);
+            int order[13] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0};
+            return order[query];
         }
         static __device__ int init_semaphores(const Globals &g,
                                               megakernel::state<Config> &s) {
@@ -242,7 +244,7 @@ template <typename Config, typename Globals> struct attention_reduction {
 
                 kittens::warp::wait(L_partial_all_arrived(s, q_head_local_idx), 0);
                 if (kittens::laneid() == 0)
-                    s.record(megakernel::TEVENT_REDUCTION_INPUT_READY + kittens::warpid());
+                    s.record(megakernel::TEVENT_CONSUMER_START + 16 + kittens::warpid());
                 l_partial_sv &L_smem = get_L_partial_smem(s, q_head_local_idx);
 
                 // --- Reduction Pipeline ---
@@ -293,7 +295,6 @@ template <typename Config, typename Globals> struct attention_reduction {
                 o_final_sv &O_final_smem =
                     get_O_final_smem(s, q_head_local_idx);
                 kittens::warp::store(O_final_smem, accumulated_out);
-                megakernel::fence_shared_to_async();
                 kittens::warp::sync();
 
                 s.warp_arrive(final_O_ready(s, q_head_local_idx));

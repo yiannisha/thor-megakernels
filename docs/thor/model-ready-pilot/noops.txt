@@ -1,5 +1,0 @@
-
-Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
-Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.05it/s]
-Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.05it/s]
-{"status": "PASS", "cases": 18, "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-pilot/noops.json"}

@@ -1,1 +1,0 @@
-{"status": "PASS", "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/activation-reuse-safe/benchmark-static-batch1.json", "errors": []}

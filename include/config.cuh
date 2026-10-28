@@ -7,8 +7,10 @@ namespace megakernel {
 struct default_config {
     // Instruction pipeline
     static constexpr int INSTRUCTION_PIPELINE_STAGES = 2;
+
     static constexpr int INSTRUCTION_BARRIER_PARTIES_PER_WARP = 1;
-    static constexpr int PAGE_BARRIER_PARTIES_PER_WARP = 1;
+    static constexpr bool STATIC_REGISTER_ALLOCATION = false;
+    static constexpr bool COOPERATIVE_LAUNCH = false;
 
     // num bits required to represent num pipeline stages
     static constexpr int INSTRUCTION_PIPELINE_STAGES_BITS = 1;
@@ -41,9 +43,7 @@ struct default_config {
         ::kittens::MAX_SHARED_MEMORY - STATIC_SHARED_MEMORY;
 
     // Shared memory declared dynamically
-    static constexpr int WEIGHT_PIPELINE_STAGES = 3;
     static constexpr int PAGE_SIZE = 16384;
-    static constexpr int WEIGHT_CHUNK_WIDTH = 512;
     static constexpr int NUM_PAGES = DYNAMIC_SHARED_MEMORY / PAGE_SIZE;
     static_assert(NUM_PAGES == 13, "NUM_PAGES must be 13");
 
@@ -51,151 +51,22 @@ struct default_config {
 
     static constexpr int GMEM_SPIN_LOOP_SLEEP_NANOS = 20;
 
-    static constexpr bool MATCH_TORCH_BF16_RMS = false;
-    static constexpr bool ORDERED_DOWNPROJ = false;
-    static constexpr bool COOPERATIVE_LAUNCH = false;
-    static constexpr bool ALLOW_MULTI_CTA = false;
-    static constexpr bool READY_QUEUE = false;
-    static constexpr bool SERIAL_INSTRUCTION_HANDOFF = false;
-    static constexpr int HANDOFF_AFTER_OPCODE = -1;
-    static constexpr int FULL_CTA_BARRIER = 15;
-    static constexpr bool FP32_DOWNPROJ = false;
-    static constexpr bool MATCH_TORCH_BF16_EPILOGUES = false;
-    static constexpr bool COMPENSATED_ATTENTION = false;
-    static constexpr bool FP64_RMS = false;
-#ifdef KITTENS_BLACKWELL
-    static constexpr bool TENSORCORE_MATVEC = true;
-#else
-    static constexpr bool TENSORCORE_MATVEC = false;
-#endif
-    static constexpr bool STATIC_REGISTER_ALLOCATION = false;
     static constexpr int CONSUMER_REGISTERS = 104;
     static constexpr int NON_CONSUMER_REGISTERS = 64;
 };
 #ifdef MK_THOR
-#ifndef MK_WEIGHT_PIPELINE_STAGES
-#define MK_WEIGHT_PIPELINE_STAGES 3
-#endif
-#ifndef MK_PAGE_SIZE
-#define MK_PAGE_SIZE 16384
-#endif
-#ifndef MK_WEIGHT_CHUNK_WIDTH
-#define MK_WEIGHT_CHUNK_WIDTH (MK_PAGE_SIZE / 32)
-#endif
-#ifndef MK_PAGE_COUNT
-#define MK_PAGE_COUNT (1 + (2048 / MK_WEIGHT_CHUNK_WIDTH) * MK_WEIGHT_PIPELINE_STAGES)
-#endif
-#ifndef MK_HANDOFF_AFTER_OPCODE
-#define MK_HANDOFF_AFTER_OPCODE -1
-#endif
-#ifndef MK_SERIAL_INSTRUCTION_HANDOFF
-#define MK_SERIAL_INSTRUCTION_HANDOFF 0
-#endif
-#ifndef MK_READY_QUEUE
-#define MK_READY_QUEUE 0
-#endif
-#ifndef MK_ALLOW_MULTI_CTA
-#define MK_ALLOW_MULTI_CTA 0
-#endif
 #ifndef MK_ACTIVE_WORKERS
 #define MK_ACTIVE_WORKERS 20
 #endif
-#ifndef MK_CONSUMER_WARPS
-#define MK_CONSUMER_WARPS 16
-#endif
-#ifndef MK_CONSUMER_REGISTERS
-#define MK_CONSUMER_REGISTERS 104
-#endif
-#ifndef MK_SERVICE_REGISTERS
-#define MK_SERVICE_REGISTERS 64
-#endif
-#ifndef MK_BACKOFF_NS
-#define MK_BACKOFF_NS 20
-#endif
-#ifndef MK_RECORD_TIMING
-#define MK_RECORD_TIMING 0
-#endif
-#ifndef MK_INSTRUCTION_BARRIER_PARTIES
-#define MK_INSTRUCTION_BARRIER_PARTIES 32
-#endif
-#ifndef MK_MATCH_TORCH_BF16_RMS
-#define MK_MATCH_TORCH_BF16_RMS 1
-#endif
-#ifndef MK_MATCH_TORCH_BF16_EPILOGUES
-#define MK_MATCH_TORCH_BF16_EPILOGUES 0
-#endif
-#ifndef MK_TENSORCORE_MATVEC
-#define MK_TENSORCORE_MATVEC 0
-#endif
-#ifndef MK_FP64_RMS
-#define MK_FP64_RMS 0
-#endif
-#ifndef MK_COMPENSATED_ATTENTION
-#define MK_COMPENSATED_ATTENTION 0
-#endif
-#ifndef MK_FP32_DOWNPROJ
-#define MK_FP32_DOWNPROJ 0
-#endif
-#ifndef MK_ORDERED_DOWNPROJ
-#define MK_ORDERED_DOWNPROJ 0
-#endif
-#ifndef MK_THOR_STATIC_REGISTERS
-#define MK_THOR_STATIC_REGISTERS 96
-#endif
-#ifndef MK_THOR_DYNAMIC_REGISTERS
-#define MK_THOR_DYNAMIC_REGISTERS 0
-#endif
 struct thor_config : default_config {
-    static constexpr bool STATIC_REGISTER_ALLOCATION = MK_THOR_DYNAMIC_REGISTERS == 0;
-    static constexpr bool ORDERED_DOWNPROJ = MK_ORDERED_DOWNPROJ != 0;
+    static constexpr bool STATIC_REGISTER_ALLOCATION = true;
     static constexpr bool COOPERATIVE_LAUNCH = true;
-    static constexpr bool ALLOW_MULTI_CTA = MK_ALLOW_MULTI_CTA != 0;
-    static constexpr bool READY_QUEUE = MK_READY_QUEUE != 0;
-    static constexpr bool SERIAL_INSTRUCTION_HANDOFF = MK_SERIAL_INSTRUCTION_HANDOFF != 0;
-    static constexpr int HANDOFF_AFTER_OPCODE = MK_HANDOFF_AFTER_OPCODE;
-    static_assert(HANDOFF_AFTER_OPCODE>=-1 && HANDOFF_AFTER_OPCODE<=7, "invalid instruction handoff opcode");
-    static_assert(!READY_QUEUE || (SERIAL_INSTRUCTION_HANDOFF && !ALLOW_MULTI_CTA && !MK_RECORD_TIMING && STATIC_REGISTER_ALLOCATION), "ready prototype requires static, serial, untimed single-CTA residency");
-    // IDs 0, 3 and 4 belong to consumer collectives. Full-CTA use is
-    // confined to initialization/teardown; a lower ID reduces reservation.
-    static constexpr int FULL_CTA_BARRIER = ALLOW_MULTI_CTA ? 7 : 15;
-    static constexpr bool FP32_DOWNPROJ = MK_FP32_DOWNPROJ != 0;
-    static constexpr bool MATCH_TORCH_BF16_EPILOGUES = MK_MATCH_TORCH_BF16_EPILOGUES != 0;
-    static constexpr bool COMPENSATED_ATTENTION = MK_COMPENSATED_ATTENTION != 0;
-    static constexpr bool FP64_RMS = MK_FP64_RMS != 0;
-    static constexpr bool TENSORCORE_MATVEC = MK_TENSORCORE_MATVEC != 0;
-    static_assert(!(FP32_DOWNPROJ && ORDERED_DOWNPROJ), "FP32 finalization replaces column ordering");
-    static constexpr bool MATCH_TORCH_BF16_RMS = MK_MATCH_TORCH_BF16_RMS != 0;
-    static_assert(!TENSORCORE_MATVEC || MATCH_TORCH_BF16_RMS, "BF16 MMA matvec requires BF16-rounded normalized inputs");
-    static constexpr int INSTRUCTION_BARRIER_PARTIES_PER_WARP = MK_INSTRUCTION_BARRIER_PARTIES;
-    static_assert(!READY_QUEUE || INSTRUCTION_BARRIER_PARTIES_PER_WARP==32, "ready dispatch requires per-thread instruction publication");
-    static constexpr int PAGE_BARRIER_PARTIES_PER_WARP = 1;
-    static_assert(INSTRUCTION_BARRIER_PARTIES_PER_WARP == 1 || INSTRUCTION_BARRIER_PARTIES_PER_WARP == 32);
-    static constexpr int NUM_CONSUMER_WARPS = MK_CONSUMER_WARPS;
-    static_assert(NUM_CONSUMER_WARPS == 4 || NUM_CONSUMER_WARPS == 8 || NUM_CONSUMER_WARPS == 16);
-    static constexpr int NUM_WARPS = NUM_CONSUMER_WARPS + 4;
-    static constexpr int NUM_THREADS = NUM_WARPS * ::kittens::WARP_THREADS;
-    static constexpr int CONSUMER_REGISTERS = MK_CONSUMER_REGISTERS;
-    static constexpr int NON_CONSUMER_REGISTERS = MK_SERVICE_REGISTERS;
-    static_assert(CONSUMER_REGISTERS % 8 == 0 && NON_CONSUMER_REGISTERS % 8 == 0);
-    static_assert(CONSUMER_REGISTERS >= 24 && CONSUMER_REGISTERS <= 256);
-    static_assert(NON_CONSUMER_REGISTERS >= 24 && NON_CONSUMER_REGISTERS <= 256);
-    static constexpr int GMEM_SPIN_LOOP_SLEEP_NANOS = MK_BACKOFF_NS;
-    static_assert(GMEM_SPIN_LOOP_SLEEP_NANOS >= 0 && GMEM_SPIN_LOOP_SLEEP_NANOS <= 1000000);
-    static constexpr bool TIMING_RECORD_ENABLED = MK_RECORD_TIMING != 0;
+    static constexpr int INSTRUCTION_BARRIER_PARTIES_PER_WARP = 32;
     static constexpr int ACTIVE_WORKERS = MK_ACTIVE_WORKERS;
-    static_assert(ACTIVE_WORKERS > 0, "active workers must be positive");
-    static constexpr int WEIGHT_PIPELINE_STAGES = MK_WEIGHT_PIPELINE_STAGES;
-    static constexpr int PAGE_SIZE = MK_PAGE_SIZE;
-    static constexpr int WEIGHT_CHUNK_WIDTH = MK_WEIGHT_CHUNK_WIDTH;
-    static_assert((PAGE_SIZE == 16384 && WEIGHT_CHUNK_WIDTH == 512) ||
-                  (PAGE_SIZE == 8192 && WEIGHT_CHUNK_WIDTH == 256));
-    static constexpr int WEIGHT_STAGE_PAGES = 2048 / WEIGHT_CHUNK_WIDTH;
-    static_assert(NUM_CONSUMER_WARPS % WEIGHT_STAGE_PAGES == 0,
-                  "consumer warps must cover all weight pages");
-    static constexpr int NUM_PAGES = MK_PAGE_COUNT;
-    static_assert(WEIGHT_PIPELINE_STAGES >= 1 && WEIGHT_PIPELINE_STAGES <= 3);
-    static_assert(NUM_PAGES >= 1 + WEIGHT_STAGE_PAGES * WEIGHT_PIPELINE_STAGES && NUM_PAGES <= (PAGE_SIZE == 8192 ? 25 : 13));
-    // Selected page payload plus worst-case 1024-byte alignment loss.
+    static_assert(ACTIVE_WORKERS > 0);
+    static constexpr int NUM_PAGES = 13;
+    // Include worst-case alignment loss in the allocation, then check the
+    // actual compiled static + dynamic allocation before launch.
     static constexpr int DYNAMIC_SHARED_MEMORY = NUM_PAGES * PAGE_SIZE + 1023;
 };
 #endif

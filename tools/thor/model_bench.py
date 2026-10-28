@@ -16,7 +16,7 @@ import torch
 from .config import Config
 from .inspect_device import ROOT, command, driver_devices
 from .model_check import errors, load_reference
-from .sweep import source_hash
+from .repro import source_hash
 
 
 class ModelAdapter:
@@ -26,14 +26,12 @@ class ModelAdapter:
             raise ValueError('unsupported engine')
         self.engine = engine
         self.config = Config(**json.loads(os.environ.get('THOR_CONFIG', '{}')))
-        if self.config.ready_queue and engine!='native':
-            raise ValueError('ready dispatch requires native execution')
         self.logit_limit = float(os.environ.get('THOR_LOGIT_NRMSE_LIMIT', '.03'))
         if not 0 < self.logit_limit < 1:
             raise ValueError('logit NRMSE limit must lie between zero and one')
         model_path = Path(os.environ.get('THOR_MODEL_PATH', str(ROOT / 'local/models/Llama-3.2-1B-Instruct')))
         self.case = load_reference(SimpleNamespace(model=model_path, context=context, seed=seed,
-                                                   ordered_downproj=self.config.ordered_downproj, cache_capacity=cache_capacity,
+                                                   cache_capacity=cache_capacity,
                                                    reference_attention=reference_attention or os.environ.get('THOR_REFERENCE_ATTENTION', 'flash')))
         self.model = self.case.model
         self.position = torch.tensor([[context]], device=self.model.device)
@@ -51,23 +49,10 @@ class ModelAdapter:
             self.globs = LatencyScheduleBuilder.make_globals(self.model)
             # Cost-based scheduling must see the same context as execution.
             self.globs.pos_id = context
-            self.globs.o_proj_grouped = self.config.o_proj_grouped
-            self.globs.set_active_workers(self.config.workers, max_ctas_per_sm=2 if self.config.allow_multi_cta else 1)
-            if self.config.allow_multi_cta:
-                # Equal intermediate-buffer capacity for the 1x/2x worker controls.
-                capacity = ((2 * self.globs.physical_sm_count() + 15) // 16) * 16
-                self.globs.attn_lse_intermediates = torch.zeros(
-                    (self.globs.num_attention_heads, capacity), dtype=torch.float32, device=self.model.device)
-                self.globs.attn_out_intermediates = torch.zeros(
-                    (self.globs.num_attention_heads, capacity, self.globs.head_dim), dtype=torch.float32, device=self.model.device)
+            self.globs.set_active_workers(self.config.workers)
             nodes, end = LatencyScheduleBuilder.make_dag(self.globs)
             self.schedule = Schedule(self.globs, nodes, end)
-            if self.config.ready_queue:
-                if engine!='native':raise ValueError('ready dispatch requires native execution')
-                from megakernels.demos.latency.ready_queue import tensorize_ready
-                self.ready_contract=tensorize_ready(self.schedule)
-            else:
-                tensorize_instructions(self.globs, assign_to_sms(self.config.scheduler, schedule=self.schedule))
+            tensorize_instructions(self.globs, assign_to_sms('rr', schedule=self.schedule))
         if engine == 'native':
             from megakernels.demos.latency.mk import interpret_with_mk
             sys.path.insert(0, os.environ.get('THOR_BINARY_DIR', str(ROOT / 'demos/low-latency-llama')))
@@ -78,28 +63,11 @@ class ModelAdapter:
             self.interpret(self.globs, lambda *a, **k: resources.update(self.native(*a, **k, dry_run=True)))
             if resources.get('build_source_hash') != source_hash():
                 raise RuntimeError('stale native binary; rebuild before benchmarking')
-            expected = {'handoff_after_opcode':self.config.handoff_after_opcode, 'ready_queue':self.config.ready_queue, 'active_workers': self.config.workers, 'allow_multi_cta': self.config.allow_multi_cta,
-                        'serial_instruction_handoff': self.config.serial_instruction_handoff,
-                        'full_cta_barrier_id': 7 if self.config.allow_multi_cta else 15,
-                        'weight_pipeline_stages': self.config.weight_stages, 'page_count': self.config.page_count,
-                        'page_size': self.config.page_size, 'weight_chunk_width': self.config.tile_width, 'consumer_warps': self.config.consumer_warps,
-                        'backoff_ns': self.config.backoff_ns, 'timing_enabled': self.config.timing,
-                        'ordered_downproj': self.config.ordered_downproj,
-                        'fp32_downproj': self.config.fp32_downproj,
-                        'match_torch_bf16_epilogues': self.config.match_torch_bf16_epilogues,
-                        'compensated_attention': self.config.compensated_attention,
-                        'fp64_rms': self.config.fp64_rms,
-                        'tensorcore_matvec': self.config.tensorcore_matvec,
-                        'register_mode': self.config.register_mode,
-                        'consumer_register_target': self.config.consumer_registers,
-                        'service_register_target': self.config.service_registers,
-                        'match_torch_bf16_rms': self.config.match_torch_bf16_rms,
-                        'instruction_barrier_parties_per_warp': self.config.instruction_parties,
-                        'page_barrier_parties_per_warp': 1}
-            if self.config.register_mode == 'static':
-                expected['static_register_cap'] = self.config.static_registers
+            expected = {'active_workers': self.config.workers, 'consumer_warps': 16,
+                        'page_count': 13, 'page_size': 16384, 'register_mode': 'static',
+                        'instruction_barrier_parties_per_warp': 32}
             if any(resources.get(k) != value for k, value in expected.items()):
-                raise RuntimeError(f'compiled configuration does not match requested config: {resources}')
+                raise RuntimeError(f'compiled configuration does not match native port: {resources}')
             device = driver_devices()['devices'][0]
             invalid = self.config.validate(device)
             if invalid:
@@ -129,14 +97,6 @@ class ModelAdapter:
                          'timing_excludes': ['model_loading', 'prefill', 'frozen_KV_restore', 'correctness_checks'],
                          'cuda_event_note': 'interval includes CPU enqueue gaps; all work uses current stream',
                          'dram_gb_s': None, 'gpu_power_w': None, 'energy_per_token_j': None}
-        if self.globs is not None:
-            o_tasks=sum(n.instruction.opcode()==4 for n in self.schedule.dag_nodes)
-            self.metadata['schedule_structure']={'tasks':len(self.schedule.dag_nodes),
-                'o_proj_tasks':o_tasks,'o_proj_grouped':self.config.o_proj_grouped,
-                'logical_o_proj_input_bytes':o_tasks*self.globs.hidden_size*2,
-                'traffic_note':'logical activation loads, not measured LPDDR traffic'}
-        if self.config.ready_queue:
-            self.metadata['ready_contract']=self.ready_contract
         if engine == 'torch_graph':
             stream = torch.cuda.Stream()
             stream.wait_stream(torch.cuda.current_stream())
@@ -200,13 +160,9 @@ class ModelAdapter:
                    'hidden': errors(self.last_hidden, self.case.ref_hidden),
                    'k_cache': errors(self.model.stacked_kv_cache[0][:, 0, self.context], self.case.ref_cache[0]),
                    'v_cache': errors(self.model.stacked_kv_cache[1][:, 0, self.context], self.case.ref_cache[1])}
-        coverage=None
-        if self.config.ready_queue:
-            from megakernels.demos.latency.ready_queue import completion_check
-            coverage=completion_check(self.globs)
-        return {'passed': all(m['passed'] for m in metrics.values()) and (coverage is None or coverage['passed']),
-                'metrics': metrics, 'ready_coverage':coverage,
-                'greedy_token_matches': bool(output.argmax() == reference.argmax())}
+        return {'passed': all(m['passed'] for m in metrics.values()),
+                'metrics': metrics, 'greedy_token_matches': bool(output.argmax() == reference.argmax())}
+
 
 
 def make_adapter():

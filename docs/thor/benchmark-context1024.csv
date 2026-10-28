@@ -1,9 +1,0 @@
-run_id,status,engine,variant,scope,precision,context,batch,samples,warmups,batches,power_mode,concurrent_workload,p50_ms,p95_ms,p99_ms,mean_ms,tokens_per_s
-999dc53e-a300-4fd1-a1da-beaabb0d5a2e,PASS,native,native:upstream-like,decode,bf16,1024,1,90,5,3,"NV Power Mode: 120W
-1",uncontrolled-existing,11.608128070831299,15.020673942565917,15.264780855178833,12.2531398985121,81.6117344845977
-304c2f78-bc91-49b7-bad1-6ca463be5ef5,PASS,torch,torch:upstream-like,decode,bf16,1024,1,90,5,3,"NV Power Mode: 120W
-1",uncontrolled-existing,14.12715196609497,17.524294471740724,17.889095497131347,14.477301375071209,69.07364667574873
-1b3ca18e-51e5-4cfd-8ea5-e82c47a5aa40,PASS,torch_graph,torch_graph:upstream-like,decode,bf16,1024,1,90,5,3,"NV Power Mode: 120W
-1",uncontrolled-existing,12.800415992736816,16.47693614959717,17.770450477600097,13.35901050567627,74.85584352037885
-a1817ff2-39a3-4504-bf84-201ef17e0584,PASS,pyvm,pyvm:upstream-like,decode,bf16,1024,1,90,5,3,"NV Power Mode: 120W
-1",uncontrolled-existing,2240.0137939453125,2268.3190795898436,2277.4707080078124,2236.1026285807293,0.447206665391162

@@ -1,7 +1,0 @@
-{
-  "name": "tensorcore-matvec",
-  "fp32_downproj": true,
-  "match_torch_bf16_epilogues": true,
-  "compensated_attention": true,
-  "tensorcore_matvec": true
-}

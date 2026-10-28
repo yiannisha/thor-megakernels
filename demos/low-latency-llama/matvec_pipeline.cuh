@@ -1,20 +1,17 @@
 #pragma once
 
 #include "llama.cuh"
-#include "page_layout.h"
 
 template <typename Config, typename Globals, typename parsed_instruction,
           typename pipeline_specifics>
 struct matvec_pipeline {
-    static constexpr int INPUT_PIPELINE_STAGES = Config::WEIGHT_PIPELINE_STAGES;
+    static constexpr int INPUT_PIPELINE_STAGES = 3;
     static constexpr int OUTPUT_PIPELINE_STAGES = 3;
-    static constexpr int STAGE_PAGES = Globals::hidden_dim / Config::WEIGHT_CHUNK_WIDTH;
+    static constexpr int STAGE_PAGES = 4;
     static_assert(Config::NUM_PAGES >= 1 + INPUT_PIPELINE_STAGES * STAGE_PAGES,
                   "weight pipeline exceeds page budget");
     static_assert(Globals::hidden_dim % Config::NUM_CONSUMER_WARPS == 0,
                   "consumer reduction must divide hidden dimension");
-    static_assert(sizeof(kittens::sv_bf<Globals::hidden_dim>) <= Config::PAGE_SIZE);
-    static_assert(sizeof(kittens::st_bf<16, Config::WEIGHT_CHUNK_WIDTH>) <= Config::PAGE_SIZE);
     static constexpr int ACTIVATION_PAGE = 0;
     static constexpr int WEIGHTS_START_PAGE = 1;
 
@@ -32,7 +29,7 @@ struct matvec_pipeline {
         SCRATCH_BYTES_PER_WARP * Config::NUM_CONSUMER_WARPS;
     static constexpr int USED_SCRATCH_BYTES =
         OUTPUT_PIPELINE_STAGES * SCRATCH_BYTES_PER_STAGE;
-    static_assert((USED_SCRATCH_BYTES + Config::NUM_CONSUMER_WARPS * (Config::FP64_RMS ? sizeof(double) : sizeof(float))) <= Config::SCRATCH_BYTES - 512,
+    static_assert((USED_SCRATCH_BYTES + Config::NUM_CONSUMER_WARPS * sizeof(float)) <= Config::SCRATCH_BYTES,
                   "USED_SCRATCH_BYTES must be less than SCRATCH_BYTES");
 
     // Pages (very naive for now, no fine-grained usage)
@@ -80,9 +77,35 @@ struct matvec_pipeline {
     __device__ static inline int
     release_lid(const Globals &g, typename Config::instruction_t &instruction,
                 int &query) {
+        // NOTE: assumes a three stage pipeline
+
         parsed_instruction inst{instruction};
-        return mk_matvec_release_lid(Config::NUM_PAGES, INPUT_PIPELINE_STAGES,
-                                      STAGE_PAGES, inst.iters, query);
+        // unused pages, then activation, then weights
+
+        static_assert(INPUT_PIPELINE_STAGES == 3,
+                      "INPUT_PIPELINE_STAGES must be 3");
+
+        auto iters = inst.iters;
+        auto remainder = iters % INPUT_PIPELINE_STAGES;
+
+        // special handling for 1 and 2 because only then do
+        // we free pages before the activation/rms scale (page 0)
+        if (iters == 1) {
+            int ret_order[13] = {5, 6, 7, 8, 9, 10, 11, 12, 0, 1, 2, 3, 4};
+            return ret_order[query];
+        } else if (iters == 2) {
+            int ret_order[13] = {9, 10, 11, 12, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+            return ret_order[query];
+        } else if (remainder == 1) {
+            int ret_order[13] = {0, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4};
+            return ret_order[query];
+        } else if (remainder == 2) {
+            int ret_order[13] = {0, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8};
+            return ret_order[query];
+        } else {
+            int ret_order[13] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+            return ret_order[query];
+        }
     }
 
     __device__ static inline int init_semaphores(megakernel::state<Config> &s) {
@@ -114,24 +137,16 @@ struct matvec_pipeline {
                 kittens::wait(weights_finished(s, input_stage),
                      (iter % (2 * INPUT_PIPELINE_STAGES)) <
                          INPUT_PIPELINE_STAGES);
-                megakernel::fence_shared_to_async();
 
-                // Acquire every destination page before the release-arrival
-                // on weights_arrived. Consumers acquire that arrival; doing it
-                // earlier loses the previous page owner's memory ordering.
-                if (iter < INPUT_PIPELINE_STAGES) {
-#pragma unroll
-                    for (int i = 0; i < STAGE_PAGES; i++)
-                        s.wait_page_ready(get_weight_page(s, input_stage, i));
-                }
                 auto &sem = weights_arrived(s, input_stage);
-                asm volatile("" ::: "memory");
                 kittens::tma::expect_bytes(sem, sizeof(kittens::bf16) * 2048 * 16);
-                asm volatile("" ::: "memory");
 #pragma unroll
                 for (int i = 0; i < STAGE_PAGES; i++) {
                     int weight_page = get_weight_page(s, input_stage, i);
-                    auto &weight_chunk = reinterpret_cast<kittens::st_bf<16, Config::WEIGHT_CHUNK_WIDTH> &>(
+                    if (iter < INPUT_PIPELINE_STAGES) {
+                        s.wait_page_ready(weight_page);
+                    }
+                    auto &weight_chunk = reinterpret_cast<kittens::st_bf<16, 512> &>(
                         s.pages[weight_page]);
 
                     if (iter == 0 && i == 0) {

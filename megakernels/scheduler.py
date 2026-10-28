@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 import heapq
-import math
 from dataclasses import dataclass, field, replace
 
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from megakernels.instructions import BaseGlobals, Instruction
@@ -51,14 +50,6 @@ class Schedule:
     globs: BaseGlobals
     dag_nodes: list[DAG_Node]
     end_node: DAG_Node
-    cost_model: Callable[[Instruction, BaseGlobals], float] | None = None
-
-    def instruction_cost(self, instruction):
-        value = (self.cost_model(instruction, self.globs) if self.cost_model is not None
-                 else instruction.cost(self.globs))
-        if not math.isfinite(value) or value <= 0:
-            raise ValueError("instruction costs must be finite and positive")
-        return value
 
     def get_linear_instructions(self):
         # NOTE: assumes this is in topological order
@@ -136,7 +127,7 @@ def assign_dag_to_sms(schedule: Schedule) -> list[list[Instruction]]:
     for node in ready_nodes:
         idx = node_to_idx[node]
         # max cost first
-        ready_heap.append((-schedule.instruction_cost(node.instruction), idx))
+        ready_heap.append((-node.instruction.cost(globs), idx))
 
     heapq.heapify(ready_heap)
 
@@ -151,7 +142,7 @@ def assign_dag_to_sms(schedule: Schedule) -> list[list[Instruction]]:
         # start_time = max(ready_time, sm_time)
         start_time = max(sm_time, node.earliest_ready_time(globs))
 
-        end_time = start_time + schedule.instruction_cost(node.instruction)
+        end_time = start_time + node.instruction.cost(globs)
 
         node.start_time = start_time
         node.end_time = end_time
@@ -164,7 +155,7 @@ def assign_dag_to_sms(schedule: Schedule) -> list[list[Instruction]]:
             child.remaining_dependencies.remove(node)
             if len(child.remaining_dependencies) == 0:
                 idx = node_to_idx[child]
-                heapq.heappush(ready_heap, (-schedule.instruction_cost(child.instruction), idx))
+                heapq.heappush(ready_heap, (-child.instruction.cost(globs), idx))
 
     if sum(map(len, sm_queues)) != len(nodes):
         raise ValueError("dependency graph contains a cycle")
@@ -300,7 +291,7 @@ def wave_assign_to_sms(
             for parent in set(node.dependencies) & members:
                 children[parent].append(node)
         indices = {node: i for i, node in enumerate(nodes)}
-        ready = [(-schedule.instruction_cost(node.instruction), indices[node]) for node in nodes if pending[node] == 0]
+        ready = [(-node.instruction.cost(globs), indices[node]) for node in nodes if pending[node] == 0]
         heapq.heapify(ready)
         assigned = 0
         while ready:
@@ -308,14 +299,14 @@ def wave_assign_to_sms(
             node = nodes[index]
             ins = node.instruction
             sm_cost, sm_idx = heapq.heappop(sm_heap)
-            sm_cost += schedule.instruction_cost(ins)
+            sm_cost += ins.cost(globs)
             heapq.heappush(sm_heap, (sm_cost, sm_idx))
             sm_queues[sm_idx].append(ins)
             assigned += 1
             for child in children[node]:
                 pending[child] -= 1
                 if pending[child] == 0:
-                    heapq.heappush(ready, (-schedule.instruction_cost(child.instruction), indices[child]))
+                    heapq.heappush(ready, (-child.instruction.cost(globs), indices[child]))
         if assigned != len(nodes):
             raise ValueError("dependency cycle within opcode wave")
 

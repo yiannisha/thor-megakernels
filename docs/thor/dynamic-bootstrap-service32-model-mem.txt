@@ -1,4 +1,0 @@
-========= COMPUTE-SANITIZER
-Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]Loading safetensors files: 100%|██████████| 1/1 [00:01<00:00,  1.01s/it]Loading safetensors files: 100%|██████████| 1/1 [00:01<00:00,  1.01s/it]
-{"status": "PASS", "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/dynamic-bootstrap-service32-model-mem.json", "errors": []}
-========= ERROR SUMMARY: 0 errors

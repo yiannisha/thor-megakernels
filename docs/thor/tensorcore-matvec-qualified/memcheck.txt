@@ -1,3 +1,0 @@
-========= COMPUTE-SANITIZER
-{"status": "PASS", "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/tensorcore-matvec-qualified/memcheck.json", "errors": []}
-========= ERROR SUMMARY: 0 errors

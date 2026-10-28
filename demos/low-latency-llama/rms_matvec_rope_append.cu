@@ -59,7 +59,7 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
 
         static __device__ inline void
         load_iter(megakernel::state<Config> &s, const globals &g, parsed_instruction &inst,
-                  int iter, int col_idx, kittens::st_bf<16, Config::WEIGHT_CHUNK_WIDTH> &weight_chunk,
+                  int iter, int col_idx, kittens::st_bf<16, 512> &weight_chunk,
                   kittens::semaphore &sem) {
             auto block_idx = inst.start_block_idx + iter;
             kittens::tma::load_async<dim::ROW, cache_policy::EVICT_FIRST>(
@@ -89,11 +89,7 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
                           pipeline::SCRATCH_BYTES_PER_WARP>(
                 output_scratch_start, qkv_proj);
 
-            if constexpr (Config::MATCH_TORCH_BF16_EPILOGUES) {
-                kittens::rv_bf<16> rounded;
-                kittens::warp::copy(rounded, qkv_proj);
-                kittens::warp::copy(qkv_proj, rounded);
-            }
+
             kittens::wait(rope_arrived(s), 0);
 
             auto head_chunk = block_idx % 4;
@@ -125,7 +121,6 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
 
             kittens::warp::sync();
             kittens::warp::store(qkv_proj_smem_bf, qkv_proj);
-                megakernel::fence_shared_to_async();
             kittens::warp::sync();
 
             if (kittens::laneid() == 0) {

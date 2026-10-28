@@ -1,3 +1,0 @@
-========= COMPUTE-SANITIZER
-PASS 36 VM cases; physical_sms=20 resident_ctas_per_sm=1 static_smem=10384 dynamic_smem=214015 registers=25
-========= ERROR SUMMARY: 0 errors

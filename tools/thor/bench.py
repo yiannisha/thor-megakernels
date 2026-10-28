@@ -116,9 +116,9 @@ def main():
     args.output = args.output.resolve()
     if not args.worker and not args.dry_run:
         try:
-            from .sweep import timed_command
+            from .repro import timed_command
         except ImportError:
-            from sweep import timed_command
+            from repro import timed_command
         run_id = str(uuid.uuid4())
         args.output.parent.mkdir(parents=True, exist_ok=True)
         child = [sys.executable, '-m', 'tools.thor.bench', '--worker', '--run-id', run_id,

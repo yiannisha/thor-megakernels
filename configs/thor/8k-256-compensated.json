@@ -1,9 +1,0 @@
-{
-  "name": "8k-256-compensated",
-  "fp32_downproj": true,
-  "match_torch_bf16_epilogues": true,
-  "compensated_attention": true,
-  "page_size": 8192,
-  "tile_width": 256,
-  "page_count": 25
-}

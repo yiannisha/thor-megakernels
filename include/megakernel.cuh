@@ -5,7 +5,6 @@
 #include "config.cuh"
 #include "util.cuh"
 #include "controller/controller.cuh"
-#include "controller/ready_queue.cuh"
 #include "launcher.cuh"
 #include "storer.cuh"
 #include "loader.cuh"
@@ -20,7 +19,7 @@ __device__ inline void mk_internal(const globals &g) {
 #ifdef MK_DEBUG
     if (threadIdx.x == 0)
         printf("Thread %d: Kernel launched\n", threadIdx.x);
-    kittens::group<config::NUM_WARPS>::sync(config::FULL_CTA_BARRIER);
+    kittens::group<config::NUM_WARPS>::sync(15);
 #endif
     __shared__ alignas(128) instruction_state_t<config>
         instruction_state[config::INSTRUCTION_PIPELINE_STAGES];
@@ -46,7 +45,7 @@ __device__ inline void mk_internal(const globals &g) {
 #ifdef MK_DEBUG
     if (threadIdx.x == 0)
         printf("Thread %d: Pre-MKS creation\n", threadIdx.x);
-    kittens::group<config::NUM_WARPS>::sync(config::FULL_CTA_BARRIER);
+    kittens::group<config::NUM_WARPS>::sync(15);
 #endif
     state<config> mks{instruction_state,
                       instruction_arrived,
@@ -70,7 +69,7 @@ __device__ inline void mk_internal(const globals &g) {
 #ifdef MK_DEBUG
     if (threadIdx.x == 0)
         printf("Thread %d: Created MKS\n", threadIdx.x);
-    kittens::group<config::NUM_WARPS>::sync(config::FULL_CTA_BARRIER);
+    kittens::group<config::NUM_WARPS>::sync(15);
 #endif
 
     // Zero initial timings memory.
@@ -89,7 +88,7 @@ __device__ inline void mk_internal(const globals &g) {
     }
     if (threadIdx.x < config::NUM_PAGES) {
         for (int i = 0; i < config::INSTRUCTION_PIPELINE_STAGES_BITS; i++) {
-            auto count = config::NUM_CONSUMER_WARPS * config::PAGE_BARRIER_PARTIES_PER_WARP * (1 << i);
+            auto count = config::NUM_CONSUMER_WARPS * (1 << i);
             init_semaphore(page_finished[threadIdx.x][i], count);
             arrive(page_finished[threadIdx.x][i], count);
         }
@@ -105,10 +104,11 @@ __device__ inline void mk_internal(const globals &g) {
     }
 
     asm volatile("fence.proxy.async.shared::cta;\n" ::: "memory");
+    asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
     __syncthreads();
 
     if (config::CLUSTER_BLOCKS == 1)
-        kittens::everyone::sync(config::FULL_CTA_BARRIER); // all warps must arrive here, confirming semaphore
+        kittens::everyone::sync(15); // all warps must arrive here, confirming semaphore
                             // initialization is visible to all threads.
     else
         kittens::everyone::tma::cluster::sync();
@@ -119,16 +119,12 @@ __device__ inline void mk_internal(const globals &g) {
 #endif
 
     if (kittens::warpid() < config::NUM_CONSUMER_WARPS) {
-#ifndef MK_THOR
         if constexpr (!config::STATIC_REGISTER_ALLOCATION)
             kittens::warpgroup::increase_registers<config::CONSUMER_REGISTERS>();
-#endif
         ::megakernel::consumer::main_loop<config, globals, ops...>(g, mks);
     } else {
-#ifndef MK_THOR
         if constexpr (!config::STATIC_REGISTER_ALLOCATION)
             kittens::warpgroup::decrease_registers<config::NON_CONSUMER_REGISTERS>();
-#endif
         switch (kittens::warpgroup::warpid()) {
         case 0:
             ::megakernel::loader::main_loop<config, globals, ops...>(g, mks);
@@ -140,10 +136,8 @@ __device__ inline void mk_internal(const globals &g) {
             ::megakernel::launcher::main_loop<config, globals, ops...>(g, mks);
             break;
         case 3:
-            if constexpr (config::READY_QUEUE)
-                ::megakernel::controller::ready_loop<config, globals, ops...>(g,mks);
-            else
-                ::megakernel::controller::main_loop<config, globals, ops...>(g,mks);
+            ::megakernel::controller::main_loop<config, globals, ops...>(g,
+                                                                         mks);
             break;
         default:
             asm volatile("trap;");
@@ -157,7 +151,7 @@ __device__ inline void mk_internal(const globals &g) {
     if (config::CLUSTER_BLOCKS > 1)
         kittens::everyone::tma::cluster::sync();
     else
-        kittens::everyone::sync(config::FULL_CTA_BARRIER);
+        kittens::everyone::sync(15);
 
 #ifdef MK_DEBUG
     uint64_t end_time = (uint64_t)clock64();
@@ -175,37 +169,17 @@ struct megakernel_wrapper {
 };
 
 template <typename config, typename globals, typename... ops>
-#if defined(MK_THOR) && !MK_THOR_DYNAMIC_REGISTERS
-// CUDA ignores command-line maxrregcount on kernels carrying launch bounds.
-// The per-kernel cap and launch_bounds attributes are mutually exclusive.
-__maxnreg__(MK_THOR_STATIC_REGISTERS)
+#ifdef MK_THOR
+__maxnreg__(96)
 #else
 __launch_bounds__(config::NUM_THREADS, 1)
 #endif
     __cluster_dims__(config::CLUSTER_BLOCKS) __global__
     void mk(const __grid_constant__ globals g) {
-    if constexpr (config::READY_QUEUE) {
-        ready::initialize(g);
-        cooperative_groups::this_grid().sync();
-        ready::publish_roots(g);
-    }
     if constexpr (requires { config::COOPERATIVE_LAUNCH; }) {
         if constexpr (config::COOPERATIVE_LAUNCH)
             cooperative_groups::this_grid().sync();
     }
-#ifdef MK_THOR
-    if constexpr (!config::STATIC_REGISTER_ALLOCATION) {
-        // Establish a known allocation before either role requests its target.
-        // No VM state is live here. The CTA barrier synchronizes all warps in
-        // each warpgroup between successive setmaxnreg instructions.
-        kittens::warpgroup::decrease_registers<24>();
-        __syncthreads();
-        if (threadIdx.x < config::NUM_CONSUMER_WARPS * kittens::WARP_THREADS)
-            kittens::warpgroup::increase_registers<config::CONSUMER_REGISTERS>();
-        else
-            kittens::warpgroup::increase_registers<config::NON_CONSUMER_REGISTERS>();
-    }
-#endif
     megakernel_wrapper<config, globals, ops...>::run(g);
 }
 

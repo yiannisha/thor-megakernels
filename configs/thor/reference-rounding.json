@@ -1,5 +1,0 @@
-{
-  "name": "reference-rounding",
-  "fp32_downproj": true,
-  "match_torch_bf16_epilogues": true
-}

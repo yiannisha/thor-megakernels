@@ -1,1 +1,0 @@
-{"status": "PASS", "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/tensorcore-matvec-qualified/benchmark-mma-batch2.json", "errors": []}

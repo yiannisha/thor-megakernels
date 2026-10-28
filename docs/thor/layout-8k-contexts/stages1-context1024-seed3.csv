@@ -1,6 +1,0 @@
-run_id,status,batch_index,sample_index,elapsed_ms
-43de64c2-3fb1-48eb-be97-0daaa9ec6dc6,PASS,0,0,14.373696327209473
-43de64c2-3fb1-48eb-be97-0daaa9ec6dc6,PASS,0,1,14.215167999267578
-43de64c2-3fb1-48eb-be97-0daaa9ec6dc6,PASS,0,2,14.059967994689941
-43de64c2-3fb1-48eb-be97-0daaa9ec6dc6,PASS,0,3,13.865023612976074
-43de64c2-3fb1-48eb-be97-0daaa9ec6dc6,PASS,0,4,13.858304023742676

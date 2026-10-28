@@ -1,7 +1,0 @@
-{
-  "name": "compensated-fp64-rms",
-  "fp32_downproj": true,
-  "match_torch_bf16_epilogues": true,
-  "compensated_attention": true,
-  "fp64_rms": true
-}

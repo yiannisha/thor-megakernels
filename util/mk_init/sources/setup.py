@@ -77,12 +77,8 @@ if TARGET == 'HOPPER':
 elif TARGET == 'BLACKWELL':
     nvcc_flags.extend(['-DKITTENS_HOPPER', '-DKITTENS_BLACKWELL', '-gencode=arch=compute_100a,code=sm_100a'])
 elif TARGET == 'THOR':
-    arch = os.environ.get('THOR_ARCH', 'sm_110a')
-    if arch not in ('sm_110', 'sm_110a'):
-        raise ValueError('THOR_ARCH must be sm_110 or sm_110a')
-    nvcc_flags.extend(['-DKITTENS_HOPPER', '-DMK_THOR', f'-gencode=arch={arch.replace("sm_", "compute_")},code={arch}',
-                       '-DMK_THOR_STATIC_REGISTERS=' + os.environ.get('THOR_STATIC_REGISTERS', '96'),
-                       '-maxrregcount=' + os.environ.get('THOR_STATIC_REGISTERS', '96')])
+    nvcc_flags.extend(['-DKITTENS_HOPPER', '-DMK_THOR',
+                       '-gencode=arch=compute_110a,code=sm_110a', '-maxrregcount=96'])
 else:
     raise ValueError(f"Invalid target: {TARGET}")
 

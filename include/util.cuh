@@ -4,14 +4,6 @@
 #include "config.cuh"
 
 namespace megakernel {
-// Call from every generic shared-memory producer before its warp publishes
-// data to an asynchronous TMA reader or hands a page to another TMA writer.
-__device__ inline void fence_shared_to_async() {
-#ifdef MK_THOR
-    asm volatile("fence.proxy.async.shared::cta;\n" ::: "memory");
-#endif
-}
-
 
 // pid -- physical page id
 // lid -- logical page id
@@ -138,17 +130,6 @@ template <typename config> struct state {
     }
     __device__ inline void next_instruction() {
         __syncwarp();
-        if (config::SERIAL_INSTRUCTION_HANDOFF ||
-            (config::HANDOFF_AFTER_OPCODE>=0 && instruction()[0]==config::HANDOFF_AFTER_OPCODE)) {
-            // Selected instruction boundaries, or all boundaries in serial mode,
-            // join execution roles before any advances. The controller
-            // is excluded and retains its asynchronous instruction prefetch.
-            // ID 6 is disjoint from consumer collectives and the full-CTA ID.
-            // Roles reach separate call sites under divergent control flow;
-            // bar.sync would imply .aligned and require CTA convergence.
-            asm volatile("barrier.sync 6, %0;\n"
-                         :: "n"((config::NUM_WARPS - 1) * 32) : "memory");
-        }
         if (kittens::laneid() < config::INSTRUCTION_BARRIER_PARTIES_PER_WARP) {
 #ifdef MK_DEBUG
             printf("Thread %d: arriving at instruction finished %d\n",
@@ -180,15 +161,12 @@ template <typename config> struct state {
             auto bit = (instruction_index >> i) & 1;
             kittens::wait(page_finished[pid][i], bit);
         }
-        // Ownership can pass from generic shared-memory writers to a TMA
-        // loader in a different warp. Order the acquired accesses with async.
-        fence_shared_to_async();
     }
 
     __device__ inline void finish_page(int pid, int count) {
 #pragma unroll
         for (int i = 0; i < config::INSTRUCTION_PIPELINE_STAGES_BITS; i++) {
-            arrive(page_finished[pid][i], count * config::PAGE_BARRIER_PARTIES_PER_WARP);
+            arrive(page_finished[pid][i], count);
         }
     }
 
@@ -198,14 +176,8 @@ template <typename config> struct state {
     }
 
     __device__ inline void warp_finish_page(int pid, int count) {
-#ifdef MK_THOR
-        fence_shared_to_async();
-        __syncwarp();
-#endif
-        if (kittens::warp::laneid() < config::PAGE_BARRIER_PARTIES_PER_WARP) {
-#pragma unroll
-            for (int i = 0; i < config::INSTRUCTION_PIPELINE_STAGES_BITS; i++)
-                arrive(page_finished[pid][i], count);
+        if (kittens::warp::laneid() == 0) {
+            finish_page(pid, count);
         }
     }
 
@@ -225,12 +197,9 @@ template <typename config> struct state {
 
     __device__ inline void record(int event_id) {
         if constexpr (config::TIMING_RECORD_ENABLED) {
-            if (kittens::laneid() != 0) return;
             uint64_t current = clock64();
             int diff = (int)(current - start_clock);
-            // Generic IDs may be emitted by several warps. Atomic publication
-            // avoids a data race; only unique same-warp pairs are durations.
-            atomicExch(&timing()[event_id], diff);
+            timing()[event_id] = diff;
         }
     }
 
@@ -277,7 +246,6 @@ constexpr int TEVENT_LAST_STORE = 53;
 
 constexpr int TEVENT_OUTPUT_READY = 54;
 
-constexpr int TEVENT_REDUCTION_INPUT_READY = 80; // 80..95, separate from role pairs
 constexpr int FREE_SLOTS_START = 55;
 
 constexpr int TEVENT_TRIPLES_START = 100;
@@ -314,16 +282,10 @@ constexpr int TEVENT_TRIPLES_OUTPUT_READY = 125;
     __device__ void main_loop(const globals &g,                                \
                               ::megakernel::state<config> &mks) {              \
         MK_DEBUG_PRINT_START(#name);                                           \
-        int num_iters = g.instructions.rows() + (config::READY_QUEUE ? 1 : 0);  \
+        int num_iters = g.instructions.rows();                                 \
         for (mks.instruction_index = 0, mks.instruction_ring = 0;              \
              mks.instruction_index < num_iters; mks.next_instruction()) {      \
-            mks.await_instruction();                                          \
-            if constexpr (config::READY_QUEUE) {                              \
-                if (mks.instruction()[0] == -1) {                             \
-                    mks.next_instruction();                                   \
-                    break;                                                    \
-                }                                                             \
-            }                                                                 \
+            mks.await_instruction();                                           \
             if (kittens::laneid() == 0) {                                               \
                 if (is_consumer) {                                             \
                     mks.record(start_event + 2 * kittens::warpid());                    \

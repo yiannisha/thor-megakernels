@@ -1,6 +1,0 @@
-run_id,status,batch_index,sample_index,elapsed_ms
-08615ae3-63da-4bf8-988f-fdaeab9ec2a6,PASS,0,0,18.12704086303711
-08615ae3-63da-4bf8-988f-fdaeab9ec2a6,PASS,0,1,17.087167739868164
-08615ae3-63da-4bf8-988f-fdaeab9ec2a6,PASS,0,2,17.187328338623047
-08615ae3-63da-4bf8-988f-fdaeab9ec2a6,PASS,0,3,17.331520080566406
-08615ae3-63da-4bf8-988f-fdaeab9ec2a6,PASS,0,4,14.286144256591797

@@ -27,20 +27,10 @@ else ifeq ($(GPU),B200)
 NVCCFLAGS+= -DKITTENS_HOPPER -DKITTENS_BLACKWELL -gencode=arch=compute_100a,code=sm_100a
 else ifeq ($(GPU),THOR)
 # TMA/SIMT compatibility adapter; no B200 tensor-memory paths.
-THOR_ARCH?=sm_110a
 THOR_WORKERS?=20
-THOR_STATIC_REGISTERS?=96
-THOR_REGISTER_MODE?=static
-THOR_BUILD_HASH=$(shell PYTHONPATH="$(MEGAKERNELS_ROOT)" python3 -c 'from tools.thor.sweep import source_hash; print(source_hash())')
+THOR_BUILD_HASH=$(shell PYTHONPATH="$(MEGAKERNELS_ROOT)" python3 -c 'from tools.thor.repro import source_hash; print(source_hash())')
 NVCCFLAGS+= -DMK_BUILD_SOURCE_HASH='"$(THOR_BUILD_HASH)"'
-NVCCFLAGS+= -DKITTENS_HOPPER -DMK_THOR -DMK_ACTIVE_WORKERS=$(THOR_WORKERS) -gencode=arch=$(subst sm_,compute_,$(THOR_ARCH)),code=$(THOR_ARCH)
-ifeq ($(THOR_REGISTER_MODE),dynamic)
-NVCCFLAGS+= -DMK_THOR_DYNAMIC_REGISTERS=1
-else ifeq ($(THOR_REGISTER_MODE),static)
-NVCCFLAGS+= -DMK_THOR_DYNAMIC_REGISTERS=0 -DMK_THOR_STATIC_REGISTERS=$(THOR_STATIC_REGISTERS) -maxrregcount=$(THOR_STATIC_REGISTERS)
-else
-$(error THOR_REGISTER_MODE must be static or dynamic)
-endif
+NVCCFLAGS+= -DKITTENS_HOPPER -DMK_THOR -DMK_ACTIVE_WORKERS=$(THOR_WORKERS) -gencode=arch=compute_110a,code=sm_110a -maxrregcount=96
 else
 $(error Unsupported GPU '$(GPU)')
 endif

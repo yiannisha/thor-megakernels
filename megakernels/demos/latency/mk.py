@@ -9,9 +9,6 @@ def interpret_with_mk(
     globs: Globals,
     mk_func,
 ):
-    if globs.ready_metadata is None:
-        globs.ready_metadata = torch.zeros(1,dtype=torch.int32,device=globs.device)
-        globs.ready_state = torch.zeros(1,dtype=torch.int32,device=globs.device)
     fourD_k_cache = rearrange(globs.k_cache, "l b t h d -> (l b) t h d")
     fourD_v_cache = rearrange(globs.v_cache, "l b t h d -> (l b) t h d")
 
@@ -20,7 +17,6 @@ def interpret_with_mk(
         globs.barriers,
         globs.instructions,
         globs.timings,
-        globs.ready_metadata, globs.ready_state,
         # weights
         globs.qkv_proj_weights,
         globs.attn_ln_weights,
@@ -44,7 +40,6 @@ def interpret_with_mk(
         globs.attn_out_intermediates,
         globs.silu_out,
         globs.logits,
-        globs.down_partials,
         # scalars
         globs.pos_id,
         globs.attn_scale,

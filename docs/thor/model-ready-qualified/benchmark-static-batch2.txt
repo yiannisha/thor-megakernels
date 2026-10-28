@@ -1,1 +1,0 @@
-{"status": "PASS", "output": "/home/thor-guest/ml-perf/Megakernels/docs/thor/model-ready-qualified/benchmark-static-batch2.json", "errors": []}

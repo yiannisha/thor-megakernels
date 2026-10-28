@@ -41,14 +41,14 @@ struct MatVecAddOp {
 
         static __device__ inline void
         load_iter(megakernel::state<Config> &s, const globals &g, parsed_instruction &inst,
-                  int iter, int col_idx, kittens::st_bf<16, Config::WEIGHT_CHUNK_WIDTH> &weight_chunk,
+                  int iter, int col_idx, kittens::st_bf<16, 512> &weight_chunk,
                   kittens::semaphore &sem) {
             kittens::tma::load_async<dim::ROW, cache_policy::EVICT_FIRST>(
                 weight_chunk, g.*WeightsPtr,
                 coord<>{inst.layer,
                         (inst.start_block_idx + iter) *
                             Globals::matvec_block_size,
-                        inst.start_reduction_col + Config::WEIGHT_CHUNK_WIDTH * col_idx},
+                        inst.start_reduction_col + 512 * col_idx},
                 sem);
         }
 
@@ -68,45 +68,7 @@ struct MatVecAddOp {
                           pipeline::SCRATCH_BYTES_PER_WARP>(
                 output_scratch_start, output_rv);
 
-            if constexpr (opcode == OPCODE_DownProjResidual && Config::FP32_DOWNPROJ) {
-                // Each (column, output element) has exactly one writer. The
-                // last of four column arrivals finalizes this output block;
-                // no CTA waits for work that has not been scheduled yet.
-                static_assert(Globals::intermediate_dim == 4 * Globals::hidden_dim);
-                const int lane = kittens::warp::laneid();
-                const int index = block_idx * Globals::matvec_block_size + lane;
-                if (lane < Globals::matvec_block_size) {
-                    g.down_partials.raw_ptr[inst.reduction_block_idx * Globals::hidden_dim + index] = output_rv[0][0];
-                    __threadfence();
-                }
-                kittens::warp::sync();
-                unsigned int prior = 0;
-                if (lane == 0) {
-                    // Slots 7..9 are reserved for per-block finalization;
-                    // ordinary opcodes use slots 0..6 only.
-                    prior = gmem_add_release(&g.Bar[{inst.layer, 7 + block_idx / 48, block_idx % 48}], 1);
-                }
-                prior = __shfl_sync(0xffffffff, prior, 0);
-                kittens::warp::sync();
-                if (prior == 3) {
-                    if (lane < Globals::matvec_block_size) {
-                        float sum = 0.f;
-                        #pragma unroll
-                        for (int col = 0; col < 4; ++col)
-                            sum += g.down_partials.raw_ptr[col * Globals::hidden_dim + index];
-                        // PyTorch rounds the linear output to BF16 before
-                        // adding the BF16 residual, then rounds the result.
-                        const float projected = __bfloat162float(__float2bfloat16_rn(sum));
-                        const float residual = __bfloat162float(g.hidden_states.raw_ptr[index]);
-                        g.hidden_states.raw_ptr[index] = __float2bfloat16_rn(projected + residual);
-                        __threadfence();
-                    }
-                    kittens::warp::sync();
-                    if (lane == 0)
-                        gmem_add_release(&g.Bar[{inst.layer, opcode - 1, 0}], 4);
-                }
-                return;
-            }
+
 
             kittens::warp::sync();
             kittens::warp::store(output_smem_bf, output_rv);
@@ -166,14 +128,7 @@ struct MatVecAddOp {
                 s.wait_page_ready(activation_page);
 
                 s.record(megakernel::TEVENT_AT_GMEM_WAIT);
-                if constexpr (opcode == OPCODE_DownProjResidual && Config::ORDERED_DOWNPROJ) {
-                    // Preserve the PyVM's column order for BF16 residual updates.
-                    // Each completed column contributes exactly hidden_dim/16 tasks.
-                    megakernel::gmem_wait<Config>([&] {
-                        return gmem_load_acquire(&g.Bar[{inst.layer, opcode - 1, 0}]) <
-                            inst.reduction_block_idx * (Globals::hidden_dim / Globals::matvec_block_size);
-                    });
-                }
+
                 megakernel::gmem_wait<Config>([&] { return (gmem_load_acquire(&g.Bar[{inst.layer, prev_opcode - 1,
                                                 inst.reduction_block_idx}]) <
                        EXPECTED_ARRIVAL_COUNT); });
@@ -217,8 +172,8 @@ struct MatVecAddOp {
 
                 // asm volatile("fence.acq_rel.gpu;\n"); // possible we need sc
                 // here but I don't think so.
-                if constexpr (!(opcode == OPCODE_DownProjResidual && Config::FP32_DOWNPROJ))
-                    gmem_add_release(&g.Bar[{inst.layer, opcode - 1, 0}], inst.iters);
+
+                gmem_add_release(&g.Bar[{inst.layer, opcode - 1, 0}], inst.iters);
                 s.record(megakernel::TEVENT_DONE_GMEM_STORE);
             }
         }

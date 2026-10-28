@@ -65,29 +65,6 @@ class SchedulerTests(unittest.TestCase):
                 schedule = self.schedule(nodes, workers)
                 validate_queues(schedule, wave_assign_to_sms(schedule))
 
-    def test_calibrated_costs_change_priority_and_preserve_dependencies(self):
-        from megakernels.scheduler import wave_assign_to_sms, validate_queues
-        a, b = DAG_Node(Op(100), []), DAG_Node(Op(1), [])
-        c = DAG_Node(Op(2), [b])
-        for assign in (assign_dag_to_sms, wave_assign_to_sms):
-            schedule = self.schedule([a, b, c], workers=1)
-            default = assign(schedule)
-            self.assertIs(default[0][0], a.instruction)
-            schedule.cost_model = lambda ins, globs: 200 if ins is b.instruction else 1
-            queues = assign(schedule)
-            self.assertIs(queues[0][0], b.instruction)
-            self.assertLess(queues[0].index(b.instruction), queues[0].index(c.instruction))
-            validate_queues(schedule, queues)
-            for bad in (float('nan'), float('inf'), 0, -1):
-                schedule.cost_model = lambda ins, globs, bad=bad: bad
-                with self.assertRaises(ValueError):
-                    assign(schedule)
-
-    def test_zero_workers(self):
-        with self.assertRaises(ValueError):
-            round_robin_assign_to_sms([], 0)
-
-class QueueValidationTests(unittest.TestCase):
     def test_reverse_queue_dependency_detected(self):
         from megakernels.scheduler import validate_queues
         a, b = DAG_Node(Op(1), []), DAG_Node(Op(1), [])

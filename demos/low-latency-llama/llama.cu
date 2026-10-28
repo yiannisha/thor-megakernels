@@ -31,7 +31,6 @@ PYBIND11_MODULE(mk_llama, m) {
             o_proj_op, rms_upgate_silu_op, rms_lm_head_op>, config>(
         m, "mk_llama", &llama_1b_globals::Bar, &llama_1b_globals::instructions,
         &llama_1b_globals::timings,
-        &llama_1b_globals::ready_metadata, &llama_1b_globals::ready_state,
 
         &llama_1b_globals::qkv_weights, &llama_1b_globals::attn_norm_weights,
         &llama_1b_globals::o_weights, &llama_1b_globals::mlp_norm_weights,
@@ -46,7 +45,7 @@ PYBIND11_MODULE(mk_llama, m) {
         &llama_1b_globals::hidden_states, &llama_1b_globals::q_post_rope,
         &llama_1b_globals::attn_out, &llama_1b_globals::attn_lse_intermediates,
         &llama_1b_globals::attn_out_intermediates, &llama_1b_globals::silu_out,
-        &llama_1b_globals::logits, &llama_1b_globals::down_partials,
+        &llama_1b_globals::logits,
 
         &llama_1b_globals::pos_id, &llama_1b_globals::attn_scale,
         &llama_1b_globals::rms_norm_eps,

@@ -1,8 +1,0 @@
-{
-  "name": "attention-handoff",
-  "fp32_downproj": true,
-  "match_torch_bf16_epilogues": true,
-  "compensated_attention": true,
-  "o_proj_grouped": false,
-  "handoff_after_opcode": 2
-}

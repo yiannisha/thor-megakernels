@@ -144,7 +144,7 @@ def main():
         parser.error('invalid benchmark counts or timeout')
     args.output = args.output.resolve()
     if not args.worker:
-        from tools.thor.sweep import timed_command
+        from tools.thor.repro import timed_command
         command = [sys.executable, '-m', 'tools.thor.vllm_bench', '--worker', '--model', str(args.model.resolve()),
                    '--prompt', str(args.prompt.resolve()), '--output', str(args.output),
                    '--decode-steps', str(args.decode_steps), '--warmups', str(args.warmups),
