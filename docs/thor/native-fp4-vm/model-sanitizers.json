@@ -1,0 +1,71 @@
+[
+  {
+    "tool": "memcheck",
+    "returncode": 0,
+    "command": [
+      "compute-sanitizer",
+      "--tool",
+      "memcheck",
+      "--kernel-name",
+      "kns=megakernel",
+      "--error-exitcode",
+      "7",
+      "--print-limit",
+      "3",
+      "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+      "-m",
+      "tools.analysis.nvfp4.model_bench",
+      "--check-only",
+      "--context",
+      "1024",
+      "--output",
+      "/home/thor-guest/ml-perf/Megakernels/docs/thor/native-fp4-vm/model-memcheck.json"
+    ]
+  },
+  {
+    "tool": "synccheck",
+    "returncode": 0,
+    "command": [
+      "compute-sanitizer",
+      "--tool",
+      "synccheck",
+      "--kernel-name",
+      "kns=megakernel",
+      "--error-exitcode",
+      "7",
+      "--print-limit",
+      "3",
+      "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+      "-m",
+      "tools.analysis.nvfp4.model_bench",
+      "--check-only",
+      "--context",
+      "1024",
+      "--output",
+      "/home/thor-guest/ml-perf/Megakernels/docs/thor/native-fp4-vm/model-synccheck.json"
+    ]
+  },
+  {
+    "tool": "racecheck",
+    "returncode": 0,
+    "command": [
+      "compute-sanitizer",
+      "--tool",
+      "racecheck",
+      "--kernel-name",
+      "kns=megakernel",
+      "--error-exitcode",
+      "7",
+      "--print-limit",
+      "3",
+      "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+      "-m",
+      "tools.analysis.nvfp4.model_bench",
+      "--check-only",
+      "--context",
+      "1024",
+      "--output",
+      "/home/thor-guest/ml-perf/Megakernels/docs/thor/native-fp4-vm/model-racecheck.json"
+    ]
+  }
+]

@@ -57,6 +57,10 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
             &resident, kernel, Config::NUM_THREADS, dynamic), "occupancy query");
         if (resident < 1)
             throw std::runtime_error("compiled kernel cannot keep one CTA resident per SM");
+        if constexpr (requires { Config::NATIVE_TMEM_COLUMNS; }) {
+            if (resident != 1)
+                throw std::runtime_error("native TMEM ownership requires exactly one resident CTA per SM");
+        }
         if constexpr (Config::COOPERATIVE_LAUNCH) {
             if (!prop.cooperativeLaunch || grid.x > static_cast<unsigned>(resident * prop.multiProcessorCount))
                 throw std::runtime_error("cooperative grid cannot be admitted with compiled resources");

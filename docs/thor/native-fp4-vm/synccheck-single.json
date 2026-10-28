@@ -1,0 +1,58 @@
+{
+  "width": 256,
+  "rows": 256,
+  "length": 1,
+  "workers": 1,
+  "noops": false,
+  "fused_quant": false,
+  "quantize": false,
+  "quant_workers": 0,
+  "provenance": {
+    "binary_sha256": "cef8188c6d6f8dc427b434aa58ae6b42f40c1245c7da27f6450a05fea3c4166b",
+    "source_sha256": {
+      "tools/analysis/nvfp4/primitive.cu": "b56645de0c9f13d01eb7587ee1cab8d90cd2bde19732da1ecd54614f743e5fe0"
+    },
+    "cutlass_revision": "91843b71d90737e0a9b86f7d9df213cff5a3526f",
+    "cuda_arch": "sm_110a",
+    "stage_argument": "2",
+    "vm_sources": {
+      "include/megakernel.cuh": "f104b3fe1310f2689e390bec6cbe1f84c9823f854b588ce12f737ef4de02e5d0",
+      "include/util.cuh": "af8c84c06faf7b6374c3993ce56ffb178849490ada9051c0cbee8c823da68b78",
+      "include/ops/nvfp4_linear.cuh": "df86cfa161170850808806abec2eefd8506b144732d05b2136b99c7fc973507e",
+      "include/ops/nvfp4_types.cuh": "89c99e77f6bc7a435be698694bfefa7af88369be0b8351b96e458f208b053dfc",
+      "experimental/native_fp4_vm/vm.cu": "4d9f21265b1651ed5334151d147e67810fd8f0b874c7f8042b5da7e26a9ee52b"
+    },
+    "framework_source_hash": "06e6fbf2c2b9580763bdcd683b151cd30aa63a87572cc9bbc5272967b82b0a79"
+  },
+  "variants": {},
+  "stress_errors": [
+    [
+      {
+        "max_abs": 0.0,
+        "relative_l2": 0.0,
+        "finite": true
+      }
+    ],
+    [
+      {
+        "max_abs": 0.0,
+        "relative_l2": 0.0,
+        "finite": true
+      }
+    ],
+    [
+      {
+        "max_abs": 0.0,
+        "relative_l2": 0.0,
+        "finite": true
+      }
+    ]
+  ],
+  "error_vs_identical_quantized_graph": [
+    {
+      "max_abs": 0.0,
+      "relative_l2": 0.0,
+      "finite": true
+    }
+  ]
+}

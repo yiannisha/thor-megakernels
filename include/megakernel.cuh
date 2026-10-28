@@ -72,6 +72,23 @@ __device__ inline void mk_internal(const globals &g) {
     kittens::group<config::NUM_WARPS>::sync(15);
 #endif
 
+    // Native tcgen05 instructions share one TMEM allocation for the entire VM.
+    // Only the launcher warp allocates/deallocates; operator barriers protect reuse.
+    if constexpr (requires { config::NATIVE_TMEM_COLUMNS; }) {
+        static_assert(config::CLUSTER_BLOCKS == 1, "native TMEM resource currently supports one-CTA clusters");
+        static_assert(config::COOPERATIVE_LAUNCH, "native TMEM resource requires cooperative admission");
+        static_assert(config::NATIVE_TMEM_COLUMNS >= 32 && config::NATIVE_TMEM_COLUMNS <= 512);
+        static_assert((config::NATIVE_TMEM_COLUMNS & (config::NATIVE_TMEM_COLUMNS - 1)) == 0);
+        __shared__ uint32_t native_tmem;
+        if (kittens::warpid() == config::NUM_CONSUMER_WARPS + 2) {
+            uint32_t address = static_cast<uint32_t>(__cvta_generic_to_shared(&native_tmem));
+            asm volatile("tcgen05.alloc.cta_group::1.sync.aligned.shared::cta.b32 [%0], %1;"
+                         :: "r"(address), "r"(config::NATIVE_TMEM_COLUMNS) : "memory");
+        }
+        __syncthreads();
+        mks.native_tmem_base = native_tmem;
+    }
+
     // Zero initial timings memory.
     if (threadIdx.x < config::TIMING_WIDTH) {
 #pragma unroll
@@ -152,6 +169,14 @@ __device__ inline void mk_internal(const globals &g) {
         kittens::everyone::tma::cluster::sync();
     else
         kittens::everyone::sync(15);
+
+    if constexpr (requires { config::NATIVE_TMEM_COLUMNS; }) {
+        if (kittens::warpid() == config::NUM_CONSUMER_WARPS + 2) {
+            asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;" ::: "memory");
+            asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;"
+                         :: "r"(mks.native_tmem_base), "r"(config::NATIVE_TMEM_COLUMNS) : "memory");
+        }
+    }
 
 #ifdef MK_DEBUG
     uint64_t end_time = (uint64_t)clock64();

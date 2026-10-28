@@ -211,6 +211,8 @@ template <typename config> struct state {
 #endif
 
     uint32_t pid_order_shared_addr;
+    // Opt-in native MMA resource; allocated once per CTA by mk_internal.
+    uint32_t native_tmem_base = 0;
 
     __device__ inline void print() {
         printf("Kittens Virtual Machine State being printed by thread %d, "

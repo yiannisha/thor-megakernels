@@ -1,0 +1,2783 @@
+{
+  "scope": "one decode; each operator checked on its actual native input",
+  "operations": [
+    {
+      "index": 0,
+      "layer": 0,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 1,
+      "layer": 0,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 2,
+      "layer": 0,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.000244140625,
+        "mean_absolute_error": 3.028617356903851e-08,
+        "max_relative_error": 0.006211180239915848,
+        "mean_relative_error": 1.833712985899183e-06,
+        "normalized_rmse": 1.0900035704253241e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.000244140625,
+        "mean_absolute_error": 3.028617356903851e-08,
+        "max_relative_error": 0.006211180239915848,
+        "mean_relative_error": 1.833712985899183e-06,
+        "normalized_rmse": 1.0900035704253241e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 3,
+      "layer": 0,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 4,
+      "layer": 1,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 6.103515625e-05,
+        "mean_absolute_error": 1.9868215517249155e-08,
+        "max_relative_error": 0.0049019609577953815,
+        "mean_relative_error": 1.5956904917402426e-06,
+        "normalized_rmse": 6.556840048688173e-07,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 6.103515625e-05,
+        "mean_absolute_error": 1.9868215517249155e-08,
+        "max_relative_error": 0.0049019609577953815,
+        "mean_relative_error": 1.5956904917402426e-06,
+        "normalized_rmse": 6.556840048688173e-07,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 5,
+      "layer": 1,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 6,
+      "layer": 1,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.000244140625,
+        "mean_absolute_error": 1.5283603715943173e-08,
+        "max_relative_error": 0.03913043439388275,
+        "mean_relative_error": 3.725284614120028e-06,
+        "normalized_rmse": 6.877042324049398e-06,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.000244140625,
+        "mean_absolute_error": 1.5283603715943173e-08,
+        "max_relative_error": 0.03913043439388275,
+        "mean_relative_error": 3.725284614120028e-06,
+        "normalized_rmse": 6.877042324049398e-06,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 7,
+      "layer": 1,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 8,
+      "layer": 2,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 9,
+      "layer": 2,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 10,
+      "layer": 2,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.001953125,
+        "mean_absolute_error": 1.2002601579297334e-07,
+        "max_relative_error": 0.007246376946568489,
+        "mean_relative_error": 1.695697619652492e-06,
+        "normalized_rmse": 5.454920756164938e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.001953125,
+        "mean_absolute_error": 1.2002601579297334e-07,
+        "max_relative_error": 0.007246376946568489,
+        "mean_relative_error": 1.695697619652492e-06,
+        "normalized_rmse": 5.454920756164938e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 11,
+      "layer": 2,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 12,
+      "layer": 3,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 13,
+      "layer": 3,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 14,
+      "layer": 3,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0009765625,
+        "mean_absolute_error": 6.730624591000378e-08,
+        "max_relative_error": 0.006097560748457909,
+        "mean_relative_error": 1.6070007404778153e-06,
+        "normalized_rmse": 2.216376014985144e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0009765625,
+        "mean_absolute_error": 6.730624591000378e-08,
+        "max_relative_error": 0.006097560748457909,
+        "mean_relative_error": 1.6070007404778153e-06,
+        "normalized_rmse": 2.216376014985144e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 15,
+      "layer": 3,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 16,
+      "layer": 4,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 7.62939453125e-06,
+        "mean_absolute_error": 2.4835269396561444e-09,
+        "max_relative_error": 0.007246376946568489,
+        "mean_relative_error": 2.3588468138768803e-06,
+        "normalized_rmse": 7.617457242758974e-08,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 7.62939453125e-06,
+        "mean_absolute_error": 2.4835269396561444e-09,
+        "max_relative_error": 0.007246376946568489,
+        "mean_relative_error": 2.3588468138768803e-06,
+        "normalized_rmse": 7.617457242758974e-08,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 17,
+      "layer": 4,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 18,
+      "layer": 4,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.00048828125,
+        "mean_absolute_error": 6.179061529110186e-08,
+        "max_relative_error": 0.014705882407724857,
+        "mean_relative_error": 3.1441963983525056e-06,
+        "normalized_rmse": 1.4828499843133613e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.00048828125,
+        "mean_absolute_error": 6.179061529110186e-08,
+        "max_relative_error": 0.014705882407724857,
+        "mean_relative_error": 3.1441963983525056e-06,
+        "normalized_rmse": 1.4828499843133613e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 19,
+      "layer": 4,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 20,
+      "layer": 5,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 21,
+      "layer": 5,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 22,
+      "layer": 5,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 7.62939453125e-06,
+        "mean_absolute_error": 9.481482265982777e-10,
+        "max_relative_error": 0.011363636702299118,
+        "mean_relative_error": 2.0641623450501356e-06,
+        "normalized_rmse": 2.5663041469670134e-07,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 7.62939453125e-06,
+        "mean_absolute_error": 9.481482265982777e-10,
+        "max_relative_error": 0.011363636702299118,
+        "mean_relative_error": 2.0641623450501356e-06,
+        "normalized_rmse": 2.5663041469670134e-07,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 23,
+      "layer": 5,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 24,
+      "layer": 6,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 9.5367431640625e-07,
+        "mean_absolute_error": 3.1044086745701804e-10,
+        "max_relative_error": 0.004524887073785067,
+        "mean_relative_error": 1.4729450867889682e-06,
+        "normalized_rmse": 1.0046806941943487e-08,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 9.5367431640625e-07,
+        "mean_absolute_error": 3.1044086745701804e-10,
+        "max_relative_error": 0.004524887073785067,
+        "mean_relative_error": 1.4729450867889682e-06,
+        "normalized_rmse": 1.0046806941943487e-08,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 25,
+      "layer": 6,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 26,
+      "layer": 6,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 27,
+      "layer": 6,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 28,
+      "layer": 7,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 29,
+      "layer": 7,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 30,
+      "layer": 7,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0009765625,
+        "mean_absolute_error": 6.007030606269836e-08,
+        "max_relative_error": 0.005681818351149559,
+        "mean_relative_error": 5.909313358642976e-07,
+        "normalized_rmse": 2.422637953714002e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0009765625,
+        "mean_absolute_error": 6.007030606269836e-08,
+        "max_relative_error": 0.005681818351149559,
+        "mean_relative_error": 5.909313358642976e-07,
+        "normalized_rmse": 2.422637953714002e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 31,
+      "layer": 7,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 32,
+      "layer": 8,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 3.0517578125e-05,
+        "mean_absolute_error": 9.934107758624577e-09,
+        "max_relative_error": 0.004694835748523474,
+        "mean_relative_error": 1.52826692101371e-06,
+        "normalized_rmse": 3.3196201343344e-07,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 3.0517578125e-05,
+        "mean_absolute_error": 9.934107758624577e-09,
+        "max_relative_error": 0.004694835748523474,
+        "mean_relative_error": 1.52826692101371e-06,
+        "normalized_rmse": 3.3196201343344e-07,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 33,
+      "layer": 8,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 34,
+      "layer": 8,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.000244140625,
+        "mean_absolute_error": 3.7953213904984295e-08,
+        "max_relative_error": 0.012658228166401386,
+        "mean_relative_error": 2.690350584089174e-06,
+        "normalized_rmse": 7.681454917474184e-06,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.000244140625,
+        "mean_absolute_error": 3.7953213904984295e-08,
+        "max_relative_error": 0.012658228166401386,
+        "mean_relative_error": 2.690350584089174e-06,
+        "normalized_rmse": 7.681454917474184e-06,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 35,
+      "layer": 8,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 36,
+      "layer": 9,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 37,
+      "layer": 9,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 38,
+      "layer": 9,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0009765625,
+        "mean_absolute_error": 9.19681042432785e-08,
+        "max_relative_error": 0.006896551698446274,
+        "mean_relative_error": 1.725281549624924e-06,
+        "normalized_rmse": 1.9318016711622477e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0009765625,
+        "mean_absolute_error": 9.19681042432785e-08,
+        "max_relative_error": 0.006896551698446274,
+        "mean_relative_error": 1.725281549624924e-06,
+        "normalized_rmse": 1.9318016711622477e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 39,
+      "layer": 9,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 40,
+      "layer": 10,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 41,
+      "layer": 10,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 42,
+      "layer": 10,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 43,
+      "layer": 10,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 44,
+      "layer": 11,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 45,
+      "layer": 11,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 46,
+      "layer": 11,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 3.0517578125e-05,
+        "mean_absolute_error": 2.3355823941528797e-09,
+        "max_relative_error": 0.004629629664123058,
+        "mean_relative_error": 8.158058335538954e-07,
+        "normalized_rmse": 6.455164225371846e-07,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 3.0517578125e-05,
+        "mean_absolute_error": 2.3355823941528797e-09,
+        "max_relative_error": 0.004629629664123058,
+        "mean_relative_error": 8.158058335538954e-07,
+        "normalized_rmse": 6.455164225371846e-07,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 47,
+      "layer": 11,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 48,
+      "layer": 12,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 49,
+      "layer": 12,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 6.103515625e-05,
+        "mean_absolute_error": 2.9802322387695312e-08,
+        "max_relative_error": 0.1428571492433548,
+        "mean_relative_error": 6.975446740398183e-05,
+        "normalized_rmse": 6.258995654206956e-06,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 6.103515625e-05,
+        "mean_absolute_error": 2.9802322387695312e-08,
+        "max_relative_error": 0.1428571492433548,
+        "mean_relative_error": 6.975446740398183e-05,
+        "normalized_rmse": 6.258995654206956e-06,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 50,
+      "layer": 12,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0001220703125,
+        "mean_absolute_error": 8.185452315956354e-09,
+        "max_relative_error": 0.0066225165501236916,
+        "mean_relative_error": 1.6117487575684208e-06,
+        "normalized_rmse": 2.948911060229875e-06,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0001220703125,
+        "mean_absolute_error": 8.185452315956354e-09,
+        "max_relative_error": 0.0066225165501236916,
+        "mean_relative_error": 1.6117487575684208e-06,
+        "normalized_rmse": 2.948911060229875e-06,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 51,
+      "layer": 12,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 52,
+      "layer": 13,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 53,
+      "layer": 13,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 54,
+      "layer": 13,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.001953125,
+        "mean_absolute_error": 1.277076080441475e-07,
+        "max_relative_error": 0.004694835748523474,
+        "mean_relative_error": 1.0452349670231342e-06,
+        "normalized_rmse": 4.3973523133900017e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.001953125,
+        "mean_absolute_error": 1.277076080441475e-07,
+        "max_relative_error": 0.004694835748523474,
+        "mean_relative_error": 1.0452349670231342e-06,
+        "normalized_rmse": 4.3973523133900017e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 55,
+      "layer": 13,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 56,
+      "layer": 14,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 1.52587890625e-05,
+        "mean_absolute_error": 4.967053879312289e-09,
+        "max_relative_error": 0.0041841003112494946,
+        "mean_relative_error": 1.3620118579638074e-06,
+        "normalized_rmse": 1.5674400799525756e-07,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 1.52587890625e-05,
+        "mean_absolute_error": 4.967053879312289e-09,
+        "max_relative_error": 0.0041841003112494946,
+        "mean_relative_error": 1.3620118579638074e-06,
+        "normalized_rmse": 1.5674400799525756e-07,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 57,
+      "layer": 14,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 58,
+      "layer": 14,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.00048828125,
+        "mean_absolute_error": 5.216134013608098e-08,
+        "max_relative_error": 0.006289307959377766,
+        "mean_relative_error": 2.8452191145333927e-06,
+        "normalized_rmse": 1.0035526429419406e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.00048828125,
+        "mean_absolute_error": 5.216134013608098e-08,
+        "max_relative_error": 0.006289307959377766,
+        "mean_relative_error": 2.8452191145333927e-06,
+        "normalized_rmse": 1.0035526429419406e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 59,
+      "layer": 14,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.000244140625,
+        "mean_absolute_error": 1.1920928955078125e-07,
+        "max_relative_error": 0.00413223123177886,
+        "mean_relative_error": 2.0176910311420215e-06,
+        "normalized_rmse": 1.4915971405571327e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.000244140625,
+        "mean_absolute_error": 1.1920928955078125e-07,
+        "max_relative_error": 0.00413223123177886,
+        "mean_relative_error": 2.0176910311420215e-06,
+        "normalized_rmse": 1.4915971405571327e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 60,
+      "layer": 15,
+      "kind": "qkv",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 3.0517578125e-05,
+        "mean_absolute_error": 9.934107758624577e-09,
+        "max_relative_error": 0.005586592014878988,
+        "mean_relative_error": 1.8185521639679791e-06,
+        "normalized_rmse": 2.8429673193386407e-07,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 3.0517578125e-05,
+        "mean_absolute_error": 9.934107758624577e-09,
+        "max_relative_error": 0.005586592014878988,
+        "mean_relative_error": 1.8185521639679791e-06,
+        "normalized_rmse": 2.8429673193386407e-07,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 61,
+      "layer": 15,
+      "kind": "o",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 62,
+      "layer": 15,
+      "kind": "upgate",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.001953125,
+        "mean_absolute_error": 1.2223608791828156e-07,
+        "max_relative_error": 0.006849315017461777,
+        "mean_relative_error": 1.3909555036661914e-06,
+        "normalized_rmse": 1.854501351772342e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.001953125,
+        "mean_absolute_error": 1.2223608791828156e-07,
+        "max_relative_error": 0.006849315017461777,
+        "mean_relative_error": 1.3909555036661914e-06,
+        "normalized_rmse": 1.854501351772342e-05,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 63,
+      "layer": 15,
+      "kind": "down",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    },
+    {
+      "index": 64,
+      "layer": null,
+      "kind": "head",
+      "activation": {
+        "passed": true,
+        "max_absolute_error": 0.0,
+        "mean_absolute_error": 0.0,
+        "max_relative_error": 0.0,
+        "mean_relative_error": 0.0,
+        "normalized_rmse": 0.0,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "packed_byte_mismatches": 0,
+      "scale_mismatches": 0,
+      "mma_on_actual_activation": {
+        "passed": true,
+        "max_absolute_error": 0.00390625,
+        "mean_absolute_error": 1.0365459957029088e-07,
+        "max_relative_error": 0.1043081283569336,
+        "mean_relative_error": 1.8366306449024705e-06,
+        "normalized_rmse": 9.113124178838916e-06,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.001
+      },
+      "whole_op_on_frozen_input": {
+        "passed": true,
+        "max_absolute_error": 0.00390625,
+        "mean_absolute_error": 1.0365459957029088e-07,
+        "max_relative_error": 0.1043081283569336,
+        "mean_relative_error": 1.8366306449024705e-06,
+        "normalized_rmse": 9.113124178838916e-06,
+        "atol": 0.25,
+        "rtol": 0.05,
+        "nrmse_limit": 0.003
+      }
+    }
+  ],
+  "attention": [
+    {
+      "passed": true,
+      "max_absolute_error": 0.000244140625,
+      "mean_absolute_error": 5.263296770863235e-06,
+      "max_relative_error": 0.6558441519737244,
+      "mean_relative_error": 0.0021373762283474207,
+      "normalized_rmse": 0.0004897100734524429,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.0009765625,
+      "mean_absolute_error": 1.783610787242651e-05,
+      "max_relative_error": 0.06435643881559372,
+      "mean_relative_error": 0.0012194538721814752,
+      "normalized_rmse": 0.0010436803568154573,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.001953125,
+      "mean_absolute_error": 2.0465759007493034e-05,
+      "max_relative_error": 0.24226804077625275,
+      "mean_relative_error": 0.002472770167514682,
+      "normalized_rmse": 0.0019368150969967246,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.0009765625,
+      "mean_absolute_error": 2.2400985471904278e-05,
+      "max_relative_error": 1.0855615139007568,
+      "mean_relative_error": 0.003064017742872238,
+      "normalized_rmse": 0.0018146838992834091,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.001953125,
+      "mean_absolute_error": 3.0148192308843136e-05,
+      "max_relative_error": 0.886227548122406,
+      "mean_relative_error": 0.0027503161691129208,
+      "normalized_rmse": 0.0017028809525072575,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.00390625,
+      "mean_absolute_error": 3.861822187900543e-05,
+      "max_relative_error": 0.21052631735801697,
+      "mean_relative_error": 0.002105919411405921,
+      "normalized_rmse": 0.001966186799108982,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.001953125,
+      "mean_absolute_error": 2.518802648410201e-05,
+      "max_relative_error": 1.5021644830703735,
+      "mean_relative_error": 0.0027836435474455357,
+      "normalized_rmse": 0.0012902746675536036,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.0009765625,
+      "mean_absolute_error": 1.96374676306732e-05,
+      "max_relative_error": 4.964912414550781,
+      "mean_relative_error": 0.0068893879652023315,
+      "normalized_rmse": 0.0009471162920817733,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.001953125,
+      "mean_absolute_error": 2.3548287572339177e-05,
+      "max_relative_error": 2.699530601501465,
+      "mean_relative_error": 0.004049916751682758,
+      "normalized_rmse": 0.0012386137386783957,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.001953125,
+      "mean_absolute_error": 4.171812906861305e-05,
+      "max_relative_error": 0.5757575631141663,
+      "mean_relative_error": 0.002536039100959897,
+      "normalized_rmse": 0.001573471468873322,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.001953125,
+      "mean_absolute_error": 4.303851164877415e-05,
+      "max_relative_error": 0.6666666865348816,
+      "mean_relative_error": 0.0026602125726640224,
+      "normalized_rmse": 0.001805284759029746,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.001953125,
+      "mean_absolute_error": 2.338600461371243e-05,
+      "max_relative_error": 1.3636363744735718,
+      "mean_relative_error": 0.003587085520848632,
+      "normalized_rmse": 0.001594236702658236,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.0009765625,
+      "mean_absolute_error": 1.7691974790068343e-05,
+      "max_relative_error": 9.395722389221191,
+      "mean_relative_error": 0.006385937798768282,
+      "normalized_rmse": 0.0010563303949311376,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.001953125,
+      "mean_absolute_error": 3.14512726617977e-05,
+      "max_relative_error": 0.8792808055877686,
+      "mean_relative_error": 0.003024764358997345,
+      "normalized_rmse": 0.0015193511499091983,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.00390625,
+      "mean_absolute_error": 4.604004789143801e-05,
+      "max_relative_error": 1.1111111640930176,
+      "mean_relative_error": 0.0031904526986181736,
+      "normalized_rmse": 0.0017059012316167355,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    },
+    {
+      "passed": true,
+      "max_absolute_error": 0.001953125,
+      "mean_absolute_error": 3.837242547888309e-05,
+      "max_relative_error": 0.8659793734550476,
+      "mean_relative_error": 0.0026605171151459217,
+      "normalized_rmse": 0.0006857409025542438,
+      "atol": 0.25,
+      "rtol": 0.05,
+      "nrmse_limit": 0.003
+    }
+  ]
+}
