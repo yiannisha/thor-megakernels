@@ -1,0 +1,26 @@
+[
+  {
+    "case": "zero-workers",
+    "expected": "reject before launch",
+    "process": {
+      "returncode": 1,
+      "output": "FAIL: invalid configuration or cooperative launch unavailable\n"
+    }
+  },
+  {
+    "case": "zero-tasks",
+    "expected": "reject before launch",
+    "process": {
+      "returncode": 1,
+      "output": "FAIL: invalid configuration or cooperative launch unavailable\n"
+    }
+  },
+  {
+    "case": "too-many-workers",
+    "expected": "reject before launch",
+    "process": {
+      "returncode": 1,
+      "output": "FAIL: invalid configuration or cooperative launch unavailable\n"
+    }
+  }
+]
