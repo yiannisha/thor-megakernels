@@ -1,6 +1,7 @@
 #include "../../demos/low-latency-llama/llama.cuh"
 #include "../../demos/low-latency-llama/attention_partial.cu"
 #include "vm.cu"
+#include "ops/nvfp4_weight_only.cuh"
 #include "pyutils/pyutils.cuh"
 #include <pybind11/stl.h>
 
@@ -49,6 +50,15 @@ struct ModelQuantize : fvm::Quantize {
 
 };
 struct ModelLinear : fvm::Linear {
+ struct controller {
+  __device__ static int release_lid(const fvm::Globals& g,fvm::Config::instruction_t& inst,int& q){
+   return g.operands[inst[1]].bf16_input?fvm::weight_only::Linear::controller::release_lid(g,inst,q):fvm::Linear::controller::release_lid(g,inst,q);
+  }
+  __device__ static int init_semaphores(const fvm::Globals& g,ModelState& s){return g.operands[s.instruction()[1]].bf16_input?fvm::weight_only::Linear::controller::init_semaphores(g,s):fvm::Linear::controller::init_semaphores(g,s);}
+ };
+ struct loader {__device__ static void run(const ModelGlobals& g,ModelState& s){if(g.operands[s.instruction()[1]].bf16_input)fvm::weight_only::Linear::loader::run(g,s);else fvm::Linear::loader::run(g,s);}};
+ struct launcher {__device__ static void run(const ModelGlobals& g,ModelState& s){if(g.operands[s.instruction()[1]].bf16_input)fvm::weight_only::Linear::launcher::run(g,s);else fvm::Linear::launcher::run(g,s);}};
+ struct consumer {__device__ static void run(const ModelGlobals& g,ModelState& s){if(g.operands[s.instruction()[1]].bf16_input)fvm::weight_only::Linear::consumer::run(g,s);else fvm::Linear::consumer::run(g,s);}};
  struct storer {
   __device__ static void run(const ModelGlobals& g,ModelState& s){
    if(g.trace){
@@ -127,6 +137,12 @@ template<class... Members>void bind_model(pybind11::module_& m,Members... member
   cudaMalloc(&p->attention_codes,attention_codes.size()*4);
   cudaMemcpy(p->attention_codes,attention_codes.data(),attention_codes.size()*4,cudaMemcpyHostToDevice);
   return (uintptr_t)p;
+ });
+ m.def("weight_only",[](uintptr_t handle,std::vector<uintptr_t> activations,std::vector<uintptr_t> scales,std::vector<float> global_scales){
+  auto* p=(ModelPlan*)handle;if(activations.size()!=65 || scales.size()!=65 || global_scales.size()!=65)throw std::runtime_error("expected 65 weight-only operands");
+  std::vector<fvm::Operand> ops(65);cudaMemcpy(ops.data(),p->vm->operands,65*sizeof(fvm::Operand),cudaMemcpyDeviceToHost);
+  for(int i=0;i<65;++i){ops[i].bf16_input=(__nv_bfloat16*)activations[i];ops[i].weight_scales=(unsigned char*)scales[i];ops[i].alpha=global_scales[i];}
+  auto e=cudaMemcpy(p->vm->operands,ops.data(),65*sizeof(fvm::Operand),cudaMemcpyHostToDevice);if(e!=cudaSuccess)throw std::runtime_error(cudaGetErrorString(e));
  });
  m.def("attention",[](uintptr_t handle,int layer,int position,uintptr_t stream){
   if(layer<0 || layer>=16)throw std::runtime_error("invalid attention layer");

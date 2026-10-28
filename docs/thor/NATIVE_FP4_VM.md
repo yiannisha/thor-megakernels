@@ -58,3 +58,5 @@ bash experimental/native_fp4_vm/build_model.sh
 python -m tools.analysis.nvfp4.model_bench --check-only --quantized-reference --shared-attention-reference --output local/fp4-check.json
 python -m tools.analysis.nvfp4.model_bench --context 1024 --decode-steps 100 --warmups 5 --repeats 10 --batches 3 --output local/fp4-e2e.json
 ```
+
+A separate experimental [weight-only W4A16 path](W4A16_VM.md) preserves BF16 activations. It is currently slower than BF16; W4A4 remains available unchanged.

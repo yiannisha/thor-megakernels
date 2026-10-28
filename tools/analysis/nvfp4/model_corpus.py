@@ -11,18 +11,18 @@ from .model_bench import FP4ModelAdapter
 from .bench import ROOT
 @torch.inference_mode()
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--windows',type=int,default=16);ap.add_argument('--prefix',type=int,default=128);ap.add_argument('--suffix',type=int,default=64);ap.add_argument('--output',type=Path,required=True);args=ap.parse_args()
+ ap=argparse.ArgumentParser();ap.add_argument('--windows',type=int,default=16);ap.add_argument('--prefix',type=int,default=128);ap.add_argument('--suffix',type=int,default=64);ap.add_argument('--output',type=Path,required=True);ap.add_argument('--weight-only',action='store_true');args=ap.parse_args()
  source=ROOT/'local/thor-native-fp4-vm/wikitext-test-rows.json';raw=source.read_bytes();data=json.loads(raw)
  tokenizer=AutoTokenizer.from_pretrained(ROOT/'local/models/Llama-3.2-1B-Instruct',local_files_only=True)
  text='\n\n'.join(r['row']['text'] for r in data['rows'] if r['row']['text'].strip())
  ids=tokenizer.encode(text,add_special_tokens=False)
- a=FP4ModelAdapter();cache=a.model.stacked_kv_cache
+ a=FP4ModelAdapter(weight_only=args.weight_only);cache=a.model.stacked_kv_cache
  def restore(saved):
   for dst,src in zip(cache,saved):dst.copy_(src)
  def step(mode,pos,token):
   a.context=pos;a.position.fill_(pos);a.state.seq_len=pos+1;a.case.token.fill_(token)
   return a._run_torch() if mode=='bf16' else a.run()
- result={'dataset':'Salesforce/wikitext','config':'wikitext-2-raw-v1','split':'test',
+ result={'precision':'W4A16' if args.weight_only else 'W4A4','dataset':'Salesforce/wikitext','config':'wikitext-2-raw-v1','split':'test',
   'source_sha256':hashlib.sha256(raw).hexdigest(),'prefix_tokens':args.prefix,'suffix_tokens':args.suffix,
   'scope':'BF16 prefill for both; distinct teacher-forced BF16/FP4 decode caches; deterministic first windows; not full-corpus PPL','windows':[]}
  def write():args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(json.dumps(result,indent=2)+'\n')

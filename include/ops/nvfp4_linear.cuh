@@ -28,6 +28,9 @@ struct Operand {
  const __nv_bfloat16 *norm=nullptr,*input_gate=nullptr,*residual=nullptr;
  float norm_eps=1e-5f;
  int transform=0;
+ // Optional weight-only mode: prepare activations as BF16, never as FP4.
+ __nv_bfloat16* bf16_input=nullptr;
+ const unsigned char* weight_scales=nullptr;
 };
 struct Globals {
  megakernel::instruction_layout<Config> instructions;
@@ -192,6 +195,10 @@ template<int Opcode=9> struct QuantizeOp : megakernel::NoOp<Config> {
      v=__bfloat162float(__float2bfloat16(v*__bfloat162float(o.norm[col+lane])));
     }
     if(lane<16 && o.transform==2){float gate=__bfloat162float(o.input_gate[col+lane]);v=__bfloat162float(__float2bfloat16(v*(gate/(1.f+expf(-gate)))));}
+    if(o.bf16_input){
+     if(lane<16)o.bf16_input[col+lane]=__float2bfloat16(v);
+     continue;
+    }
     v/=o.input_tensor_scale;
     float a=fabsf(v);for(int d=16;d;d>>=1)a=fmaxf(a,__shfl_xor_sync(0xffffffff,a,d));
     __nv_fp8_e4m3 sf(fmaxf(a/6.f,1.f/512.f));

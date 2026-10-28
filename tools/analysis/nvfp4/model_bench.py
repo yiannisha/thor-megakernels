@@ -20,7 +20,7 @@ from tools.thor.repro import source_hash
 
 class FP4ModelAdapter(ModelAdapter):
  @torch.inference_mode()
- def __init__(self,context=1024,seed=1,decode_steps=100):
+ def __init__(self,context=1024,seed=1,decode_steps=100,weight_only=False):
   super().__init__('torch',context,seed,cache_capacity=context+decode_steps+1)
   from megakernels.demos.latency.scheduler import LatencyScheduleBuilder
   from megakernels.demos.latency.mk import interpret_with_mk
@@ -68,10 +68,14 @@ class FP4ModelAdapter(ModelAdapter):
   norms.append(g.lm_head_norm_weights.data_ptr())
   result=[]
   interpret_with_mk(g,lambda *args,**kwargs:result.append(self.module.configure(self.vm,norms,*args)))
-  self.handle=result[0];self.engine='fp4'
+  self.handle=result[0];self.engine='fp4';self.weight_only=weight_only
+  if weight_only:
+   self.bf16_activations=[torch.empty_like(x['source']) for x in self.inputs]
+   self.module.weight_only(self.handle,[x.data_ptr() for x in self.bf16_activations],[w['scales'].data_ptr() for w in self.weights],[w['tensor_scale'] for w in self.weights])
   self.metadata.update(engine='fp4',precision='NVFP4 W4A4 linear, BF16/FP32 attention and nonlinear operations',
    native_build=self.p.provenance,variant='native-fp4-vm-model',activation_tensor_scale=1/64,
    quantized_weight_bytes=sum(w['packed'].numel()+w['native'].numel() for w in self.weights))
+  if weight_only:self.metadata.update(precision='NVFP4 weights, BF16 activations and MMA, FP32 accumulation',variant='native-w4a16-vm-model')
   self.reset()
   print('Full-model native FP4 VM is configured',flush=True)
  @torch.inference_mode()
@@ -86,7 +90,7 @@ class FP4ModelAdapter(ModelAdapter):
   return self.globs.logits
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--quantized-reference',action='store_true');ap.add_argument('--shared-attention-reference',action='store_true');ap.add_argument('--context',type=int,default=1024);ap.add_argument('--seed',type=int,default=1)
+ ap=argparse.ArgumentParser();ap.add_argument('--weight-only',action='store_true');ap.add_argument('--quantized-reference',action='store_true');ap.add_argument('--shared-attention-reference',action='store_true');ap.add_argument('--context',type=int,default=1024);ap.add_argument('--seed',type=int,default=1)
  ap.add_argument('--decode-steps',type=int,default=100);ap.add_argument('--warmups',type=int,default=2)
  ap.add_argument('--repeats',type=int,default=5);ap.add_argument('--batches',type=int,default=1);ap.add_argument('--check-only',action='store_true')
  ap.add_argument('--output',type=Path,required=True);args=ap.parse_args()
@@ -95,7 +99,7 @@ def main():
  write()
  try:
   with torch.inference_mode():
-   adapter=FP4ModelAdapter(args.context,seed=args.seed,decode_steps=args.decode_steps)
+   adapter=FP4ModelAdapter(args.context,seed=args.seed,decode_steps=args.decode_steps,weight_only=args.weight_only)
    result['metadata']=adapter.metadata
    adapter.reset();logits=adapter.run();torch.cuda.synchronize()
    result['first_decode']=adapter.check(logits,adapter.reference())

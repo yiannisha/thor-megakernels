@@ -8,8 +8,8 @@ from tools.thor.model_check import errors,attention_context
 
 @torch.inference_mode()
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--context',type=int,default=1024);args=ap.parse_args()
- a=FP4ModelAdapter(args.context);trace=[]
+ ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--context',type=int,default=1024);ap.add_argument('--weight-only',action='store_true');args=ap.parse_args()
+ a=FP4ModelAdapter(args.context,weight_only=args.weight_only);trace=[]
  for w in a.weights:
   m,halfk=w['packed'].shape;k=halfk*2
   trace.append({name:torch.full((size,),float('nan'),device='cuda',dtype=torch.bfloat16)
@@ -23,7 +23,7 @@ def main():
   for start in range(0,m,1024):
    out[start:start+1024]=levels[unpack(w['packed'][start:start+1024])]*w['scales'][start:start+1024].view(torch.float8_e4m3fn).float().repeat_interleave(16,-1)*w['tensor_scale']
   return out
- result={'scope':'one decode; each operator checked on its actual native input','operations':[],'attention':[]}
+ result={'precision':'W4A16' if args.weight_only else 'W4A4','scope':'one decode; each operator checked on its actual native input','operations':[],'attention':[]}
  old=torch.get_float32_matmul_precision();torch.set_float32_matmul_precision('highest')
  try:
   for i,(w,x,t) in enumerate(zip(a.weights,a.inputs,trace)):
@@ -34,20 +34,31 @@ def main():
     transformed=(transformed*norm).bfloat16()
    elif kind==3:transformed=(F.silu(t['gate'].float())*source.float()).bfloat16()
    else:transformed=source
-   q=a.p.storage(transformed.reshape(1,-1).contiguous());q['tensor_scale']=1/64;a.p.quantize(q,reference=True)
-   k=source.numel();groups=torch.arange(k//16,device='cuda');offsets=(groups//4)*512+groups%4
-   scales=x['native'][offsets].view(torch.float8_e4m3fn).float()
-   actual_x=levels[unpack(x['packed'])].flatten()*scales.repeat_interleave(16)/64
-   decoded=weight(w)
-   y=F.linear(actual_x,decoded).bfloat16()
-   y_expected=F.linear(q['decoded'].flatten(),decoded).bfloat16()
-   if i<64 and kind in (1,3):y=y+t['residual'];y_expected=y_expected+t['residual']
-   row={'index':i,'layer':i//4 if i<64 else None,'kind':('qkv','o','upgate','down')[kind] if i<64 else 'head',
-    'activation':errors(actual_x,q['decoded'].flatten(),nrmse_limit=.001),
-    'packed_byte_mismatches':int((x['packed']!=q['packed']).sum()),
-    'scale_mismatches':int((x['native'][offsets]!=q['scales'].flatten()).sum()),
-    'mma_on_actual_activation':errors(t['output'],y,nrmse_limit=.001),
-    'whole_op_on_frozen_input':errors(t['output'],y_expected,nrmse_limit=.003)}
+   if args.weight_only:
+    actual_x=a.bf16_activations[i].float()
+    decoded=weight(w)
+    y=F.linear(actual_x,decoded).bfloat16()
+    y_expected=F.linear(transformed.float(),decoded).bfloat16()
+    if i<64 and kind in (1,3):y=y+t['residual'];y_expected=y_expected+t['residual']
+    row={'index':i,'layer':i//4 if i<64 else None,'kind':('qkv','o','upgate','down')[kind] if i<64 else 'head',
+     'activation':errors(actual_x,transformed.float(),nrmse_limit=.001),
+     'mma_on_actual_activation':errors(t['output'],y,nrmse_limit=.001),
+     'whole_op_on_frozen_input':errors(t['output'],y_expected,nrmse_limit=.003)}
+   else:
+    q=a.p.storage(transformed.reshape(1,-1).contiguous());q['tensor_scale']=1/64;a.p.quantize(q,reference=True)
+    k=source.numel();groups=torch.arange(k//16,device='cuda');offsets=(groups//4)*512+groups%4
+    scales=x['native'][offsets].view(torch.float8_e4m3fn).float()
+    actual_x=levels[unpack(x['packed'])].flatten()*scales.repeat_interleave(16)/64
+    decoded=weight(w)
+    y=F.linear(actual_x,decoded).bfloat16()
+    y_expected=F.linear(q['decoded'].flatten(),decoded).bfloat16()
+    if i<64 and kind in (1,3):y=y+t['residual'];y_expected=y_expected+t['residual']
+    row={'index':i,'layer':i//4 if i<64 else None,'kind':('qkv','o','upgate','down')[kind] if i<64 else 'head',
+     'activation':errors(actual_x,q['decoded'].flatten(),nrmse_limit=.001),
+     'packed_byte_mismatches':int((x['packed']!=q['packed']).sum()),
+     'scale_mismatches':int((x['native'][offsets]!=q['scales'].flatten()).sum()),
+     'mma_on_actual_activation':errors(t['output'],y,nrmse_limit=.001),
+     'whole_op_on_frozen_input':errors(t['output'],y_expected,nrmse_limit=.003)}
    result['operations'].append(row)
    print(i,row['kind'],'activation',row['activation']['normalized_rmse'],'MMA',row['mma_on_actual_activation']['normalized_rmse'],'whole',row['whole_op_on_frozen_input']['normalized_rmse'],flush=True)
    del decoded

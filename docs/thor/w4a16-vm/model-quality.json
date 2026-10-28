@@ -1,0 +1,468 @@
+{
+  "precision": "W4A16",
+  "scope": "8 authored sanity prompts; BF16 prefill; separate autoregressive decode caches; no latency claims",
+  "cases": [
+    {
+      "prompt": "What is 7 + 5? Answer with only the number.",
+      "target": "12",
+      "prefix_tokens": 49,
+      "teacher_forced": [
+        {
+          "target_id": 717,
+          "bf16_nll": 0.003038316033780575,
+          "fp4_nll": 0.005530177149921656,
+          "kl_bf16_to_fp4": 0.0011592162773013115,
+          "bf16_top1": 717,
+          "fp4_top1": 717
+        }
+      ],
+      "greedy": {
+        "bf16": {
+          "token_ids": [
+            717,
+            128009
+          ],
+          "text": "12"
+        },
+        "fp4": {
+          "token_ids": [
+            717,
+            128009
+          ],
+          "text": "12"
+        }
+      }
+    },
+    {
+      "prompt": "What is the capital of France? Answer with only the city name.",
+      "target": "Paris",
+      "prefix_tokens": 49,
+      "teacher_forced": [
+        {
+          "target_id": 60704,
+          "bf16_nll": 0.0044478061608970165,
+          "fp4_nll": 0.013669807463884354,
+          "kl_bf16_to_fp4": 0.006661089137196541,
+          "bf16_top1": 60704,
+          "fp4_top1": 60704
+        }
+      ],
+      "greedy": {
+        "bf16": {
+          "token_ids": [
+            60704,
+            128009
+          ],
+          "text": "Paris"
+        },
+        "fp4": {
+          "token_ids": [
+            60704,
+            128009
+          ],
+          "text": "Paris"
+        }
+      }
+    },
+    {
+      "prompt": "Translate 'good morning' into French. Answer with just the translation.",
+      "target": "Bonjour",
+      "prefix_tokens": 49,
+      "teacher_forced": [
+        {
+          "target_id": 82681,
+          "bf16_nll": 0.6243642568588257,
+          "fp4_nll": 1.1003305912017822,
+          "kl_bf16_to_fp4": 0.20704706013202667,
+          "bf16_top1": 82681,
+          "fp4_top1": 6098
+        }
+      ],
+      "greedy": {
+        "bf16": {
+          "token_ids": [
+            82681,
+            128009
+          ],
+          "text": "Bonjour"
+        },
+        "fp4": {
+          "token_ids": [
+            6098,
+            30362,
+            128009
+          ],
+          "text": "bonjour"
+        }
+      }
+    },
+    {
+      "prompt": "Complete the sequence: 2, 4, 6, 8, ... Answer with only the next number.",
+      "target": "10",
+      "prefix_tokens": 59,
+      "teacher_forced": [
+        {
+          "target_id": 605,
+          "bf16_nll": 3.8290491104125977,
+          "fp4_nll": 5.2519121170043945,
+          "kl_bf16_to_fp4": 0.45318102836608887,
+          "bf16_top1": 791,
+          "fp4_top1": 791
+        }
+      ],
+      "greedy": {
+        "bf16": {
+          "token_ids": [
+            791,
+            5497,
+            315,
+            279,
+            8668,
+            374,
+            7999,
+            220,
+            17,
+            311,
+            1855,
+            1396,
+            311,
+            636,
+            279,
+            1828,
+            1396,
+            13,
+            4815,
+            4516,
+            11,
+            279,
+            1828,
+            1396,
+            304,
+            279,
+            8668,
+            1053,
+            387,
+            25,
+            220,
+            605,
+            128009
+          ],
+          "text": "The pattern of the sequence is adding 2 to each number to get the next number. \n\nSo, the next number in the sequence would be: 10"
+        },
+        "fp4": {
+          "token_ids": [
+            791,
+            5497,
+            315,
+            279,
+            8668,
+            374,
+            7999,
+            220,
+            17,
+            311,
+            1855,
+            1396,
+            311,
+            636,
+            279,
+            1828,
+            1396,
+            13,
+            4815,
+            4516,
+            11,
+            279,
+            1828,
+            1396,
+            304,
+            279,
+            8668,
+            1053,
+            387,
+            25,
+            220,
+            605,
+            128009
+          ],
+          "text": "The pattern of the sequence is adding 2 to each number to get the next number. \n\nSo, the next number in the sequence would be: 10"
+        }
+      }
+    },
+    {
+      "prompt": "Name the largest planet in our solar system. Answer with only its name.",
+      "target": "Jupiter",
+      "prefix_tokens": 50,
+      "teacher_forced": [
+        {
+          "target_id": 41,
+          "bf16_nll": 0.0056654359214007854,
+          "fp4_nll": 0.04316707327961922,
+          "kl_bf16_to_fp4": 0.02676568180322647,
+          "bf16_top1": 41,
+          "fp4_top1": 41
+        },
+        {
+          "target_id": 20089,
+          "bf16_nll": 0.0025898031890392303,
+          "fp4_nll": 0.001892800792120397,
+          "kl_bf16_to_fp4": 0.00041631009662523866,
+          "bf16_top1": 20089,
+          "fp4_top1": 20089
+        }
+      ],
+      "greedy": {
+        "bf16": {
+          "token_ids": [
+            41,
+            20089,
+            128009
+          ],
+          "text": "Jupiter"
+        },
+        "fp4": {
+          "token_ids": [
+            41,
+            20089,
+            128009
+          ],
+          "text": "Jupiter"
+        }
+      }
+    },
+    {
+      "prompt": "A box contains 3 red balls and 2 blue balls. How many balls are in the box? Answer with only the number.",
+      "target": "5",
+      "prefix_tokens": 62,
+      "teacher_forced": [
+        {
+          "target_id": 20,
+          "bf16_nll": 0.002577318577095866,
+          "fp4_nll": 0.03571689873933792,
+          "kl_bf16_to_fp4": 0.02690478041768074,
+          "bf16_top1": 20,
+          "fp4_top1": 20
+        }
+      ],
+      "greedy": {
+        "bf16": {
+          "token_ids": [
+            20,
+            128009
+          ],
+          "text": "5"
+        },
+        "fp4": {
+          "token_ids": [
+            20,
+            128009
+          ],
+          "text": "5"
+        }
+      }
+    },
+    {
+      "prompt": "Choose the correct word: She ___ to school every day. (go/goes) Answer with one word.",
+      "target": "goes",
+      "prefix_tokens": 57,
+      "teacher_forced": [
+        {
+          "target_id": 3427,
+          "bf16_nll": 2.5342650413513184,
+          "fp4_nll": 1.1687641143798828,
+          "kl_bf16_to_fp4": 0.6078766584396362,
+          "bf16_top1": 8100,
+          "fp4_top1": 3427
+        },
+        {
+          "target_id": 288,
+          "bf16_nll": 2.373586893081665,
+          "fp4_nll": 2.8249874114990234,
+          "kl_bf16_to_fp4": 0.014812322333455086,
+          "bf16_top1": 128009,
+          "fp4_top1": 128009
+        }
+      ],
+      "greedy": {
+        "bf16": {
+          "token_ids": [
+            8100,
+            5900,
+            13,
+            128009
+          ],
+          "text": "She goes."
+        },
+        "fp4": {
+          "token_ids": [
+            3427,
+            128009
+          ],
+          "text": "go"
+        }
+      }
+    },
+    {
+      "prompt": "Explain in one sentence why ice floats on water.",
+      "target": "Ice is less dense than liquid water.",
+      "prefix_tokens": 46,
+      "teacher_forced": [
+        {
+          "target_id": 52430,
+          "bf16_nll": 0.05520318076014519,
+          "fp4_nll": 0.03414059802889824,
+          "kl_bf16_to_fp4": 0.014953512698411942,
+          "bf16_top1": 52430,
+          "fp4_top1": 52430
+        },
+        {
+          "target_id": 374,
+          "bf16_nll": 5.881598472595215,
+          "fp4_nll": 5.259940147399902,
+          "kl_bf16_to_fp4": 0.0011873419862240553,
+          "bf16_top1": 49002,
+          "fp4_top1": 49002
+        },
+        {
+          "target_id": 2753,
+          "bf16_nll": 2.053954601287842,
+          "fp4_nll": 2.0049893856048584,
+          "kl_bf16_to_fp4": 0.04102129861712456,
+          "bf16_top1": 39950,
+          "fp4_top1": 39950
+        },
+        {
+          "target_id": 29050,
+          "bf16_nll": 0.0037640926893800497,
+          "fp4_nll": 0.00370352272875607,
+          "kl_bf16_to_fp4": 0.00010120958904735744,
+          "bf16_top1": 29050,
+          "fp4_top1": 29050
+        },
+        {
+          "target_id": 1109,
+          "bf16_nll": 5.674201020156033e-05,
+          "fp4_nll": 0.0005055579822510481,
+          "kl_bf16_to_fp4": 0.00035522866528481245,
+          "bf16_top1": 1109,
+          "fp4_top1": 1109
+        },
+        {
+          "target_id": 14812,
+          "bf16_nll": 1.4946664571762085,
+          "fp4_nll": 1.1196162700653076,
+          "kl_bf16_to_fp4": 0.032417163252830505,
+          "bf16_top1": 3090,
+          "fp4_top1": 3090
+        },
+        {
+          "target_id": 3090,
+          "bf16_nll": 0.00040737437666393816,
+          "fp4_nll": 0.0005106813623569906,
+          "kl_bf16_to_fp4": 8.694712596479803e-05,
+          "bf16_top1": 3090,
+          "fp4_top1": 3090
+        },
+        {
+          "target_id": 13,
+          "bf16_nll": 11.882359504699707,
+          "fp4_nll": 12.217827796936035,
+          "kl_bf16_to_fp4": 0.05280272662639618,
+          "bf16_top1": 11,
+          "fp4_top1": 11
+        }
+      ],
+      "greedy": {
+        "bf16": {
+          "token_ids": [
+            52430,
+            49002,
+            389,
+            3090,
+            1606,
+            433,
+            374,
+            2753,
+            29050,
+            1109,
+            3090,
+            11,
+            7438,
+            433,
+            706,
+            264,
+            4827,
+            17915,
+            1109,
+            279,
+            14932,
+            14812,
+            11,
+            10923,
+            433,
+            311,
+            7293,
+            22340,
+            520,
+            279,
+            7479,
+            13,
+            128009
+          ],
+          "text": "Ice floats on water because it is less dense than water, meaning it has a lower density than the surrounding liquid, allowing it to remain suspended at the surface."
+        },
+        "fp4": {
+          "token_ids": [
+            52430,
+            49002,
+            389,
+            3090,
+            1606,
+            433,
+            374,
+            2753,
+            29050,
+            1109,
+            3090,
+            11,
+            7438,
+            433,
+            374,
+            2753,
+            8987,
+            1109,
+            3090,
+            323,
+            9093,
+            38268,
+            311,
+            279,
+            7479,
+            11,
+            6968,
+            264,
+            6324,
+            315,
+            3805,
+            477,
+            32183,
+            2212,
+            433,
+            13,
+            128009
+          ],
+          "text": "Ice floats on water because it is less dense than water, meaning it is less heavy than water and therefore rises to the surface, creating a layer of air or foam around it."
+        }
+      }
+    }
+  ],
+  "summary": {
+    "cases": 8,
+    "teacher_forced_tokens": 17,
+    "mean_bf16_nll": 1.8089173180695284,
+    "mean_fp4_nll": 1.8286591148010785,
+    "mean_kl_bf16_to_fp4": 0.08751468091556008,
+    "top1_agreement": 0.8823529411764706,
+    "continuation_perplexity_ratio": 1.019937954711222
+  }
+}

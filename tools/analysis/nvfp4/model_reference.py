@@ -38,6 +38,7 @@ def check_quantized(adapter, native_attention=False):
  def patch(module,weight):
   restored.append((module,module.forward));retained.append(weight)
   def forward(x):
+   if adapter.weight_only:return F.linear(x.float(),weight).bfloat16()
    q=p.storage(x.reshape(1,-1).contiguous());q['tensor_scale']=1/64;p.quantize(q,reference=True)
    return F.linear(q['decoded'].reshape(x.shape),weight).bfloat16()
   module.forward=forward
