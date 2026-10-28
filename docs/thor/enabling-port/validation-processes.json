@@ -1,0 +1,122 @@
+{
+  "source_hash": "e168d6442cad29e215292f04c0e24f981a85feb4cf4925eb53ea5f908f9c4a76",
+  "processes": [
+    {
+      "name": "final-thor-build",
+      "command": [
+        "make",
+        "-B",
+        "-C",
+        "/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama",
+        "GPU=THOR"
+      ],
+      "returncode": 0,
+      "output": "make: Entering directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc llama.cu -DNDEBUG -Xcompiler=-fPIE --expt-extended-lambda --expt-relaxed-constexpr -Xcompiler=-Wno-psabi -Xcompiler=-fno-strict-aliasing --use_fast_math -forward-unknown-to-host-compiler -O3 -Xnvlink=--verbose -Xptxas=--verbose -Xptxas=--warn-on-spills -std=c++20 -x cu -lrt -lpthread -ldl -lcuda -lcudadevrt -lcudart_static -lcublas -lineinfo -I/home/thor-guest/ml-perf/Megakernels/local/thunderkittens/include -I/home/thor-guest/ml-perf/Megakernels/include -I/usr/include/python3.12 -I/home/thor-guest/ml-perf/Megakernels/local/thor-venv/lib/python3.12/site-packages/pybind11/include -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/python3.12/config-3.12-aarch64-linux-gnu -L/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/lib/aarch64-linux-gnu  -ldl  -lm  -shared -fPIC -DMK_BUILD_SOURCE_HASH='\"e168d6442cad29e215292f04c0e24f981a85feb4cf4925eb53ea5f908f9c4a76\"' -DKITTENS_HOPPER -DMK_THOR -DMK_ACTIVE_WORKERS=20 -gencode=arch=compute_110a,code=sm_110a -maxrregcount=96  -o mk_llama.cpython-312-aarch64-linux-gnu.so\nptxas warning : Registers are spilled to local memory in function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_', 4 bytes spill stores, 4 bytes spill loads\nptxas info    : 6 bytes gmem\nptxas info    : Compiling entry function '_ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_' for 'sm_110a'\nptxas info    : Function properties for _ZN10megakernel2mkINS_11thor_configE9globals_tILi16ELi2048ELi8192ELi64ELi32ELi8ELi16ELi16ELi20EEJ17attention_partialIS1_S3_E19attention_reductionIS1_S3_E19rms_qkv_rope_appendIS1_S3_E8downprojIS1_S3_E6o_projIS1_S3_E15rms_upgate_siluIS1_S3_E11rms_lm_headIS1_S3_EEEEvT0_\n    400 bytes stack frame, 4 bytes spill stores, 4 bytes spill loads\nptxas info    : Used 96 registers, used 16 barriers, 400 bytes cumulative stack size, 10384 bytes smem\nptxas info    : Compile time = 691.486 ms\nnvlink info    : 0 bytes gmem\npython3 ../../tools/thor/build_manifest.py --binary \"mk_llama.cpython-312-aarch64-linux-gnu.so\" --compiler \"/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc\" --gpu \"THOR\"\nmake: Leaving directory '/home/thor-guest/ml-perf/Megakernels/demos/low-latency-llama'\n"
+    },
+    {
+      "name": "memcheck",
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "memcheck",
+        "--target-processes",
+        "all",
+        "--kernel-name",
+        "kns=megakernel",
+        "--error-exitcode",
+        "99",
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.autoregressive_bench",
+        "--decode-steps",
+        "1",
+        "--warmups",
+        "0",
+        "--repeats",
+        "1",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/enabling-port/memcheck.json"
+      ],
+      "returncode": 0,
+      "output": "========= COMPUTE-SANITIZER\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.02it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.02it/s]\n{\"status\": \"PASS\", \"summary\": {\"request_mean_tpot_ms\": {\"p50_ms\": 106.79614399850834, \"p95_ms\": 106.79614399850834, \"p99_ms\": 106.79614399850834, \"mean_ms\": 106.79614399850834, \"min_ms\": 106.79614399850834, \"max_ms\": 106.79614399850834}}}\n========= ERROR SUMMARY: 0 errors\n"
+    },
+    {
+      "name": "synccheck",
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "synccheck",
+        "--target-processes",
+        "all",
+        "--kernel-name",
+        "kns=megakernel",
+        "--error-exitcode",
+        "99",
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.autoregressive_bench",
+        "--decode-steps",
+        "1",
+        "--warmups",
+        "0",
+        "--repeats",
+        "1",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/enabling-port/synccheck.json"
+      ],
+      "returncode": 0,
+      "output": "========= COMPUTE-SANITIZER\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.25it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.25it/s]\n{\"status\": \"PASS\", \"summary\": {\"request_mean_tpot_ms\": {\"p50_ms\": 182.34440000378527, \"p95_ms\": 182.34440000378527, \"p99_ms\": 182.34440000378527, \"mean_ms\": 182.34440000378527, \"min_ms\": 182.34440000378527, \"max_ms\": 182.34440000378527}}}\n========= ERROR SUMMARY: 0 errors\n"
+    },
+    {
+      "name": "racecheck",
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--target-processes",
+        "all",
+        "--kernel-name",
+        "kns=megakernel",
+        "--error-exitcode",
+        "99",
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.autoregressive_bench",
+        "--decode-steps",
+        "1",
+        "--warmups",
+        "0",
+        "--repeats",
+        "1",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/enabling-port/racecheck.json"
+      ],
+      "returncode": 0,
+      "output": "========= COMPUTE-SANITIZER\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.22it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.22it/s]\n{\"status\": \"PASS\", \"summary\": {\"request_mean_tpot_ms\": {\"p50_ms\": 29674.485355004435, \"p95_ms\": 29674.485355004435, \"p99_ms\": 29674.485355004435, \"mean_ms\": 29674.485355004435, \"min_ms\": 29674.485355004435, \"max_ms\": 29674.485355004435}}}\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n"
+    },
+    {
+      "name": "native-final",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.autoregressive_bench",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "3",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/enabling-port/native-final.json"
+      ],
+      "returncode": 0,
+      "output": "\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.22it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.22it/s]\n{\"status\": \"PASS\", \"summary\": {\"request_mean_tpot_ms\": {\"p50_ms\": 10.395199470003718, \"p95_ms\": 10.413092980925285, \"p99_ms\": 10.423338562450954, \"mean_ms\": 10.395134742436413, \"min_ms\": 10.360755029978463, \"max_ms\": 10.426353739894694}}}\n"
+    }
+  ]
+}

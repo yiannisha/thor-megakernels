@@ -1,0 +1,68 @@
+{
+  "source_hash": "e168d6442cad29e215292f04c0e24f981a85feb4cf4925eb53ea5f908f9c4a76",
+  "processes": [
+    {
+      "name": "vm-smoke",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.smoke",
+        "--execute",
+        "--timeout",
+        "150",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/enabling-port/vm-smoke.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/enabling-port/vm-smoke.json\"}\n"
+    },
+    {
+      "name": "native-pilot",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.autoregressive_bench",
+        "--decode-steps",
+        "5",
+        "--warmups",
+        "0",
+        "--repeats",
+        "1",
+        "--batches",
+        "1",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/enabling-port/native-pilot.json"
+      ],
+      "returncode": 0,
+      "output": "\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.24it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.24it/s]\n{\"status\": \"PASS\", \"summary\": {\"request_mean_tpot_ms\": {\"p50_ms\": 13.461312200524844, \"p95_ms\": 13.461312200524844, \"p99_ms\": 13.461312200524844, \"mean_ms\": 13.461312200524844, \"min_ms\": 13.461312200524844, \"max_ms\": 13.461312200524844}}}\n"
+    },
+    {
+      "name": "native",
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/thor-venv/bin/python",
+        "-m",
+        "tools.thor.autoregressive_bench",
+        "--warmups",
+        "5",
+        "--repeats",
+        "30",
+        "--batches",
+        "3",
+        "--output",
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/enabling-port/native.json"
+      ],
+      "returncode": 0,
+      "output": "\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.26it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.25it/s]\n{\"status\": \"PASS\", \"summary\": {\"request_mean_tpot_ms\": {\"p50_ms\": 10.389297244983027, \"p95_ms\": 10.406902275019092, \"p99_ms\": 10.410377561867062, \"mean_ms\": 10.389664441004344, \"min_ms\": 10.366861259972211, \"max_ms\": 10.413820340036182}}}\n"
+    },
+    {
+      "name": "vllm",
+      "command": [
+        "bash",
+        "-c",
+        "source tools/thor/vllm_env.sh\npython -m tools.thor.vllm_bench --disable-flashinfer-autotune --warmups 5 --repeats 30 --batches 3 --output docs/thor/enabling-port/vllm.json"
+      ],
+      "returncode": 0,
+      "output": "{\"status\": \"PASS\", \"output\": \"/home/thor-guest/ml-perf/Megakernels/docs/thor/enabling-port/vllm.json\", \"errors\": []}\n"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "source_commit": "8c09c7af90aca7fe449a0adb4d2e0386b9dd1bb6",
+  "source_hash": "e168d6442cad29e215292f04c0e24f981a85feb4cf4925eb53ea5f908f9c4a76",
+  "native_binary_sha256": "83cc14ce9aa8e916a181a191a5c46ac9c583344cea530ee8be18681514eaef6a",
+  "archive_branch": "archive/thor-experiments-20261027",
+  "median_latency_reduction_percent": 8.372015691196955
+}
