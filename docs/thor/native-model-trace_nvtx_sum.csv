@@ -1,0 +1,3 @@
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Style,Range
+76.7,21317339,30,710578.0,768935.0,354565,916852,140414.4,PushPop,:native.decode
+23.3,6460421,30,215347.4,237120.5,60435,253676,52744.0,PushPop,:native.reset
