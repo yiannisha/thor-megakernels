@@ -1,0 +1,7 @@
+{
+  "name": "cost-profile",
+  "fp32_downproj": true,
+  "match_torch_bf16_epilogues": true,
+  "compensated_attention": true,
+  "timing": true
+}

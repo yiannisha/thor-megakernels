@@ -275,6 +275,7 @@ constexpr int TEVENT_LAST_STORE = 53;
 
 constexpr int TEVENT_OUTPUT_READY = 54;
 
+constexpr int TEVENT_REDUCTION_INPUT_READY = 80; // 80..95, separate from role pairs
 constexpr int FREE_SLOTS_START = 55;
 
 constexpr int TEVENT_TRIPLES_START = 100;

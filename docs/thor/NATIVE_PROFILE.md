@@ -9,3 +9,5 @@ Temporal step-10 diagnostics maintain independent native/reference KV histories 
 Raw diagnostics: `temporal-drift-step10-matched-capacity.json` (original matching horizon), and `temporal-drift-step10.json` (initial shorter-cache probe). The layer-prefix comparisons are diagnostic, not replacements for full temporal gates. No accuracy tolerance was relaxed.
 
 The existing optional internal timing path needs an instrumentation audit before calibration: generic event IDs can be written by multiple lanes/warps, and each thread's clock64 origin is local. Use race-free stores and paired durations from the same warp; do not subtract absolute timestamps across SMs or different thread origins. Timing remains disabled in the qualified baseline.
+
+The instruction timing audit and real-model profiles are now implemented in [INSTRUCTION_COSTS.md](INSTRUCTION_COSTS.md), including collective timestamp publication/reset, non-overlapping role events, three contexts, instrumentation overhead and measured-cost static scheduling comparisons. Only same-warp paired differences are exported as durations; generic diagnostic timestamps remain excluded from duration fitting.

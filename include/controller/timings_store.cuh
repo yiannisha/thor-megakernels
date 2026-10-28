@@ -26,6 +26,17 @@ template <typename config, typename globals>
 __device__ void inline store_timings_and_reset(int *timings,
                                                int instruction_index,
                                                const globals &g) {
+#ifdef MK_THOR
+    __syncwarp(); // publish lane 0's final controller timestamp to copying lanes
+    // Every controller lane acquired instruction_finished before entering.
+    // Use generic stores to avoid crossing the async proxy for timestamps
+    // published by other warps. Each lane owns disjoint timing/reset slots.
+    for (int i = kittens::laneid(); i < config::TIMING_WIDTH; i += kittens::WARP_THREADS) {
+        g.timings[kittens::coord<>{(int)get_worker_id(), instruction_index, i}] = timings[i];
+        timings[i] = 0;
+    }
+    __syncwarp();
+#else
     if (kittens::laneid() == 0) {
         store_timings<config, globals>(timings, instruction_index, g);
         kittens::tma::store_async_read_wait();
@@ -42,6 +53,7 @@ __device__ void inline store_timings_and_reset(int *timings,
     for (int i = kittens::laneid(); i < config::TIMING_WIDTH; i += kittens::WARP_THREADS) {
         timings[i] = 0;
     }
+#endif
 #endif
 }
 

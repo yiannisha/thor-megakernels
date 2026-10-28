@@ -47,6 +47,8 @@ class ModelAdapter:
             from megakernels.demos.latency.scheduler import LatencyScheduleBuilder
             from megakernels.scheduler import Schedule, assign_to_sms, tensorize_instructions
             self.globs = LatencyScheduleBuilder.make_globals(self.model)
+            # Cost-based scheduling must see the same context as execution.
+            self.globs.pos_id = context
             self.globs.set_active_workers(self.config.workers, max_ctas_per_sm=2 if self.config.allow_multi_cta else 1)
             if self.config.allow_multi_cta:
                 # Equal intermediate-buffer capacity for the 1x/2x worker controls.
@@ -110,6 +112,7 @@ class ModelAdapter:
                          'variant': f'{engine}:{self.config.name}', 'config': self.config.to_dict(),
                          'power_mode': command(['nvpmodel', '-q']).get('stdout'),
                          'concurrent_workload': 'uncontrolled-existing', 'same_cache_replay': True,
+                         'schedule_position': self.globs.pos_id if self.globs is not None else None,
                          'input_hash': hashlib.sha256(self.case.inputs.cpu().numpy().tobytes()).hexdigest(),
                          'native_resources': resources, 'native_build': build,
                          'gate': {'logit_nrmse_limit': self.logit_limit, 'state_nrmse_limit': .02},

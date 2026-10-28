@@ -242,7 +242,7 @@ template <typename Config, typename Globals> struct attention_reduction {
 
                 kittens::warp::wait(L_partial_all_arrived(s, q_head_local_idx), 0);
                 if (kittens::laneid() == 0)
-                    s.record(megakernel::TEVENT_CONSUMER_START + 16 + kittens::warpid());
+                    s.record(megakernel::TEVENT_REDUCTION_INPUT_READY + kittens::warpid());
                 l_partial_sv &L_smem = get_L_partial_smem(s, q_head_local_idx);
 
                 // --- Reduction Pipeline ---
