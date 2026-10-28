@@ -1,0 +1,4 @@
+{
+  "source": "\"\"\"Validate scoped observer row ownership and non-overlapping cycle accounting.\"\"\"\nimport json\nimport torch\nfrom tools.thor.model_bench import ModelAdapter\n\nwith torch.inference_mode():\n a=ModelAdapter('native',1024,1,cache_capacity=1125);a.reset();a.run();torch.cuda.synchronize()\n diag=a.globs.diag.cpu().tolist();ops=a.globs.instructions[:,:,0].cpu().tolist();checked=0\n for rows,opcodes in zip(diag,ops):\n  for row,op in zip(rows,opcodes):\n   if op in (1,4,5,6,7):\n    assert row[10]==op and row[11]>0 and min(row)>=0\n    assert sum(row[:3])<=row[3] and row[4]+row[5]<=row[6] and row[7]<=row[8]\n    checked+=1\n assert checked==3028\n print(json.dumps({'status':'PASS','observer_rows_checked':checked}))\n",
+  "reason": "preserve initial strict signed-clock assertion and its failed racecheck invocation"
+}

@@ -1,0 +1,7 @@
+========= COMPUTE-SANITIZER
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.20it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.20it/s]
+{"status": "PASS", "observer_rows_checked": 3028, "clock_invariants_skipped": true, "clock_range_rows": 20, "clock_range_examples": [{"worker": 0, "index": 157, "opcode": 7, "row": [208774593, 1733922957, -778474551, 2135069865, 1933832297, 45569444, -1945546065, 195036289, 207168561, 0, 7, 401]}, {"worker": 1, "index": 157, "opcode": 7, "row": [212812598, 1464682616, -162002085, -1854015237, 1917431607, 26358998, -1749803470, 86533521, 103571964, 0, 7, 401]}, {"worker": 2, "index": 157, "opcode": 7, "row": [179389262, 1365164129, -462073740, 1936097136, 1536554383, 48349320, 2105848471, 133242221, 153701673, 0, 7, 401]}]}
+========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)

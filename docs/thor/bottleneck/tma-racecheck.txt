@@ -1,0 +1,12 @@
+========= COMPUTE-SANITIZER
+{"stages":1,"issuers":1,"consumer_reads":false,"bytes":10485760,"median_ms":44.370369,"GB_s":0.236323,"checksum":0,"checksum_checked":false,"resident_ctas_per_sm":1,"registers":34,"dynamic_smem":214015,"samples_ms":[44.370369]}
+{"stages":3,"issuers":4,"consumer_reads":true,"bytes":10485760,"median_ms":73.795586,"GB_s":0.142092,"checksum":1756410896,"checksum_checked":true,"resident_ctas_per_sm":1,"registers":48,"dynamic_smem":214015,"samples_ms":[73.795586]}
+{"stages":2,"issuers":1,"consumer_reads":true,"bytes":10485760,"median_ms":69.160126,"GB_s":0.151616,"checksum":1756410896,"checksum_checked":true,"resident_ctas_per_sm":1,"registers":47,"dynamic_smem":214015,"samples_ms":[69.160126]}
+{"stages":3,"issuers":1,"consumer_reads":true,"bytes":10485760,"median_ms":71.573059,"GB_s":0.146504,"checksum":1756410896,"checksum_checked":true,"resident_ctas_per_sm":1,"registers":48,"dynamic_smem":214015,"samples_ms":[71.573059]}
+{"stages":3,"issuers":4,"consumer_reads":false,"bytes":10485760,"median_ms":33.148319,"GB_s":0.316329,"checksum":0,"checksum_checked":false,"resident_ctas_per_sm":1,"registers":21,"dynamic_smem":214015,"samples_ms":[33.148319]}
+{"stages":2,"issuers":1,"consumer_reads":false,"bytes":10485760,"median_ms":31.860449,"GB_s":0.329115,"checksum":0,"checksum_checked":false,"resident_ctas_per_sm":1,"registers":34,"dynamic_smem":214015,"samples_ms":[31.860449]}
+{"stages":1,"issuers":1,"consumer_reads":true,"bytes":10485760,"median_ms":71.625725,"GB_s":0.146397,"checksum":1756410896,"checksum_checked":true,"resident_ctas_per_sm":1,"registers":44,"dynamic_smem":214015,"samples_ms":[71.625725]}
+{"stages":3,"issuers":2,"consumer_reads":false,"bytes":10485760,"median_ms":31.777760,"GB_s":0.329972,"checksum":0,"checksum_checked":false,"resident_ctas_per_sm":1,"registers":35,"dynamic_smem":214015,"samples_ms":[31.777760]}
+{"stages":3,"issuers":1,"consumer_reads":false,"bytes":10485760,"median_ms":31.503616,"GB_s":0.332843,"checksum":0,"checksum_checked":false,"resident_ctas_per_sm":1,"registers":34,"dynamic_smem":214015,"samples_ms":[31.503616]}
+{"stages":3,"issuers":2,"consumer_reads":true,"bytes":10485760,"median_ms":69.398880,"GB_s":0.151094,"checksum":1756410896,"checksum_checked":true,"resident_ctas_per_sm":1,"registers":48,"dynamic_smem":214015,"samples_ms":[69.398880]}
+========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)

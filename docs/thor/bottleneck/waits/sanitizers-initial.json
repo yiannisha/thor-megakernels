@@ -1,0 +1,32 @@
+[
+  {
+    "name": "memcheck",
+    "command": [
+      "bash",
+      "-c",
+      "cd local/thor-diagnostic-worktree\nsource tools/thor/env.sh\nTHOR_BINARY_DIR=/home/thor-guest/ml-perf/Megakernels/local/thor-wait-diagnostic compute-sanitizer --tool memcheck --target-processes all --kernel-name kns=megakernel --error-exitcode 99 python -m tools.analysis.check_waits"
+    ],
+    "returncode": 0,
+    "output": "========= COMPUTE-SANITIZER\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.20it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.20it/s]\n{\"status\": \"PASS\", \"observer_rows_checked\": 3028}\n========= ERROR SUMMARY: 0 errors\n"
+  },
+  {
+    "name": "synccheck",
+    "command": [
+      "bash",
+      "-c",
+      "cd local/thor-diagnostic-worktree\nsource tools/thor/env.sh\nTHOR_BINARY_DIR=/home/thor-guest/ml-perf/Megakernels/local/thor-wait-diagnostic compute-sanitizer --tool synccheck --target-processes all --kernel-name kns=megakernel --error-exitcode 99 python -m tools.analysis.check_waits"
+    ],
+    "returncode": 0,
+    "output": "========= COMPUTE-SANITIZER\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.24it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.24it/s]\n{\"status\": \"PASS\", \"observer_rows_checked\": 3028}\n========= ERROR SUMMARY: 0 errors\n"
+  },
+  {
+    "name": "racecheck",
+    "command": [
+      "bash",
+      "-c",
+      "cd local/thor-diagnostic-worktree\nsource tools/thor/env.sh\nTHOR_BINARY_DIR=/home/thor-guest/ml-perf/Megakernels/local/thor-wait-diagnostic compute-sanitizer --tool racecheck --target-processes all --kernel-name kns=megakernel --error-exitcode 99 python -m tools.analysis.check_waits"
+    ],
+    "returncode": 1,
+    "output": "========= COMPUTE-SANITIZER\n\nLoading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.22it/s]\nLoading safetensors files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.22it/s]\nTraceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/home/thor-guest/ml-perf/Megakernels/local/thor-diagnostic-worktree/tools/analysis/check_waits.py\", line 12, in <module>\n    assert row[10]==op and row[11]>0 and min(row)>=0\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n========= Target application returned an error\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n"
+  }
+]

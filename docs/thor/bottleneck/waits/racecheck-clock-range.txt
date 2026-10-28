@@ -1,0 +1,14 @@
+========= COMPUTE-SANITIZER
+
+Loading safetensors files:   0%|          | 0/1 [00:00<?, ?it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.22it/s]
+Loading safetensors files: 100%|██████████| 1/1 [00:00<00:00,  1.22it/s]
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/thor-guest/ml-perf/Megakernels/local/thor-diagnostic-worktree/tools/analysis/check_waits.py", line 12, in <module>
+    assert row[10]==op and row[11]>0 and min(row)>=0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+========= Target application returned an error
+========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)

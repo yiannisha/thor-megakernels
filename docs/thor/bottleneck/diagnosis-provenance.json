@@ -1,0 +1,13 @@
+{
+  "production_source_hash": "e168d6442cad29e215292f04c0e24f981a85feb4cf4925eb53ea5f908f9c4a76",
+  "production_binary_sha256": "83cc14ce9aa8e916a181a191a5c46ac9c583344cea530ee8be18681514eaef6a",
+  "diagnostic_source_hash": "0e6e44962703637a22464c3af836f18a2345e5327223fea3ffae0e357ff14d23",
+  "analysis_sources": {
+    "traffic_accounting.py": "7c5352c6362911288fef6e19bae4bf514a292b3b2fcd486dde6b257b8d4ce2bc",
+    "tma_stream.cu": "e080c4ccfe834501a09843f143112b4364ced71b2cdafe44430b0716be488d34",
+    "instrument_waits.py": "75a1ec815017a4430d31268f482f5ca176ddbdbb8eea3c3bdfe775912abf64af",
+    "collect_waits.py": "d5a6f20c0465c31fa78bddb84d32f459454988fe288df87bd09f2e50e2038c3d",
+    "check_waits.py": "4b99657a69bc16bfc3741a3829c0d369ed968b6ca5891702a6061c9ba9682e1b",
+    "report_diagnoses.py": "e80bc83c05c82d8d4d6e1ea10c0550d0f92672ea1823db13bdff08023c4f65b3"
+  }
+}

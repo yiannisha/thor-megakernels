@@ -61,3 +61,5 @@ local/stream-read-new 6000000000
 ```
 
 Raw profiler artifacts remain under `local/`. The marked GPU events, summary, throughput samples, counter error and binary/source provenance are saved alongside this report.
+
+Further diagnoses are complete: [traffic accounting, TMA concurrency and scoped VM waits](DIAGNOSES.md). The production runtime remains unchanged.
