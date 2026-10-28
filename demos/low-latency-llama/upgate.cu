@@ -115,7 +115,16 @@ template <typename Config, typename Globals> struct rms_upgate_silu {
                 // asm volatile("fence.acq_rel.gpu;");
 
                 parsed_instruction inst{s};
-                gmem_add_release(&g.Bar[{inst.layer_idx, opcode - 1,
+
+#if MK_EARLY_OUTPUT_RELEASE || MK_ASYNC_PUBLICATION
+            }
+            kittens::warp::sync();
+#if MK_EARLY_OUTPUT_RELEASE
+            pipeline::template release_output_slots<2>(s,output_idx);
+#endif
+            if (kittens::laneid() == 0) {
+#endif
+                megakernel::publish_output(s,&g.Bar[{inst.layer_idx, opcode - 1,
                                   block_idx * globals::matvec_block_size /
                                       globals::hidden_dim}],
                           1);
@@ -155,6 +164,8 @@ template <typename Config, typename Globals> struct rms_upgate_silu {
     struct launcher {
         static __device__ void run(const Globals &g, megakernel::state<Config> &s) {
             pipeline::launcher_loop(s, g);
+            parsed_instruction inst{s};
+            megakernel::publication_run(s,inst.iters/2);
         }
     };
 
@@ -167,7 +178,8 @@ template <typename Config, typename Globals> struct rms_upgate_silu {
     struct storer {
 
         static __device__ void run(const Globals &g, megakernel::state<Config> &s) {
-            pipeline::storer_loop<2>(s, g);
+            pipeline::template storer_loop<2,MK_EARLY_OUTPUT_RELEASE>(s, g);
+            megakernel::publication_drain(s);
         }
     };
 };

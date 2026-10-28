@@ -157,7 +157,16 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
                 // asm volatile("fence.acq_rel.gpu;\n"); // possible we need sc
                 // here but I don't think so.
 
-                gmem_add_release(&g.Bar[{inst.layer_idx, opcode - 1, block_idx / 4}],
+
+#if MK_EARLY_OUTPUT_RELEASE || MK_ASYNC_PUBLICATION
+            }
+            kittens::warp::sync();
+#if MK_EARLY_OUTPUT_RELEASE
+            pipeline::template release_output_slots<1>(s,output_idx);
+#endif
+            if (kittens::laneid() == 0) {
+#endif
+                megakernel::publish_output(s,&g.Bar[{inst.layer_idx, opcode - 1, block_idx / 4}],
                           1);
                 s.record(megakernel::TEVENT_DONE_GMEM_STORE);
             }
@@ -218,6 +227,7 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
 
             parsed_instruction inst{s};
             pipeline::launcher_loop(s, g);
+            megakernel::publication_run(s,inst.iters);
         }
     };
     struct consumer {
@@ -228,7 +238,8 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
     struct storer {
         // Uses 4 full pages for outputs.
         static __device__ void run(const Globals &g, megakernel::state<Config> &s) {
-            pipeline::storer_loop(s, g);
+            pipeline::template storer_loop<1,MK_EARLY_OUTPUT_RELEASE>(s, g);
+            megakernel::publication_drain(s);
         }
     };
 };

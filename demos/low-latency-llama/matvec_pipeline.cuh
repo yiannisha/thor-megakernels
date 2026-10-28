@@ -1,6 +1,7 @@
 #pragma once
 
 #include "llama.cuh"
+#include "output_publication.cuh"
 
 template <typename Config, typename Globals, typename parsed_instruction,
           typename pipeline_specifics>
@@ -109,6 +110,7 @@ struct matvec_pipeline {
     }
 
     __device__ static inline int init_semaphores(megakernel::state<Config> &s) {
+        megakernel::publication_init(s);
         init_semaphore(activations_arrived(s), 1);
         for (int i = 0; i < INPUT_PIPELINE_STAGES; i++) {
             init_semaphore(weights_arrived(s, i), 1);
@@ -220,7 +222,10 @@ struct matvec_pipeline {
         }
     }
 
-    template <int iter_scale = 1>
+    template<int scale> __device__ static inline void release_output_slots(megakernel::state<Config>&s,int i) {
+        for(int j=0;j<scale;j++)s.warp_arrive(outputs_finished(s,(i-j)%OUTPUT_PIPELINE_STAGES));
+    }
+    template <int iter_scale = 1, bool early_release = false>
     __device__ static inline void storer_loop(megakernel::state<Config> &s,
                                               const Globals &g) {
         parsed_instruction inst{s};
@@ -241,7 +246,7 @@ struct matvec_pipeline {
 
             pipeline_specifics::store(s, g, inst, i, output_stage);
 
-            if ((i + 1) % iter_scale == 0) {
+            if (!early_release && (i + 1) % iter_scale == 0) {
                 for (int j = 0; j < iter_scale; j++) {
                     auto stage_to_arrive = (i - j) % OUTPUT_PIPELINE_STAGES;
                     s.warp_arrive(outputs_finished(s, stage_to_arrive));

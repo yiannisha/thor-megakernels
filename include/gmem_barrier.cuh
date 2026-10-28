@@ -1,6 +1,9 @@
 #pragma once
 #include <cuda/atomic>
 #include <stdint.h>
+#ifndef MK_PUBLICATION_RELEASE_ONLY
+#define MK_PUBLICATION_RELEASE_ONLY 0
+#endif
 
 #ifndef MK_PORTABLE_GMEM_BARRIERS
 #ifdef MK_THOR
@@ -25,7 +28,15 @@ template <typename T> __device__ inline T gmem_load_acquire(T *address) {
 template <typename T, typename V> __device__ inline T gmem_add_release(T *address, V value) {
 #if MK_PORTABLE_GMEM_BARRIERS
     return cuda::atomic_ref<T, cuda::thread_scope_device>(*address).fetch_add(
-        static_cast<T>(value), cuda::memory_order_acq_rel);
+        static_cast<T>(value),
+#if MK_PUBLICATION_RELEASE_ONLY
+        // Every producer is a release RMW on the same counter. Later RMWs
+        // remain in earlier producers' release sequences; a final acquire
+        // observing the target therefore sees every producer's stores.
+        cuda::memory_order_release);
+#else
+        cuda::memory_order_acq_rel);
+#endif
 #else
     return atomicAdd(address, static_cast<T>(value));
 #endif
