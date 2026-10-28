@@ -1,0 +1,3991 @@
+{
+  "status": "PASS",
+  "inventory": {
+    "platform": "Linux-6.8.12-1021-tegra-aarch64-with-glibc2.39",
+    "python": "3.12.3",
+    "packages": {
+      "torch": "2.13.0+cu132",
+      "transformers": "4.48.3",
+      "pybind11": "2.13.6"
+    },
+    "cuda_driver": {
+      "devices": [
+        {
+          "ordinal": 0,
+          "name": "NVIDIA Thor",
+          "sm_count": 20,
+          "cc_major": 11,
+          "cc_minor": 0,
+          "max_threads_per_block": 1024,
+          "shared_memory_per_block": 49152,
+          "shared_memory_per_sm": 233472,
+          "shared_memory_optin": 232448,
+          "max_blocks_per_sm": 24,
+          "cooperative_launch": 1
+        }
+      ]
+    },
+    "tools": {
+      "nvcc": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc",
+      "tegrastats": "/usr/bin/tegrastats",
+      "nsys": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/opt/nvidia/nsight-systems/2025.6.3/bin/nsys",
+      "ncu": "/home/thor-guest/ml-perf/Megakernels/local/toolchain/opt/nvidia/nsight-compute/2026.1.1/ncu",
+      "jtop": null
+    },
+    "commands": {
+      "nvcc": {
+        "returncode": 0,
+        "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_May_08_10:52:52_AM_PDT_2026\nCuda compilation tools, release 13.2, V13.2.86\nBuild cuda_13.2.r13.2/compiler.37953736_0",
+        "stderr": ""
+      },
+      "nvcc_targets": {
+        "returncode": 0,
+        "stdout": "sm_75\nsm_80\nsm_86\nsm_87\nsm_88\nsm_89\nsm_90\nsm_100\nsm_110\nsm_103\nsm_120\nsm_121",
+        "stderr": ""
+      },
+      "nvidia_smi": {
+        "returncode": 0,
+        "stdout": "==============NVSMI LOG==============\n\nTimestamp                                              : Tue Oct 27 18:04:50 2026\nDriver Version                                         : 595.78\nCUDA Version                                           : 13.2\n\nAttached GPUs                                          : 1\nGPU 00000000:01:00.0\n    Product Name                                       : NVIDIA Thor\n    Product Brand                                      : GeForce\n    Product Architecture                               : Blackwell\n    Display Mode                                       : Requested functionality has been deprecated\n    Display Attached                                   : No\n    Display Active                                     : Disabled\n    Persistence Mode                                   : Disabled\n    Addressing Mode                                    : ATS\n    MIG Mode\n        Current                                        : Disabled\n        Pending                                        : Disabled\n    Accounting Mode                                    : Disabled\n    Accounting Mode Buffer Size                        : 4000\n    Driver Model\n        Current                                        : N/A\n        Pending                                        : N/A\n    Serial Number                                      : N/A\n    GPU UUID                                           : GPU-a7c66ad2-6dbb-0ab8-c1a2-37ba6dba3600\n    GPU PDI                                            : 0xf7df299c60122a9d\n    Minor Number                                       : 0\n    VBIOS Version                                      : N/A\n    MultiGPU Board                                     : No\n    Board ID                                           : 0x100\n    Board Part Number                                  : N/A\n    GPU Part Number                                    : 2B00--A1\n    FRU Part Number                                    : N/A\n    Platform Info\n        Chassis Serial Number                          : N/A\n        Slot Number                                    : N/A\n        Tray Index                                     : N/A\n        Host ID                                        : N/A\n        Peer Type                                      : N/A\n        Module Id                                      : N/A\n        GPU Fabric GUID                                : N/A\n    Inforom Version\n        Image Version                                  : N/A\n        OEM Object                                     : N/A\n        ECC Object                                     : N/A\n        Power Management Object                        : N/A\n    Inforom BBX Object Flush\n        Latest Timestamp                               : N/A\n        Latest Duration                                : N/A\n    GPU Operation Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    GPU C2C Mode                                       : Disabled\n    GPU Virtualization Mode\n        Virtualization Mode                            : None\n        Host VGPU Mode                                 : N/A\n        vGPU Heterogeneous Mode                        : N/A\n    GPU Recovery Action                                : None\n    GSP Firmware Version                               : 595.78\n    IBMNPU\n        Relaxed Ordering Mode                          : N/A\n    PCI\n        Bus                                            : 0x01\n        Device                                         : 0x00\n        Domain                                         : 0x0000\n        Base Classcode                                 : 0x3\n        Sub Classcode                                  : 0x2\n        Device Id                                      : 0x2B0010DE\n        Bus Id                                         : 00000000:01:00.0\n        Sub System Id                                  : 0x00000000\n        GPU Link Info\n            PCIe Generation\n                Max                                    : 1\n                Current                                : 1\n                Device Current                         : 1\n                Device Max                             : 5\n                Host Max                               : 1\n            Link Width\n                Max                                    : 16x\n                Current                                : 1x\n        Bridge Chip\n            Type                                       : N/A\n            Firmware                                   : N/A\n        Replays Since Reset                            : 0\n        Replay Number Rollovers                        : 0\n        Tx Throughput                                  : N/A\n        Rx Throughput                                  : N/A\n        Atomic Caps Outbound                           : FETCHADD_32 FETCHADD_64 SWAP_32 SWAP_64 CAS_32 CAS_64 \n        Atomic Caps Inbound                            : N/A\n    Fan Speed                                          : N/A\n    Performance State                                  : N/A\n    Clocks Event Reasons                               : N/A\n    Clocks Event Reasons Counters\n        SW Power Capping                               : N/A\n        Sync Boost                                     : N/A\n        SW Thermal Slowdown                            : N/A\n        HW Thermal Slowdown                            : N/A\n        HW Power Braking                               : N/A\n    Sparse Operation Mode                              : N/A\n    FB Memory Usage\n        Total                                          : N/A\n        Reserved                                       : N/A\n        Used                                           : N/A\n        Free                                           : N/A\n    BAR1 Memory Usage\n        Total                                          : N/A\n        Used                                           : N/A\n        Free                                           : N/A\n    Conf Compute Protected Memory Usage\n        Total                                          : 0 MiB\n        Used                                           : 0 MiB\n        Free                                           : 0 MiB\n    Compute Mode                                       : Default\n    Utilization\n        GPU                                            : 0 %\n        Memory                                         : 0 %\n        Encoder                                        : 0 %\n        Decoder                                        : 0 %\n        JPEG                                           : 0 %\n        OFA                                            : 0 %\n    Encoder Stats\n        Active Sessions                                : 0\n        Average FPS                                    : 0\n        Average Latency                                : 0\n    FBC Stats\n        Active Sessions                                : 0\n        Average FPS                                    : 0\n        Average Latency                                : 0\n    DRAM Encryption Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    ECC Mode\n        Current                                        : N/A\n        Pending                                        : N/A\n    ECC Errors\n        Volatile\n            SRAM Correctable                           : N/A\n            SRAM Uncorrectable Parity                  : N/A\n            SRAM Uncorrectable SEC-DED                 : N/A\n            DRAM Correctable                           : N/A\n            DRAM Uncorrectable                         : N/A\n        Aggregate\n            SRAM Correctable                           : N/A\n            SRAM Uncorrectable Parity                  : N/A\n            SRAM Uncorrectable SEC-DED                 : N/A\n            DRAM Correctable                           : N/A\n            DRAM Uncorrectable                         : N/A\n            SRAM Threshold Exceeded                    : N/A\n        Aggregate Uncorrectable SRAM Sources\n            SRAM L2                                    : N/A\n            SRAM SM                                    : N/A\n            SRAM Microcontroller                       : N/A\n            SRAM PCIE                                  : N/A\n            SRAM Other                                 : N/A\n        Channel Repair Pending                         : N/A\n        TPC Repair Pending                             : N/A\n        Unrepairable Memory                            : N/A\n    Retired Pages\n        Single Bit ECC                                 : N/A\n        Double Bit ECC                                 : N/A\n        Pending Page Blacklist                         : N/A\n    Remapped Rows                                      : N/A\n    Temperature\n        GPU Current Temp                               : 38 C\n        GPU T.Limit Temp                               : N/A\n        GPU Shutdown Temp                              : N/A\n        GPU Slowdown Temp                              : N/A\n        GPU Max Operating Temp                         : N/A\n        GPU Target Temperature                         : N/A\n        Memory Current Temp                            : N/A\n        Memory Max Operating Temp                      : N/A\n    GPU Power Readings\n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : 5.14 W\n        Current Power Limit                            : N/A\n        Requested Power Limit                          : N/A\n        Default Power Limit                            : N/A\n        Min Power Limit                                : N/A\n        Max Power Limit                                : N/A\n    GPU Memory Power Readings \n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : N/A\n    Module Power Readings\n        Average Power Draw                             : N/A\n        Instantaneous Power Draw                       : N/A\n        Current Power Limit                            : N/A\n        Requested Power Limit                          : N/A\n        Default Power Limit                            : N/A\n        Min Power Limit                                : N/A\n        Max Power Limit                                : N/A\n    Power Smoothing                                    : N/A\n    Workload Power Profiles\n        Requested Profiles                             : N/A\n        Enforced Profiles                              : N/A\n    EDPp Multiplier                                    : N/A\n    Clocks\n        Graphics                                       : 927 MHz\n        SM                                             : N/A\n        Memory                                         : N/A\n        Video                                          : 315 MHz\n    Applications Clocks\n        Graphics                                       : Requested functionality has been deprecated\n        Memory                                         : Requested functionality has been deprecated\n    Default Applications Clocks\n        Graphics                                       : Requested functionality has been deprecated\n        Memory                                         : Requested functionality has been deprecated\n    Deferred Clocks\n        Memory                                         : N/A\n    Max Clocks\n        Graphics                                       : N/A\n        SM                                             : N/A\n        Memory                                         : N/A\n        Video                                          : N/A\n    Max Customer Boost Clocks\n        Graphics                                       : N/A\n    Clock Policy\n        Auto Boost                                     : N/A\n        Auto Boost Default                             : N/A\n    Fabric\n        State                                          : N/A\n        Status                                         : N/A\n        CliqueId                                       : N/A\n        ClusterUUID                                    : N/A\n        Health\n            Summary                                    : N/A\n            Bandwidth                                  : N/A\n            Route Recovery in progress                 : N/A\n            Route Unhealthy                            : N/A\n            Access Timeout Recovery                    : N/A\n            Incorrect Configuration                    : N/A\n            Partition Assigned                         : N/A\n    Processes\n        GPU instance ID                   : N/A\n        Compute instance ID               : N/A\n        Process ID                        : 5564\n            Type                          : G\n            Name                          : /usr/lib/xorg/Xorg\n            Used GPU Memory               : 91 MiB\n        GPU instance ID                   : N/A\n        Compute instance ID               : N/A\n        Process ID                        : 5823\n            Type                          : G\n            Name                          : /usr/bin/gnome-shell\n            Used GPU Memory               : 48 MiB\n    Capabilities\n        EGM                                            : disabled",
+        "stderr": ""
+      },
+      "power_mode": {
+        "returncode": 0,
+        "stdout": "NV Power Mode: 120W\n1",
+        "stderr": ""
+      },
+      "git_sha": {
+        "returncode": 0,
+        "stdout": "63d9d376ae1490c3ecaf378d131a7da68945257d",
+        "stderr": ""
+      },
+      "worktree": {
+        "returncode": 0,
+        "stdout": "?? docs/thor/LAYOUT_8K.md\n?? docs/thor/benchmark-page-width.csv\n?? docs/thor/benchmark-page-width.md\n?? docs/thor/benchmark-page-width.svg\n?? docs/thor/layout-16k-control/\n?? docs/thor/layout-8k-256/\n?? docs/thor/layout-8k-contexts/\n?? docs/thor/layout-8k-memcheck/\n?? docs/thor/layout-8k-racecheck/\n?? docs/thor/layout-8k-synccheck/\n?? docs/thor/layout-cross-builds.json\n?? docs/thor/layout-extended-qualification.json\n?? docs/thor/layout-qualification-phases.json\n?? docs/thor/robotics-mlp-eager.csv\n?? docs/thor/robotics-mlp-eager.json\n?? docs/thor/robotics-mlp-graph.csv\n?? docs/thor/robotics-mlp-graph.json",
+        "stderr": ""
+      },
+      "submodules": {
+        "returncode": 0,
+        "stdout": "664c108d16f12707a73d3072ab525f26fb2b4f62 ThunderKittens (664c108d)",
+        "stderr": ""
+      }
+    },
+    "jetpack_release": "# R39 (release), REVISION: 2.1, GCID: 46758480, BOARD: generic, EABI: aarch64, DATE: Fri Aug  7 05:54:22 AM UTC 2026\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia\n"
+  },
+  "source_sha256": "5d04102303a03ec150c7d2a9cbc162bc894a7c16c384faa32889dced66e39cac",
+  "runner_sha256": "653074119d53daa49c5dce608b9306e5b44452dfb570efe1fefc1b7f4f60a7b0",
+  "build_command": [
+    "/home/thor-guest/ml-perf/Megakernels/local/toolchain/usr/local/cuda-13.2/bin/nvcc",
+    "-std=c++20",
+    "-O3",
+    "-lineinfo",
+    "-gencode",
+    "arch=compute_110a,code=sm_110a",
+    "/home/thor-guest/ml-perf/Megakernels/demos/ready-queue/probe.cu",
+    "-o",
+    "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe"
+  ],
+  "build": {
+    "returncode": 0,
+    "output": ""
+  },
+  "cases": [
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "1",
+        "1",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":1,\"seed\":1,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0177919995,0.0179839991,0.0203840006]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0260799993,0.0244800001,0.0244800001]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 1,
+        "seed": 1,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0177919995,
+              0.0179839991,
+              0.0203840006
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0260799993,
+              0.0244800001,
+              0.0244800001
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "1",
+        "1",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":1,\"seed\":1,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0176640004,0.0178880002,0.0182719994]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0248639993,0.0241279993,0.0235200003]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 1,
+        "seed": 1,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0176640004,
+              0.0178880002,
+              0.0182719994
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0248639993,
+              0.0241279993,
+              0.0235200003
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "1",
+        "1",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":1,\"seed\":1,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0187199991,0.0191040002,0.0177599993]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0255040005,0.024704,0.0248000007]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 1,
+        "seed": 1,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0187199991,
+              0.0191040002,
+              0.0177599993
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0255040005,
+              0.024704,
+              0.0248000007
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "1",
+        "2",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":1,\"seed\":2,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0187839996,0.0180479996,0.0185279995]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0264640003,0.0249920003,0.0245120004]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 1,
+        "seed": 2,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0187839996,
+              0.0180479996,
+              0.0185279995
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0264640003,
+              0.0249920003,
+              0.0245120004
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "1",
+        "2",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":1,\"seed\":2,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0182399992,0.0188800003,0.0190399997]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0255679991,0.0241919998,0.0236159991]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 1,
+        "seed": 2,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0182399992,
+              0.0188800003,
+              0.0190399997
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0255679991,
+              0.0241919998,
+              0.0236159991
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "1",
+        "2",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":1,\"seed\":2,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.017856,0.0177919995,0.0201919992]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0254079998,0.0250560008,0.0237760004]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 1,
+        "seed": 2,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.017856,
+              0.0177919995,
+              0.0201919992
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0254079998,
+              0.0250560008,
+              0.0237760004
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "3",
+        "1",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":3,\"seed\":1,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0192319993,0.0188480001,0.0188159999]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0254720002,0.0242560003,0.0251199994]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 3,
+        "seed": 1,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0192319993,
+              0.0188480001,
+              0.0188159999
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0254720002,
+              0.0242560003,
+              0.0251199994
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "3",
+        "1",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":3,\"seed\":1,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0189120006,0.0183359999,0.0186880007]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0250240006,0.0251519997,0.0236479994]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 3,
+        "seed": 1,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0189120006,
+              0.0183359999,
+              0.0186880007
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0250240006,
+              0.0251519997,
+              0.0236479994
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "3",
+        "1",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":3,\"seed\":1,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0187519994,0.0184320007,0.0187839996]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0352320001,0.0240000002,0.0243519992]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 3,
+        "seed": 1,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0187519994,
+              0.0184320007,
+              0.0187839996
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0352320001,
+              0.0240000002,
+              0.0243519992
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "3",
+        "2",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":3,\"seed\":2,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0177919995,0.0184000004,0.0203520004]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0256639998,0.0246719997,0.023488]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 3,
+        "seed": 2,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0177919995,
+              0.0184000004,
+              0.0203520004
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0256639998,
+              0.0246719997,
+              0.023488
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "3",
+        "2",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":3,\"seed\":2,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0190719999,0.0186560005,0.0179839991]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0251199994,0.0243519992,0.0243839994]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 3,
+        "seed": 2,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0190719999,
+              0.0186560005,
+              0.0179839991
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0251199994,
+              0.0243519992,
+              0.0243839994
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "3",
+        "2",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":3,\"seed\":2,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0175679997,0.0173119996,0.0187519994]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0251199994,0.0242240001,0.0240320005]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 3,
+        "seed": 2,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0175679997,
+              0.0173119996,
+              0.0187519994
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0251199994,
+              0.0242240001,
+              0.0240320005
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "20",
+        "1",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":20,\"seed\":1,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0188159999,0.019328,0.0210880004]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0245760009,0.0245120004,0.023968]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 20,
+        "seed": 1,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0188159999,
+              0.019328,
+              0.0210880004
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0245760009,
+              0.0245120004,
+              0.023968
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "20",
+        "1",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":20,\"seed\":1,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0187199991,0.0189759992,0.0176640004]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0252800006,0.0250240006,0.0253120009]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 20,
+        "seed": 1,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0187199991,
+              0.0189759992,
+              0.0176640004
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0252800006,
+              0.0250240006,
+              0.0253120009
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "20",
+        "1",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":20,\"seed\":1,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0189759992,0.018592,0.0179520007]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0247360002,0.0243200008,0.0240320005]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 20,
+        "seed": 1,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0189759992,
+              0.018592,
+              0.0179520007
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0247360002,
+              0.0243200008,
+              0.0240320005
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "20",
+        "2",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":20,\"seed\":2,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0233919993,0.0232640002,0.0237760004]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0319680013,0.0311680008,0.0316479988]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 20,
+        "seed": 2,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0233919993,
+              0.0232640002,
+              0.0237760004
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0319680013,
+              0.0311680008,
+              0.0316479988
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "20",
+        "2",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":20,\"seed\":2,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.018592,0.0175359994,0.0170559995]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0260160007,0.0249279998,0.0242560003]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 20,
+        "seed": 2,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.018592,
+              0.0175359994,
+              0.0170559995
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0260160007,
+              0.0249279998,
+              0.0242560003
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "1",
+        "20",
+        "2",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":1,\"workers\":20,\"seed\":2,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0205119997,0.0196800008,0.0186240003]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0248319991,0.0249600001,0.0245120004]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 1,
+        "workers": 20,
+        "seed": 2,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0205119997,
+              0.0196800008,
+              0.0186240003
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0248319991,
+              0.0249600001,
+              0.0245120004
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "1",
+        "1",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":1,\"seed\":1,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.231199995,0.227103993,0.220991999]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.386752009,0.399008006,0.417600006]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 1,
+        "seed": 1,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.231199995,
+              0.227103993,
+              0.220991999
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.386752009,
+              0.399008006,
+              0.417600006
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "1",
+        "1",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":1,\"seed\":1,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.222880006,0.240224004,0.231488004]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.321375996,0.323392004,0.345919997]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 1,
+        "seed": 1,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.222880006,
+              0.240224004,
+              0.231488004
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.321375996,
+              0.323392004,
+              0.345919997
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "1",
+        "1",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":1,\"seed\":1,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.235392004,0.221024007,0.239488006]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.341600001,0.317279994,0.323264003]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 1,
+        "seed": 1,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.235392004,
+              0.221024007,
+              0.239488006
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.341600001,
+              0.317279994,
+              0.323264003
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "1",
+        "2",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":1,\"seed\":2,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.251744002,0.229184002,0.245792001]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.378560007,0.372447997,0.401216]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 1,
+        "seed": 2,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.251744002,
+              0.229184002,
+              0.245792001
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.378560007,
+              0.372447997,
+              0.401216
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "1",
+        "2",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":1,\"seed\":2,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.251711994,0.241472006,0.221024007]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.333631992,0.347871989,0.321343988]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 1,
+        "seed": 2,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.251711994,
+              0.241472006,
+              0.221024007
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.333631992,
+              0.347871989,
+              0.321343988
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "1",
+        "2",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":1,\"seed\":2,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.227039993,0.222911999,0.239455998]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.327711999,0.323424011,0.323615998]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 1,
+        "seed": 2,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.227039993,
+              0.222911999,
+              0.239455998
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.327711999,
+              0.323424011,
+              0.323615998
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "3",
+        "1",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":3,\"seed\":1,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.141120002,0.159551993,0.155456007]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.188160002,0.188063994,0.173887998]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 3,
+        "seed": 1,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.141120002,
+              0.159551993,
+              0.155456007
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.188160002,
+              0.188063994,
+              0.173887998
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "3",
+        "1",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":3,\"seed\":1,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.229151994,0.243520007,0.220799997]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.339807987,0.330047995,0.320544004]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 3,
+        "seed": 1,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.229151994,
+              0.243520007,
+              0.220799997
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.339807987,
+              0.330047995,
+              0.320544004
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "3",
+        "1",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":3,\"seed\":1,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.114496,0.104255997,0.0960640013]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.139072001,0.116544001,0.135008007]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 3,
+        "seed": 1,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.114496,
+              0.104255997,
+              0.0960640013
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.139072001,
+              0.116544001,
+              0.135008007
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "3",
+        "2",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":3,\"seed\":2,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.153311998,0.13888,0.135008007]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.151424006,0.167840004,0.167807996]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 3,
+        "seed": 2,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.153311998,
+              0.13888,
+              0.135008007
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.151424006,
+              0.167840004,
+              0.167807996
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "3",
+        "2",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":3,\"seed\":2,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.249696001,0.249727994,0.2456]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.333664,0.327455997,0.319296002]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 3,
+        "seed": 2,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.249696001,
+              0.249727994,
+              0.2456
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.333664,
+              0.327455997,
+              0.319296002
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "3",
+        "2",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":3,\"seed\":2,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.102080002,0.0981440023,0.097984001]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.108351998,0.120895997,0.134976]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 3,
+        "seed": 2,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.102080002,
+              0.0981440023,
+              0.097984001
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.108351998,
+              0.120895997,
+              0.134976
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "20",
+        "1",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":20,\"seed\":1,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.130175993,0.106624,0.127232]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.153408006,0.153439999,0.176064]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 20,
+        "seed": 1,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.130175993,
+              0.106624,
+              0.127232
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.153408006,
+              0.153439999,
+              0.176064
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "20",
+        "1",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":20,\"seed\":1,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.235328004,0.227136001,0.218976006]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.333631992,0.319296002,0.326207995]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 20,
+        "seed": 1,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.235328004,
+              0.227136001,
+              0.218976006
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.333631992,
+              0.319296002,
+              0.326207995
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "20",
+        "1",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":20,\"seed\":1,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0232319999,0.0276159998,0.0408320017]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.069472,0.0530879982,0.0571199991]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 20,
+        "seed": 1,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0232319999,
+              0.0276159998,
+              0.0408320017
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.069472,
+              0.0530879982,
+              0.0571199991
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "20",
+        "2",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":20,\"seed\":2,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0957119986,0.0899199992,0.102367997]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.134976,0.120544001,0.137024]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 20,
+        "seed": 2,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0957119986,
+              0.0899199992,
+              0.102367997
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.134976,
+              0.120544001,
+              0.137024
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "20",
+        "2",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":20,\"seed\":2,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.246368006,0.235551998,0.251711994]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.339807987,0.31932801,0.341856003]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 20,
+        "seed": 2,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.246368006,
+              0.235551998,
+              0.251711994
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.339807987,
+              0.31932801,
+              0.341856003
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "17",
+        "20",
+        "2",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":17,\"workers\":20,\"seed\":2,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0202879999,0.0367040001,0.0489600003]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.0653439984,0.0489600003,0.0715840012]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 17,
+        "workers": 20,
+        "seed": 2,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0202879999,
+              0.0367040001,
+              0.0489600003
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.0653439984,
+              0.0489600003,
+              0.0715840012
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "1",
+        "1",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":1,\"seed\":1,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.46886396,3.09836793,3.10227203]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.45065594,3.43564796,3.44528008]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 1,
+        "seed": 1,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.46886396,
+              3.09836793,
+              3.10227203
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.45065594,
+              3.43564796,
+              3.44528008
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "1",
+        "1",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":1,\"seed\":1,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.08470392,3.09184003,3.08937597]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.07395196,3.07702398,3.09465599]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 1,
+        "seed": 1,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.08470392,
+              3.09184003,
+              3.08937597
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.07395196,
+              3.07702398,
+              3.09465599
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "1",
+        "1",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":1,\"seed\":1,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.0812161,3.06070399,3.09129596]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.0822401,3.06275201,3.07590389]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 1,
+        "seed": 1,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.0812161,
+              3.06070399,
+              3.09129596
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.0822401,
+              3.06275201,
+              3.07590389
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "1",
+        "2",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":1,\"seed\":2,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.06380796,3.06156802,3.06895995]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.48979211,3.47340798,3.47024012]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 1,
+        "seed": 2,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.06380796,
+              3.06156802,
+              3.06895995
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.48979211,
+              3.47340798,
+              3.47024012
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "1",
+        "2",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":1,\"seed\":2,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.06982398,3.07603192,3.0616641]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.09241605,3.07951999,3.07603192]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 1,
+        "seed": 2,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.06982398,
+              3.07603192,
+              3.0616641
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.09241605,
+              3.07951999,
+              3.07603192
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "1",
+        "2",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":1,\"seed\":2,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.08425593,3.09024,3.07798409]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.07891202,3.07603192,3.08934402]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 1,
+        "seed": 2,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.08425593,
+              3.09024,
+              3.07798409
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.07891202,
+              3.07603192,
+              3.08934402
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "3",
+        "1",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":3,\"seed\":1,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[1.17727995,1.17756796,1.20060802]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[1.15491199,1.12403202,1.15980804]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 3,
+        "seed": 1,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              1.17727995,
+              1.17756796,
+              1.20060802
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              1.15491199,
+              1.12403202,
+              1.15980804
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "3",
+        "1",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":3,\"seed\":1,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.07801604,3.07804799,3.08979201]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.07872009,3.09555197,3.07791996]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 3,
+        "seed": 1,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.07801604,
+              3.07804799,
+              3.08979201
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.07872009,
+              3.09555197,
+              3.07791996
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "3",
+        "1",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":3,\"seed\":1,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.993088007,0.978976011,0.973280013]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[1.02819204,1.02988803,1.03219199]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 3,
+        "seed": 1,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.993088007,
+              0.978976011,
+              0.973280013
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              1.02819204,
+              1.02988803,
+              1.03219199
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "3",
+        "2",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":3,\"seed\":2,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[1.06051195,1.07296002,1.07503998]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[1.20607996,1.16310406,1.16703999]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 3,
+        "seed": 2,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              1.06051195,
+              1.07296002,
+              1.07503998
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              1.20607996,
+              1.16310406,
+              1.16703999
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "3",
+        "2",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":3,\"seed\":2,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.0935359,3.07884789,3.0790081]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.0769279,3.07798409,3.07891202]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 3,
+        "seed": 2,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.0935359,
+              3.07884789,
+              3.0790081
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.0769279,
+              3.07798409,
+              3.07891202
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "3",
+        "2",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":3,\"seed\":2,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.987807989,0.978879988,0.962463975]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[1.02790403,1.02787197,1.02707195]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 3,
+        "seed": 2,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.987807989,
+              0.978879988,
+              0.962463975
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              1.02790403,
+              1.02787197,
+              1.02707195
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "20",
+        "1",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":20,\"seed\":1,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.321568012,0.323839992,0.315232009]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.289375991,0.308192015,0.290527999]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 20,
+        "seed": 1,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.321568012,
+              0.323839992,
+              0.315232009
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.289375991,
+              0.308192015,
+              0.290527999
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "20",
+        "1",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":20,\"seed\":1,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.08940792,3.0935359,3.07481599]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.09759998,3.08838391,3.09123206]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 20,
+        "seed": 1,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.08940792,
+              3.0935359,
+              3.07481599
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.09759998,
+              3.08838391,
+              3.09123206
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "20",
+        "1",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":20,\"seed\":1,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.153472006,0.154528007,0.151616007]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.202623993,0.19664,0.212991998]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 20,
+        "seed": 1,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.153472006,
+              0.154528007,
+              0.151616007
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.202623993,
+              0.19664,
+              0.212991998
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "20",
+        "2",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":20,\"seed\":2,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.26185599,0.263711989,0.260960013]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.239647999,0.243551999,0.231455997]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 20,
+        "seed": 2,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.26185599,
+              0.263711989,
+              0.260960013
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.239647999,
+              0.243551999,
+              0.231455997
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "20",
+        "2",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":20,\"seed\":2,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.09148788,3.07782412,3.08304]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[3.07955194,3.07897592,3.07542396]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 20,
+        "seed": 2,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.09148788,
+              3.07782412,
+              3.08304
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              3.07955194,
+              3.07897592,
+              3.07542396
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "257",
+        "20",
+        "2",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":257,\"workers\":20,\"seed\":2,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.147423998,0.160768002,0.147423998]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[0.209279999,0.188639998,0.188288003]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 257,
+        "workers": 20,
+        "seed": 2,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.147423998,
+              0.160768002,
+              0.147423998
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              0.209279999,
+              0.188639998,
+              0.188288003
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "1",
+        "1",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":1,\"seed\":1,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1241608,49.1343689,49.1395187]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[54.9424973,54.9598083,54.929184]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 1,
+        "seed": 1,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1241608,
+              49.1343689,
+              49.1395187
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              54.9424973,
+              54.9598083,
+              54.929184
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "1",
+        "1",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":1,\"seed\":1,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1354561,49.1262398,49.1262093]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1190071,49.1282883,49.1243515]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 1,
+        "seed": 1,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1354561,
+              49.1262398,
+              49.1262093
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1190071,
+              49.1282883,
+              49.1243515
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "1",
+        "1",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":1,\"seed\":1,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1222382,49.1344948,49.1178894]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1385269,49.1241913,49.1463356]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 1,
+        "seed": 1,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1222382,
+              49.1344948,
+              49.1178894
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1385269,
+              49.1241913,
+              49.1463356
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "1",
+        "2",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":1,\"seed\":2,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1209602,49.1436462,49.1200943]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[54.5300179,54.5288658,54.5279694]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 1,
+        "seed": 2,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1209602,
+              49.1436462,
+              49.1200943
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              54.5300179,
+              54.5288658,
+              54.5279694
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "1",
+        "2",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":1,\"seed\":2,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1426544,49.1344337,49.1271057]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1355858,49.1282883,49.139679]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 1,
+        "seed": 2,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1426544,
+              49.1344337,
+              49.1271057
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1355858,
+              49.1282883,
+              49.139679
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "1",
+        "2",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":1,\"seed\":2,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1365128,49.1343994,49.1405754]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1426239,49.1426544,49.1321907]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 1,
+        "seed": 2,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1365128,
+              49.1343994,
+              49.1405754
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1426239,
+              49.1426544,
+              49.1321907
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "3",
+        "1",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":3,\"seed\":1,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[15.5544643,15.5451841,15.5359364]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[18.2577915,18.2609921,18.2419205]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 3,
+        "seed": 1,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              15.5544643,
+              15.5451841,
+              15.5359364
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              18.2577915,
+              18.2609921,
+              18.2419205
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "3",
+        "1",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":3,\"seed\":1,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.141407,49.1139183,49.1240654]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1466866,49.1446419,49.1384964]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 3,
+        "seed": 1,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.141407,
+              49.1139183,
+              49.1240654
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1466866,
+              49.1446419,
+              49.1384964
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "3",
+        "1",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":3,\"seed\":1,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[15.3403835,15.3311682,15.3218555]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[16.4031353,16.4010887,16.3928318]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 3,
+        "seed": 1,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              15.3403835,
+              15.3311682,
+              15.3218555
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              16.4031353,
+              16.4010887,
+              16.3928318
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "3",
+        "2",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":3,\"seed\":2,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[15.4375677,15.4538879,15.4484797]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[18.2199039,18.0928955,18.1502399]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 3,
+        "seed": 2,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              15.4375677,
+              15.4538879,
+              15.4484797
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              18.2199039,
+              18.0928955,
+              18.1502399
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "3",
+        "2",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":3,\"seed\":2,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1176338,49.1323509,49.1512642]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1344337,49.1466866,49.1385269]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 3,
+        "seed": 2,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1176338,
+              49.1323509,
+              49.1512642
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1344337,
+              49.1466866,
+              49.1385269
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "3",
+        "2",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":3,\"seed\":2,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[15.3311996,15.3322239,15.318944]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[16.3973446,16.3723831,16.3848324]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 3,
+        "seed": 2,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              15.3311996,
+              15.3322239,
+              15.318944
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              16.3973446,
+              16.3723831,
+              16.3848324
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "20",
+        "1",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":20,\"seed\":1,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[2.370368,2.37260795,2.36016011]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[2.93510389,2.94329596,2.94886398]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 20,
+        "seed": 1,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              2.370368,
+              2.37260795,
+              2.36016011
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              2.93510389,
+              2.94329596,
+              2.94886398
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "20",
+        "1",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":20,\"seed\":1,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1333771,49.1405754,49.1119347]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1466866,49.1425934,49.1387825]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 20,
+        "seed": 1,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1333771,
+              49.1405754,
+              49.1119347
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1466866,
+              49.1425934,
+              49.1387825
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "20",
+        "1",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":20,\"seed\":1,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[1.99663997,1.99660802,1.98636794]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[2.78921604,2.78822398,2.79123211]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 20,
+        "seed": 1,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              1.99663997,
+              1.99660802,
+              1.98636794
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              2.78921604,
+              2.78822398,
+              2.79123211
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "20",
+        "2",
+        "random",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":20,\"seed\":2,\"shape\":\"random\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[2.28438401,2.28438401,2.28848004]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[2.99094391,3.00320005,3.00528002]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 20,
+        "seed": 2,
+        "shape": "random",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              2.28438401,
+              2.28438401,
+              2.28848004
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              2.99094391,
+              3.00320005,
+              3.00528002
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "20",
+        "2",
+        "chain",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":20,\"seed\":2,\"shape\":\"chain\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1139183,49.1129608,49.1140785]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[49.1487694,49.1416016,49.1406097]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 20,
+        "seed": 2,
+        "shape": "chain",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1139183,
+              49.1129608,
+              49.1140785
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              49.1487694,
+              49.1416016,
+              49.1406097
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/docs/thor/ready-queue-stress/probe",
+        "4096",
+        "20",
+        "2",
+        "wide",
+        "500",
+        "1",
+        "both"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "output": "{\"scope\":\"model-free FP32 vector DAG; not Llama/OpenPI\",\"tasks\":4096,\"workers\":20,\"seed\":2,\"shape\":\"wide\",\"delay_ns\":500,\"width\":256,\"warmups\":5,\"repeats\":1,\"batches\":3,\"variants\":[{\"mode\":\"static_rr\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":24,\"resident_ctas_per_sm\":12,\"samples_ms\":[1.99868798,1.998752,1.998752]},{\"mode\":\"ready_queue\",\"status\":\"PASS\",\"max_abs\":0,\"registers_per_thread\":26,\"resident_ctas_per_sm\":12,\"samples_ms\":[2.82304001,2.81683207,2.81891203]}]}\n",
+      "status": "PASS",
+      "data": {
+        "scope": "model-free FP32 vector DAG; not Llama/OpenPI",
+        "tasks": 4096,
+        "workers": 20,
+        "seed": 2,
+        "shape": "wide",
+        "delay_ns": 500,
+        "width": 256,
+        "warmups": 5,
+        "repeats": 1,
+        "batches": 3,
+        "variants": [
+          {
+            "mode": "static_rr",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 24,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              1.99868798,
+              1.998752,
+              1.998752
+            ]
+          },
+          {
+            "mode": "ready_queue",
+            "status": "PASS",
+            "max_abs": 0,
+            "registers_per_thread": 26,
+            "resident_ctas_per_sm": 12,
+            "samples_ms": [
+              2.82304001,
+              2.81683207,
+              2.81891203
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "concurrent_workload": "uncontrolled-existing",
+  "scope": "Standalone FP32 vector DAG; no Llama/OpenPI integration",
+  "timing_scope": "kernel CUDA events; resets, CPU reference and output verification excluded",
+  "kind": "correctness-only",
+  "host_compiler": {
+    "returncode": 0,
+    "stdout": "aarch64-linux-gnu-g++-13 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+    "stderr": ""
+  },
+  "binary_sha256": "cb1b1ae9ee51a05b6e79892e4760992b12af6163009dd942881eed1371d24043"
+}

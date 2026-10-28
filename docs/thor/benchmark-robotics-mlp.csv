@@ -1,0 +1,5 @@
+run_id,status,engine,variant,scope,precision,context,batch,samples,warmups,batches,power_mode,concurrent_workload,p50_ms,p95_ms,p99_ms,mean_ms,tokens_per_s
+dd616062-eab4-4907-81a4-cc607ff8b78a,PASS,torch_eager,synthetic-gemma300m-mlp-eager,robotics_block,bf16,50,1,90,5,3,"NV Power Mode: 120W
+1",uncontrolled-existing,1.393712043762207,1.4516768217086793,1.5098838889598847,1.3997166289223566,
+8ec536d3-a2b7-4eb5-b86d-f68be98c0a81,PASS,torch_graph,synthetic-gemma300m-mlp-graph,robotics_block,bf16,50,1,90,5,3,"NV Power Mode: 120W
+1",uncontrolled-existing,0.6952959895133972,0.6991071939468384,0.7050563210248947,0.6947697745429144,
