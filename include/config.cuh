@@ -8,6 +8,7 @@ struct default_config {
     // Instruction pipeline
     static constexpr int INSTRUCTION_PIPELINE_STAGES = 2;
     static constexpr int INSTRUCTION_BARRIER_PARTIES_PER_WARP = 1;
+    static constexpr int PAGE_BARRIER_PARTIES_PER_WARP = 1;
 
     // num bits required to represent num pipeline stages
     static constexpr int INSTRUCTION_PIPELINE_STAGES_BITS = 1;
@@ -139,6 +140,7 @@ struct thor_config : default_config {
     static_assert(!(FP32_DOWNPROJ && ORDERED_DOWNPROJ), "FP32 finalization replaces column ordering");
     static constexpr bool MATCH_TORCH_BF16_RMS = MK_MATCH_TORCH_BF16_RMS != 0;
     static constexpr int INSTRUCTION_BARRIER_PARTIES_PER_WARP = MK_INSTRUCTION_BARRIER_PARTIES;
+    static constexpr int PAGE_BARRIER_PARTIES_PER_WARP = 32;
     static_assert(INSTRUCTION_BARRIER_PARTIES_PER_WARP == 1 || INSTRUCTION_BARRIER_PARTIES_PER_WARP == 32);
     static constexpr int NUM_CONSUMER_WARPS = MK_CONSUMER_WARPS;
     static_assert(NUM_CONSUMER_WARPS == 4 || NUM_CONSUMER_WARPS == 8 || NUM_CONSUMER_WARPS == 16);

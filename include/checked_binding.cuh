@@ -105,6 +105,7 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
         result["consumer_warps"] = Config::NUM_CONSUMER_WARPS;
         result["threads_per_cta"] = Config::NUM_THREADS;
         result["instruction_barrier_parties_per_warp"] = Config::INSTRUCTION_BARRIER_PARTIES_PER_WARP;
+        result["page_barrier_parties_per_warp"] = Config::PAGE_BARRIER_PARTIES_PER_WARP;
         result["backoff_ns"] = Config::GMEM_SPIN_LOOP_SLEEP_NANOS;
         result["timing_enabled"] = Config::TIMING_RECORD_ENABLED;
         result["active_workers"] = grid.x;

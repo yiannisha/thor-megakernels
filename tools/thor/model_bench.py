@@ -82,7 +82,8 @@ class ModelAdapter:
                         'consumer_register_target': self.config.consumer_registers,
                         'service_register_target': self.config.service_registers,
                         'match_torch_bf16_rms': self.config.match_torch_bf16_rms,
-                        'instruction_barrier_parties_per_warp': self.config.instruction_parties}
+                        'instruction_barrier_parties_per_warp': self.config.instruction_parties,
+                        'page_barrier_parties_per_warp': 32}
             if self.config.register_mode == 'static':
                 expected['static_register_cap'] = self.config.static_registers
             if any(resources.get(k) != value for k, value in expected.items()):

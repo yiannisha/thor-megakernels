@@ -88,7 +88,7 @@ __device__ inline void mk_internal(const globals &g) {
     }
     if (threadIdx.x < config::NUM_PAGES) {
         for (int i = 0; i < config::INSTRUCTION_PIPELINE_STAGES_BITS; i++) {
-            auto count = config::NUM_CONSUMER_WARPS * (1 << i);
+            auto count = config::NUM_CONSUMER_WARPS * config::PAGE_BARRIER_PARTIES_PER_WARP * (1 << i);
             init_semaphore(page_finished[threadIdx.x][i], count);
             arrive(page_finished[threadIdx.x][i], count);
         }

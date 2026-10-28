@@ -166,7 +166,7 @@ template <typename config> struct state {
     __device__ inline void finish_page(int pid, int count) {
 #pragma unroll
         for (int i = 0; i < config::INSTRUCTION_PIPELINE_STAGES_BITS; i++) {
-            arrive(page_finished[pid][i], count);
+            arrive(page_finished[pid][i], count * config::PAGE_BARRIER_PARTIES_PER_WARP);
         }
     }
 
@@ -176,8 +176,10 @@ template <typename config> struct state {
     }
 
     __device__ inline void warp_finish_page(int pid, int count) {
-        if (kittens::warp::laneid() == 0) {
-            finish_page(pid, count);
+        if (kittens::warp::laneid() < config::PAGE_BARRIER_PARTIES_PER_WARP) {
+#pragma unroll
+            for (int i = 0; i < config::INSTRUCTION_PIPELINE_STAGES_BITS; i++)
+                arrive(page_finished[pid][i], count);
         }
     }
 
