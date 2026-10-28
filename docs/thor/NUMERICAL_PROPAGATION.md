@@ -70,3 +70,9 @@ These results do not identify a sufficient native accuracy fix. In particular, i
 - `no-fma-probe/processes.json`: exact compiler invocation and both temporal commands; failed checks remain failures.
 
 Source `tools/thor/env.sh`, set `THOR_CONFIG` to `configs/thor/compensated-attention.json` contents and `THOR_BINARY_DIR` to the matching extension. Reproduce head attribution with `python -m tools.experiments.head_error_probe --output <fresh-file.json>`, and cumulative prefixes with `python -m tools.experiments.layer_propagation --step 44 --output <fresh-file.json>`. The latter selects math SDPA explicitly throughout reference generation. These are diagnostic harnesses without latency measurements.
+
+## Further separation of QKV arithmetic
+
+The RoPE-only oracle executes native QKV with identity rotary tables, then applies the reference eager rotary operation to the native BF16 Q/K. It reproduces every metric of the rejected explicit nonfused native RoPE candidate over all 100 steps. That agreement validates this separation method for the measured trajectory; it does not provide an accuracy improvement.
+
+A temporary sixteen-consumer RMS implementation follows the installed PyTorch FP32 mean's 512-thread/four-adjacent-values reduction tree. Output scratch is reused only before matvec outputs exist, with consumer barriers protecting publication and all readers before reuse. The native-cache test reproduces every original metric exactly; the reference-cache test changes metrics at steps 27/62 without changing any gate outcomes. Failed steps and worst logit NRMSE remain unchanged in both tests. The extra synchronization has no demonstrated qualification benefit, so this candidate is reverted. Exact patch and both test records are in `torch-rms-tree-probe/`.
