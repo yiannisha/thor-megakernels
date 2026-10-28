@@ -72,6 +72,14 @@ class ConfigTests(unittest.TestCase):
         self.assertIn('-DMK_COMPENSATED_ATTENTION=1', variant.defines())
         self.assertNotEqual(cache_key(Config(), {}, 's'), cache_key(variant, {}, 's'))
 
+    def test_tensorcore_matvec_preserves_input_precision_and_cache_identity(self):
+        variant = replace(Config(), tensorcore_matvec=True)
+        self.assertFalse(variant.validate(DEVICE))
+        self.assertTrue(replace(variant, match_torch_bf16_rms=False).validate(DEVICE))
+        self.assertTrue(replace(variant, tensorcore_matvec=1).validate(DEVICE))
+        self.assertIn('-DMK_TENSORCORE_MATVEC=1', variant.defines())
+        self.assertNotEqual(cache_key(Config(), {}, 's'), cache_key(variant, {}, 's'))
+
     def test_cache_tracks_toolchain_and_sources(self):
         key = cache_key(Config(), {'nvcc': 'a'}, 'source')
         self.assertNotEqual(key, cache_key(Config(), {'nvcc': 'b'}, 'source'))

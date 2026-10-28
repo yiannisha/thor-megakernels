@@ -66,7 +66,9 @@ rms_norm(const sv_t &rms_scale_smem, const sv_t &activations_smem,
     return activations_vec;
 }
 
-#ifdef KITTENS_BLACKWELL
+// This helper uses warp-level BF16 MMA, not B200 tensor memory/TCGEN.
+// Thor enables it explicitly without defining KITTENS_BLACKWELL.
+#if defined(KITTENS_BLACKWELL) || (defined(MK_THOR) && MK_TENSORCORE_MATVEC)
 template <kittens::ducks::st::all st_t>
 __device__ static inline void matvec(kittens::sv_fl<st_t::rows> &out_smem,
                                      st_t &weights_smem,

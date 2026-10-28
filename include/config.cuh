@@ -61,6 +61,11 @@ struct default_config {
     static constexpr bool MATCH_TORCH_BF16_EPILOGUES = false;
     static constexpr bool COMPENSATED_ATTENTION = false;
     static constexpr bool FP64_RMS = false;
+#ifdef KITTENS_BLACKWELL
+    static constexpr bool TENSORCORE_MATVEC = true;
+#else
+    static constexpr bool TENSORCORE_MATVEC = false;
+#endif
     static constexpr bool STATIC_REGISTER_ALLOCATION = false;
     static constexpr int CONSUMER_REGISTERS = 104;
     static constexpr int NON_CONSUMER_REGISTERS = 64;
@@ -111,6 +116,9 @@ struct default_config {
 #ifndef MK_MATCH_TORCH_BF16_EPILOGUES
 #define MK_MATCH_TORCH_BF16_EPILOGUES 0
 #endif
+#ifndef MK_TENSORCORE_MATVEC
+#define MK_TENSORCORE_MATVEC 0
+#endif
 #ifndef MK_FP64_RMS
 #define MK_FP64_RMS 0
 #endif
@@ -142,8 +150,10 @@ struct thor_config : default_config {
     static constexpr bool MATCH_TORCH_BF16_EPILOGUES = MK_MATCH_TORCH_BF16_EPILOGUES != 0;
     static constexpr bool COMPENSATED_ATTENTION = MK_COMPENSATED_ATTENTION != 0;
     static constexpr bool FP64_RMS = MK_FP64_RMS != 0;
+    static constexpr bool TENSORCORE_MATVEC = MK_TENSORCORE_MATVEC != 0;
     static_assert(!(FP32_DOWNPROJ && ORDERED_DOWNPROJ), "FP32 finalization replaces column ordering");
     static constexpr bool MATCH_TORCH_BF16_RMS = MK_MATCH_TORCH_BF16_RMS != 0;
+    static_assert(!TENSORCORE_MATVEC || MATCH_TORCH_BF16_RMS, "BF16 MMA matvec requires BF16-rounded normalized inputs");
     static constexpr int INSTRUCTION_BARRIER_PARTIES_PER_WARP = MK_INSTRUCTION_BARRIER_PARTIES;
     static constexpr int PAGE_BARRIER_PARTIES_PER_WARP = 1;
     static_assert(INSTRUCTION_BARRIER_PARTIES_PER_WARP == 1 || INSTRUCTION_BARRIER_PARTIES_PER_WARP == 32);

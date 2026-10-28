@@ -125,14 +125,17 @@ def check(args):
         ref_hidden, ref_logits, ref_cache = case.ref_hidden, case.ref_logits, case.ref_cache
         schedule = LatencyScheduleBuilder.build(model)
         globs = schedule.globs
+        globs.pos_id = args.context
         queues = assign_to_sms(args.scheduler, schedule=schedule)
         tensorize_instructions(globs, queues)
-        sys.path.insert(0, str((ROOT / 'demos/low-latency-llama').resolve()))
+        sys.path.insert(0, os.environ.get('THOR_BINARY_DIR', str((ROOT / 'demos/low-latency-llama').resolve())))
         import mk_llama
         resources = {}
         def preflight(*call_args, **kwargs):
             resources.update(mk_llama.mk_llama(*call_args, **kwargs, dry_run=True))
         interpret_with_mk(globs, preflight)
+        if resources.get('tensorcore_matvec') != args.tensorcore_matvec:
+            raise RuntimeError('Tensor Core matvec build and requested variant disagree')
         if resources.get('fp64_rms') != args.fp64_rms:
             raise RuntimeError('FP64 RMS build and requested variant disagree')
         if resources.get('compensated_attention') != args.compensated_attention:
@@ -223,6 +226,7 @@ def main():
     parser.add_argument('--match-torch-bf16-epilogues', action='store_true')
     parser.add_argument('--reference-attention', choices=('flash', 'math'), default=os.environ.get('THOR_REFERENCE_ATTENTION', 'flash'))
     parser.add_argument('--fp64-rms', action='store_true')
+    parser.add_argument('--tensorcore-matvec', action='store_true')
     parser.add_argument('--compensated-attention', action='store_true')
     parser.add_argument('--fp32-downproj', action='store_true')
     parser.add_argument('--ordered-downproj', action='store_true')
@@ -248,6 +252,7 @@ def main():
                        '--logit-nrmse-limit', str(args.logit_nrmse_limit), '--reference-attention', args.reference_attention]
             if args.match_torch_bf16_epilogues: command.append('--match-torch-bf16-epilogues')
             if args.fp64_rms: command.append('--fp64-rms')
+            if args.tensorcore_matvec: command.append('--tensorcore-matvec')
             if args.compensated_attention: command.append('--compensated-attention')
             if args.fp32_downproj: command.append('--fp32-downproj')
             if args.pyvm: command.append('--pyvm')

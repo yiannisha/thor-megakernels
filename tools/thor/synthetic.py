@@ -33,7 +33,7 @@ def fixture(op='qkv', iterations=4, seed=1, context=128, partitions=3, partial_i
     if not torch.cuda.is_available():
         raise RuntimeError('CUDA torch required')
     config = Config(**json.loads(os.environ.get('THOR_CONFIG', '{}')))
-    if config != Config(name=config.name, match_torch_bf16_rms=config.match_torch_bf16_rms, ordered_downproj=config.ordered_downproj, register_mode=config.register_mode, fp32_downproj=config.fp32_downproj, match_torch_bf16_epilogues=config.match_torch_bf16_epilogues, weight_stages=config.weight_stages, page_count=config.page_count, page_size=config.page_size, tile_width=config.tile_width, compensated_attention=config.compensated_attention, fp64_rms=config.fp64_rms):
+    if config != Config(name=config.name, match_torch_bf16_rms=config.match_torch_bf16_rms, ordered_downproj=config.ordered_downproj, register_mode=config.register_mode, fp32_downproj=config.fp32_downproj, match_torch_bf16_epilogues=config.match_torch_bf16_epilogues, weight_stages=config.weight_stages, page_count=config.page_count, page_size=config.page_size, tile_width=config.tile_width, compensated_attention=config.compensated_attention, fp64_rms=config.fp64_rms, tensorcore_matvec=config.tensorcore_matvec):
         raise ValueError('synthetic fixture currently requires the verified default build (20 workers, 16 warps, static cap 96)')
     if op not in ('qkv', 'o_proj', 'down', 'upgate', 'lm_head', 'noop', 'attention', 'partial', 'reduce') or not 0 <= iterations <= 8:
         raise ValueError('unsupported opcode or iterations outside 0..8')
@@ -134,7 +134,7 @@ class SyntheticAdapter:
                     'page_size': self.config.page_size, 'weight_chunk_width': self.config.tile_width,
                     'timing_enabled': self.config.timing,
                     'match_torch_bf16_rms': self.config.match_torch_bf16_rms,
-                    'ordered_downproj': self.config.ordered_downproj, 'fp32_downproj': self.config.fp32_downproj, 'match_torch_bf16_epilogues': self.config.match_torch_bf16_epilogues, 'register_mode': self.config.register_mode, 'compensated_attention': self.config.compensated_attention, 'fp64_rms': self.config.fp64_rms}
+                    'ordered_downproj': self.config.ordered_downproj, 'fp32_downproj': self.config.fp32_downproj, 'match_torch_bf16_epilogues': self.config.match_torch_bf16_epilogues, 'register_mode': self.config.register_mode, 'compensated_attention': self.config.compensated_attention, 'fp64_rms': self.config.fp64_rms, 'tensorcore_matvec': self.config.tensorcore_matvec}
         if any(observed.get(key) != value for key, value in expected.items()):
             raise RuntimeError(f'loaded native binary does not match fixture configuration: {observed}')
 

@@ -81,6 +81,7 @@ class ModelAdapter:
                         'match_torch_bf16_epilogues': self.config.match_torch_bf16_epilogues,
                         'compensated_attention': self.config.compensated_attention,
                         'fp64_rms': self.config.fp64_rms,
+                        'tensorcore_matvec': self.config.tensorcore_matvec,
                         'register_mode': self.config.register_mode,
                         'consumer_register_target': self.config.consumer_registers,
                         'service_register_target': self.config.service_registers,

@@ -19,6 +19,7 @@ class Config:
     match_torch_bf16_epilogues: bool = False
     compensated_attention: bool = False
     fp64_rms: bool = False
+    tensorcore_matvec: bool = False
     match_torch_bf16_rms: bool = True
     timing: bool = False
     allow_multi_cta: bool = False
@@ -33,8 +34,10 @@ class Config:
 
     def validate(self, device):
         errors = []
-        if any(type(value) is not bool for value in (self.timing, self.allow_multi_cta, self.serial_instruction_handoff, self.match_torch_bf16_rms, self.ordered_downproj, self.fp32_downproj, self.match_torch_bf16_epilogues, self.compensated_attention, self.fp64_rms)):
+        if any(type(value) is not bool for value in (self.timing, self.allow_multi_cta, self.serial_instruction_handoff, self.match_torch_bf16_rms, self.ordered_downproj, self.fp32_downproj, self.match_torch_bf16_epilogues, self.compensated_attention, self.fp64_rms, self.tensorcore_matvec)):
             errors.append('configuration switches must be booleans')
+        if self.tensorcore_matvec and not self.match_torch_bf16_rms:
+            errors.append('BF16 MMA matvec requires BF16-rounded normalized inputs')
         if self.fp32_downproj and self.ordered_downproj:
             errors.append('FP32 downprojection and ordered BF16 updates are mutually exclusive')
         integer_fields = ('instruction_parties', 'static_registers', 'consumer_warps', 'consumer_registers', 'service_registers', 'workers',
@@ -102,6 +105,7 @@ class Config:
             'MK_ORDERED_DOWNPROJ': int(self.ordered_downproj),
             'MK_FP32_DOWNPROJ': int(self.fp32_downproj),
             'MK_FP64_RMS': int(self.fp64_rms),
+            'MK_TENSORCORE_MATVEC': int(self.tensorcore_matvec),
             'MK_COMPENSATED_ATTENTION': int(self.compensated_attention),
             'MK_MATCH_TORCH_BF16_EPILOGUES': int(self.match_torch_bf16_epilogues),
             'MK_INSTRUCTION_BARRIER_PARTIES': self.instruction_parties}.items()]

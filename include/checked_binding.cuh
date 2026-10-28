@@ -100,6 +100,7 @@ void bind_checked_kernel(auto module, auto name, auto Globals::*... members) {
         result["ordered_downproj"] = Config::ORDERED_DOWNPROJ;
         result["fp32_downproj"] = Config::FP32_DOWNPROJ;
         result["fp64_rms"] = Config::FP64_RMS;
+        result["tensorcore_matvec"] = Config::TENSORCORE_MATVEC;
         result["compensated_attention"] = Config::COMPENSATED_ATTENTION;
         result["match_torch_bf16_epilogues"] = Config::MATCH_TORCH_BF16_EPILOGUES;
         result["match_torch_bf16_rms"] = Config::MATCH_TORCH_BF16_RMS;
