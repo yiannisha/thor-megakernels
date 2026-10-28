@@ -1,0 +1,17 @@
+[
+  {
+    "variant": "combined",
+    "tool": "memcheck",
+    "returncode": 0
+  },
+  {
+    "variant": "combined",
+    "tool": "synccheck",
+    "returncode": 0
+  },
+  {
+    "variant": "combined",
+    "tool": "racecheck",
+    "returncode": 99
+  }
+]

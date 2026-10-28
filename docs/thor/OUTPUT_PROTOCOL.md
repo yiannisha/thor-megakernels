@@ -1,5 +1,7 @@
 # Thor output completion diagnosis
 
+Follow-up: all three implementation options have been tested end to end. See [actual implementation results](output-protocol-results/RESULTS.md).
+
 The sampled QKV and up/gate storer bottleneck is the global readiness-publication region, rather than local output-slot signaling or TMA completion waiting. This narrows the previous output-slot lead; it does not establish a removable fraction of token latency.
 
 Production source and its native binary were left unchanged. Observer-only changes extend the existing linked diagnostic worktree. No optimization was implemented.

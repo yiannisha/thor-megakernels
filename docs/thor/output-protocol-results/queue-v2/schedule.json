@@ -1,0 +1,38 @@
+[
+  {
+    "block": 0,
+    "variant": "original",
+    "returncode": 0,
+    "elapsed_seconds": 24.16508173942566
+  },
+  {
+    "block": 0,
+    "variant": "queue_v2",
+    "returncode": 0,
+    "elapsed_seconds": 25.1187903881073
+  },
+  {
+    "block": 1,
+    "variant": "queue_v2",
+    "returncode": 0,
+    "elapsed_seconds": 24.09770703315735
+  },
+  {
+    "block": 1,
+    "variant": "original",
+    "returncode": 0,
+    "elapsed_seconds": 24.055166721343994
+  },
+  {
+    "block": 2,
+    "variant": "original",
+    "returncode": 0,
+    "elapsed_seconds": 24.418895483016968
+  },
+  {
+    "block": 2,
+    "variant": "queue_v2",
+    "returncode": 0,
+    "elapsed_seconds": 24.128589153289795
+  }
+]

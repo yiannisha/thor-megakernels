@@ -1,0 +1,33 @@
+[
+  {
+    "variant": "queue_v2",
+    "tool": "memcheck",
+    "returncode": 0
+  },
+  {
+    "variant": "queue_v2",
+    "tool": "synccheck",
+    "returncode": 0
+  },
+  {
+    "variant": "queue_v2",
+    "tool": "racecheck",
+    "returncode": 0
+  },
+  {
+    "variant": "batched",
+    "tool": "memcheck",
+    "returncode": 0
+  },
+  {
+    "variant": "batched",
+    "tool": "synccheck",
+    "returncode": 0
+  },
+  {
+    "variant": "batched",
+    "tool": "racecheck",
+    "returncode": 0,
+    "reused_completed_check": true
+  }
+]
