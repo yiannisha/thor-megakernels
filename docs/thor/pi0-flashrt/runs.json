@@ -1,0 +1,140 @@
+{
+  "full": {
+    "command": [
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/venv/bin/python",
+      "/home/thor-guest/ml-perf/Megakernels/demos/pi0/scripts/validate_native_pi0.py",
+      "--implementation",
+      "flashrt",
+      "--replays",
+      "20",
+      "--report",
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/flashrt/full.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 17.080821983981878
+  },
+  "prompt16": {
+    "command": [
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/venv/bin/python",
+      "/home/thor-guest/ml-perf/Megakernels/demos/pi0/scripts/validate_native_pi0.py",
+      "--implementation",
+      "flashrt",
+      "--prompt",
+      "16",
+      "--report",
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/flashrt/prompt16.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 11.936192923021736
+  },
+  "memcheck": {
+    "command": [
+      "compute-sanitizer",
+      "--tool",
+      "memcheck",
+      "--kernel-name",
+      "kns=FlashModelGlobals",
+      "--launch-count",
+      "1",
+      "--error-exitcode",
+      "99",
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/venv/bin/python",
+      "/home/thor-guest/ml-perf/Megakernels/demos/pi0/scripts/validate_native_pi0.py",
+      "--implementation",
+      "flashrt",
+      "--skip-trace",
+      "--report",
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/flashrt/memcheck.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 65.13888789000339
+  },
+  "synccheck": {
+    "command": [
+      "compute-sanitizer",
+      "--tool",
+      "synccheck",
+      "--kernel-name",
+      "kns=FlashModelGlobals",
+      "--error-exitcode",
+      "99",
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/venv/bin/python",
+      "/home/thor-guest/ml-perf/Megakernels/demos/pi0/scripts/validate_native_pi0.py",
+      "--implementation",
+      "flashrt",
+      "--skip-trace",
+      "--report",
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/flashrt/synccheck.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 26.770076504006283
+  },
+  "small-synccheck": {
+    "command": [
+      "compute-sanitizer",
+      "--tool",
+      "synccheck",
+      "--kernel-name",
+      "kns=FlashModelGlobals",
+      "--error-exitcode",
+      "99",
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/venv/bin/python",
+      "/home/thor-guest/ml-perf/Megakernels/demos/pi0/scripts/validate_native_pi0.py",
+      "--implementation",
+      "flashrt",
+      "--skip-trace",
+      "--views",
+      "1",
+      "--chunk",
+      "8",
+      "--steps",
+      "1",
+      "--report",
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/flashrt/small-synccheck.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 17.366827282006852
+  },
+  "reference-matched": {
+    "command": [
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/venv/bin/python",
+      "/home/thor-guest/ml-perf/Megakernels/demos/pi0/benchmarks/matched_native.py",
+      "--warmup",
+      "3",
+      "--iterations",
+      "15",
+      "--backends",
+      "native",
+      "eager",
+      "graph",
+      "--library",
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/model.so",
+      "--report",
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/flashrt/reference-matched.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 25.171807817998342
+  },
+  "flashrt-matched": {
+    "command": [
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/venv/bin/python",
+      "/home/thor-guest/ml-perf/Megakernels/demos/pi0/benchmarks/matched_native.py",
+      "--warmup",
+      "3",
+      "--iterations",
+      "15",
+      "--backends",
+      "native",
+      "eager",
+      "graph",
+      "--implementation",
+      "flashrt",
+      "--library",
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/flashrt/model.so",
+      "--report",
+      "/home/thor-guest/ml-perf/Megakernels/local/pi0/flashrt/flashrt-matched.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 21.793335708003724
+  }
+}

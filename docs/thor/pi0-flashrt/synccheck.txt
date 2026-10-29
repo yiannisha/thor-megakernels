@@ -1,0 +1,67 @@
+========= COMPUTE-SANITIZER
+Constructing actual pinned OpenPI model
+Running complete OpenPI eager reference
+Building complete native π0 program
+Native reference: vision layers 9
+Native reference: vision layers 18
+Native reference: vision layers 27
+Native reference: prefix layers 6
+Native reference: prefix layers 12
+Native reference: prefix layers 18
+Native reference: expert denoising step 1 wired
+Native reference: expert denoising step 2 wired
+Native reference: expert denoising step 3 wired
+Native reference: expert denoising step 4 wired
+Native reference: expert denoising step 5 wired
+Native reference: expert denoising step 6 wired
+Native reference: expert denoising step 7 wired
+Native reference: expert denoising step 8 wired
+Native reference: expert denoising step 9 wired
+Native reference: expert denoising step 10 wired
+Native pi0 static program: 1643 operations, {'workers': 20, 'stream_length': 1152, 'instructions': 22808, 'compute_tiles': 97958, 'largest_tile_range': 346, 'dynamic_fetch': False, 'ready_queue': False, 'packed_weight_bytes': 5205786624, 'projection_pack_count': 98}
+Native setup seconds 1.6131756019894965
+patch 0.0
+visiondebug.input 0.0
+visiondebug.norm1 0.0
+visiondebug.q 0.0
+visiondebug.k 0.0
+visiondebug.v 0.0
+visiondebug.attention 0.0
+visiondebug.residual1 0.0
+visiondebug.norm2 0.0
+visiondebug.activation 0.0
+vision.0 0.0
+vision.17 0.0
+vision.26 0.0
+debug.input 0.0
+debug.norm1 0.0
+debug.q 0.0
+debug.k 0.0
+debug.v 0.0
+debug.attention 0.002686998574063182
+debug.residual1 0.0034316470846533775
+debug.norm2 0.0037306370213627815
+debug.activation 0.006613531615585089
+prefix.0 0.0070879701524972916
+expert.0.0 0.005457696039229631
+expert.0.17 0.019034558907151222
+expert.1.0 0.006284843664616346
+expert.1.17 0.019284453243017197
+expert.2.0 0.006143919657915831
+expert.2.17 0.019061945378780365
+expert.3.0 0.005894982255995274
+expert.3.17 0.019037116318941116
+expert.4.0 0.006407296750694513
+expert.4.17 0.019199460744857788
+expert.5.0 0.006549138110131025
+expert.5.17 0.019140155985951424
+expert.6.0 0.006785450503230095
+expert.6.17 0.019455404952168465
+expert.7.0 0.006603962276130915
+expert.7.17 0.01928931288421154
+expert.8.0 0.006537398789077997
+expert.8.17 0.019082900136709213
+expert.9.0 0.0065856571309268475
+expert.9.17 0.01909417100250721
+COMPLETE π0 native/eager action NRMSE 0.008238029666244984 launch trace None
+========= ERROR SUMMARY: 0 errors

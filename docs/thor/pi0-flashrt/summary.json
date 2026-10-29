@@ -1,0 +1,16 @@
+{
+  "reference_ms": 441.39166259765625,
+  "flashrt_vm_ms": 261.58026123046875,
+  "speedup": 1.6874043191231554,
+  "latency_reduction_percent": 40.73738056332338,
+  "runs": {
+    "full": 0,
+    "prompt16": 0,
+    "memcheck": 0,
+    "synccheck": 0,
+    "small-synccheck": 0,
+    "reference-matched": 0,
+    "flashrt-matched": 0
+  },
+  "reference_binary_unchanged": true
+}

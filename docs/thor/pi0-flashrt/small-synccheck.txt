@@ -1,0 +1,40 @@
+========= COMPUTE-SANITIZER
+Constructing actual pinned OpenPI model
+Running complete OpenPI eager reference
+Building complete native π0 program
+Native reference: vision layers 9
+Native reference: vision layers 18
+Native reference: vision layers 27
+Native reference: prefix layers 6
+Native reference: prefix layers 12
+Native reference: prefix layers 18
+Native reference: expert denoising step 1 wired
+Native pi0 static program: 463 operations, {'workers': 20, 'stream_length': 396, 'instructions': 7784, 'compute_tiles': 25878, 'largest_tile_range': 116, 'dynamic_fetch': False, 'ready_queue': False, 'packed_weight_bytes': 5205786624, 'projection_pack_count': 98}
+Native setup seconds 1.0192064899893012
+patch 0.0
+visiondebug.input 0.0
+visiondebug.norm1 0.0
+visiondebug.q 0.0
+visiondebug.k 0.0
+visiondebug.v 0.0
+visiondebug.attention 0.0
+visiondebug.residual1 0.0
+visiondebug.norm2 0.0
+visiondebug.activation 0.0
+vision.0 0.0
+vision.17 0.0
+vision.26 0.0
+debug.input 0.0
+debug.norm1 0.0
+debug.q 0.0
+debug.k 7.527587149525061e-05
+debug.v 8.60334766912274e-05
+debug.attention 0.0003672685124911368
+debug.residual1 0.0010083091910928488
+debug.norm2 0.0011484319111332297
+debug.activation 0.0030437603127211332
+prefix.0 0.0038745785132050514
+expert.0.0 0.0034492581617087126
+expert.0.17 0.01739528402686119
+COMPLETE π0 native/eager action NRMSE 0.014452951028943062 launch trace None
+========= ERROR SUMMARY: 0 errors

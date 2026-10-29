@@ -1,0 +1,12 @@
+{
+  "reference": {
+    "packed_weight_bytes": 8773042176,
+    "weight_buffers": 578,
+    "setup_seconds": 1.7600304539955687
+  },
+  "flashrt": {
+    "packed_weight_bytes": 5205786624,
+    "weight_buffers": 254,
+    "setup_seconds": 0.8178264820016921
+  }
+}
