@@ -1,0 +1,58 @@
+/home/thor-guest/ml-perf/Megakernels/local/thunderkittens
+demos/pi0/native_pi0/native.cu(34): warning #550-D: variable "prior" was set but never used
+      unsigned long long prior;asm volatile("atom.acq_rel.gpu.global.add.u64 %0, [%1], %2;":"=l"(prior):"l"(p),"l"(static_cast<unsigned long long>(count)):"memory");
+                         ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+ptxas info    : 52 bytes gmem
+ptxas info    : Compiling entry function '_ZN3cub17_V_300200_SM_11006detail11EmptyKernelIvEEvv' for 'sm_110a'
+ptxas info    : Function properties for _ZN3cub17_V_300200_SM_11006detail11EmptyKernelIvEEvv
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 4 registers, used 0 barriers
+ptxas info    : Compile time = 1.755 ms
+ptxas info    : Compiling entry function '_ZN10megakernel2mkI13ComputeConfig12DenseGlobalsI13__nv_bfloat16EJ7DenseOpIS3_EEEEvT0_' for 'sm_110a'
+ptxas info    : Function properties for _ZN10megakernel2mkI13ComputeConfig12DenseGlobalsI13__nv_bfloat16EJ7DenseOpIS3_EEEEvT0_
+    8 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 197 registers, used 16 barriers, 8 bytes cumulative stack size, 10400 bytes smem
+ptxas info    : Compile time = 676.414 ms
+ptxas info    : Compiling entry function '_ZN10megakernel2mkI13ComputeConfig12DenseGlobalsI13__nv_fp8_e4m3EJ7DenseOpIS3_EEEEvT0_' for 'sm_110a'
+ptxas info    : Function properties for _ZN10megakernel2mkI13ComputeConfig12DenseGlobalsI13__nv_fp8_e4m3EJ7DenseOpIS3_EEEEvT0_
+    8 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 197 registers, used 16 barriers, 8 bytes cumulative stack size, 10400 bytes smem
+ptxas info    : Compile time = 665.178 ms
+ptxas info    : Compiling entry function '_ZN10megakernel2mkI13ComputeConfig18NativeModelGlobalsJ15NativeLinearOpTILi128EE23NativeVisionAttentionOp12NativeNormOp14NativeTensorOpILi1EES7_ILi2EES7_ILi3EES7_ILi4EES7_ILi5EES7_ILi6EES7_ILi7EES7_ILi8EES7_ILi9EES7_ILi10EES7_ILi11EE22NativeGemmaAttentionOpS3_ILi64EES7_ILi12EES7_ILi13EEEEEvT0_' for 'sm_110a'
+ptxas info    : Function properties for _ZN10megakernel2mkI13ComputeConfig18NativeModelGlobalsJ15NativeLinearOpTILi128EE23NativeVisionAttentionOp12NativeNormOp14NativeTensorOpILi1EES7_ILi2EES7_ILi3EES7_ILi4EES7_ILi5EES7_ILi6EES7_ILi7EES7_ILi8EES7_ILi9EES7_ILi10EES7_ILi11EE22NativeGemmaAttentionOpS3_ILi64EES7_ILi12EES7_ILi13EEEEEvT0_
+    1504 bytes stack frame, 2952 bytes spill stores, 3696 bytes spill loads
+ptxas info    : Used 255 registers, used 16 barriers, 1504 bytes cumulative stack size, 10400 bytes smem
+ptxas info    : Compile time = 10590.664 ms
+ptxas info    : Compiling entry function '_ZN10megakernel2mkI10NormConfig11NormGlobalsJ6NormOpEEEvT0_' for 'sm_110a'
+ptxas info    : Function properties for _ZN10megakernel2mkI10NormConfig11NormGlobalsJ6NormOpEEEvT0_
+    8 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 63 registers, used 16 barriers, 8 bytes cumulative stack size, 10400 bytes smem
+ptxas info    : Compile time = 259.579 ms
+ptxas info    : Compiling entry function '_ZN10megakernel2mkI15AttentionConfig16AttentionGlobalsJ11AttentionOpEEEvT0_' for 'sm_110a'
+ptxas info    : Function properties for _ZN10megakernel2mkI15AttentionConfig16AttentionGlobalsJ11AttentionOpEEEvT0_
+    4096 bytes stack frame, 15932 bytes spill stores, 11768 bytes spill loads
+ptxas info    : Used 255 registers, used 16 barriers, 4096 bytes cumulative stack size, 10400 bytes smem
+ptxas info    : Compile time = 18130.457 ms
+ptxas info    : Compiling entry function '_ZN10megakernel2mkI13ComputeConfig13NativeGlobalsJ15NativeLinearOpTILi128EES3_ILi64EEEEEvT0_' for 'sm_110a'
+ptxas info    : Function properties for _ZN10megakernel2mkI13ComputeConfig13NativeGlobalsJ15NativeLinearOpTILi128EES3_ILi64EEEEEvT0_
+    8 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 219 registers, used 16 barriers, 8 bytes cumulative stack size, 10400 bytes smem
+ptxas info    : Compile time = 1745.628 ms
+ptxas info    : Compiling entry function '_Z10norm_slotsPi' for 'sm_110a'
+ptxas info    : Function properties for _Z10norm_slotsPi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 8 registers, used 0 barriers
+ptxas info    : Compile time = 3.539 ms
+ptxas info    : Compiling entry function '_Z15attention_slotsPi' for 'sm_110a'
+ptxas info    : Function properties for _Z15attention_slotsPi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 8 registers, used 0 barriers
+ptxas info    : Compile time = 1.585 ms
+ptxas info    : Compiling entry function '_Z12slots_kernelPi' for 'sm_110a'
+ptxas info    : Function properties for _Z12slots_kernelPi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 8 registers, used 0 barriers
+ptxas info    : Compile time = 1.211 ms

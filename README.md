@@ -49,3 +49,7 @@ python megakernels/scripts/generate.py mode=mk prompt="tell me a funny joke abou
 ## Jetson Thor
 
 The native SM110a port keeps the upstream static VM, pipeline geometry and Llama arithmetic. It adds architecture/build support, logical worker indexing, checked cooperative residency, and synchronization correctness fixes. Experimental optimizations are archived on `archive/thor-experiments-20261027` and removed from this branch. See [Thor bring-up](docs/thor/BRINGUP.md) and [native versus vLLM results](docs/thor/BENCHMARKS.md).
+
+The separate [native PiZero demo](demos/pi0/README.md) executes vision, prefix,
+and all denoising steps in one cooperative Thor VM launch. Its correctness and
+validation status is recorded in [PI0_STATUS.md](docs/thor/PI0_STATUS.md).

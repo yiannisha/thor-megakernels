@@ -1,0 +1,14 @@
+{
+  "vision-fixture": {
+    "different_elements": 0,
+    "nrmse": 0.0
+  },
+  "vision-layer1": {
+    "different_elements": 0,
+    "nrmse": 0.0
+  },
+  "vision-fixture-three": {
+    "different_elements": 0,
+    "nrmse": 0.0
+  }
+}

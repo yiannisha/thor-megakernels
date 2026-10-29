@@ -1,0 +1,92 @@
+{
+  "binary_sha256": "aad9697ec6a0c8bd68ffa380684d73cc69c07d025eaf7c5ff163ded5ae458441",
+  "started_utc": "2026-10-28T20:50:21.439480+00:00",
+  "runs": {
+    "corrected-full": {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/pi0/venv/bin/python",
+        "Megakernels/demos/pi0/scripts/validate_native_pi0.py",
+        "--report",
+        "Megakernels/local/pi0/corrected-full.json",
+        "--replays",
+        "50"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 34.54555311400327
+    },
+    "corrected-prompt16": {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/pi0/venv/bin/python",
+        "Megakernels/demos/pi0/scripts/validate_native_pi0.py",
+        "--report",
+        "Megakernels/local/pi0/corrected-prompt16.json",
+        "--prompt",
+        "16"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 13.634391771018272
+    },
+    "corrected-small": {
+      "command": [
+        "/home/thor-guest/ml-perf/Megakernels/local/pi0/venv/bin/python",
+        "Megakernels/demos/pi0/scripts/validate_native_pi0.py",
+        "--report",
+        "Megakernels/local/pi0/corrected-small.json",
+        "--views",
+        "1",
+        "--chunk",
+        "8",
+        "--steps",
+        "1"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 8.454310886008898
+    },
+    "corrected-memcheck": {
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "memcheck",
+        "--kernel-name",
+        "kns=NativeModelGlobals",
+        "--error-exitcode",
+        "99",
+        "--log-file",
+        "Megakernels/local/pi0/corrected-memcheck.txt",
+        "--launch-count",
+        "1",
+        "/home/thor-guest/ml-perf/Megakernels/local/pi0/venv/bin/python",
+        "Megakernels/demos/pi0/scripts/validate_native_pi0.py",
+        "--report",
+        "Megakernels/local/pi0/corrected-memcheck.json",
+        "--skip-trace",
+        "--replays",
+        "1"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 90.13172337901779
+    },
+    "corrected-synccheck": {
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "synccheck",
+        "--kernel-name",
+        "kns=NativeModelGlobals",
+        "--error-exitcode",
+        "99",
+        "--log-file",
+        "Megakernels/local/pi0/corrected-synccheck.txt",
+        "/home/thor-guest/ml-perf/Megakernels/local/pi0/venv/bin/python",
+        "Megakernels/demos/pi0/scripts/validate_native_pi0.py",
+        "--report",
+        "Megakernels/local/pi0/corrected-synccheck.json",
+        "--skip-trace",
+        "--replays",
+        "1"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 32.05953357301769
+    }
+  }
+}
