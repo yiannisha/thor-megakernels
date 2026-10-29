@@ -11,6 +11,10 @@
 #include "consumer.cuh"
 #include "noop.cuh"
 
+#ifndef MK_THOR_REGISTER_CAP
+#define MK_THOR_REGISTER_CAP 96
+#endif
+
 namespace megakernel {
 
 template <typename config, typename globals, typename... ops>
@@ -32,9 +36,17 @@ __device__ inline void mk_internal(const globals &g) {
         tensor_finished,
 #endif
         semaphores_ready;
-    extern __shared__ int __shm[];
-    void *aligned_shm_addr =
-        (void *)((1023 + (uint64_t)&__shm[0]) & ~(uint64_t)1023);
+    extern __shared__ __align__(config::DYNAMIC_SMEM_ALIGNMENT) int __shm[];
+    constexpr int arena_alignment = [] {
+        if constexpr (requires { config::ARENA_ALIGNMENT; })
+            return config::ARENA_ALIGNMENT;
+        else return 1024;
+    }();
+    static_assert(arena_alignment >= 128 &&
+                  (arena_alignment & (arena_alignment - 1)) == 0);
+    void *aligned_shm_addr = (void *)
+        ((arena_alignment - 1 + (uint64_t)&__shm[0]) &
+         ~(uint64_t)(arena_alignment - 1));
     typename state<config>::page_array_t &pages =
         *reinterpret_cast<typename state<config>::page_array_t *>(
             aligned_shm_addr);
@@ -75,15 +87,24 @@ __device__ inline void mk_internal(const globals &g) {
     // Native tcgen05 instructions share one TMEM allocation for the entire VM.
     // Only the launcher warp allocates/deallocates; operator barriers protect reuse.
     if constexpr (requires { config::NATIVE_TMEM_COLUMNS; }) {
-        static_assert(config::CLUSTER_BLOCKS == 1, "native TMEM resource currently supports one-CTA clusters");
+        constexpr int tmem_group = [] {
+            if constexpr (requires { config::TMEM_CTA_GROUP; }) return config::TMEM_CTA_GROUP;
+            else return 1;
+        }();
+        static_assert(tmem_group == 1 || tmem_group == 2);
+        static_assert(tmem_group == 1 || config::CLUSTER_BLOCKS % 2 == 0);
         static_assert(config::COOPERATIVE_LAUNCH, "native TMEM resource requires cooperative admission");
         static_assert(config::NATIVE_TMEM_COLUMNS >= 32 && config::NATIVE_TMEM_COLUMNS <= 512);
         static_assert((config::NATIVE_TMEM_COLUMNS & (config::NATIVE_TMEM_COLUMNS - 1)) == 0);
         __shared__ uint32_t native_tmem;
         if (kittens::warpid() == config::NUM_CONSUMER_WARPS + 2) {
             uint32_t address = static_cast<uint32_t>(__cvta_generic_to_shared(&native_tmem));
-            asm volatile("tcgen05.alloc.cta_group::1.sync.aligned.shared::cta.b32 [%0], %1;"
-                         :: "r"(address), "r"(config::NATIVE_TMEM_COLUMNS) : "memory");
+            if constexpr (tmem_group == 2)
+                asm volatile("tcgen05.alloc.cta_group::2.sync.aligned.shared::cta.b32 [%0], %1;"
+                             :: "r"(address), "r"(config::NATIVE_TMEM_COLUMNS) : "memory");
+            else
+                asm volatile("tcgen05.alloc.cta_group::1.sync.aligned.shared::cta.b32 [%0], %1;"
+                             :: "r"(address), "r"(config::NATIVE_TMEM_COLUMNS) : "memory");
         }
         __syncthreads();
         mks.native_tmem_base = native_tmem;
@@ -172,9 +193,19 @@ __device__ inline void mk_internal(const globals &g) {
 
     if constexpr (requires { config::NATIVE_TMEM_COLUMNS; }) {
         if (kittens::warpid() == config::NUM_CONSUMER_WARPS + 2) {
-            asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;" ::: "memory");
-            asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;"
-                         :: "r"(mks.native_tmem_base), "r"(config::NATIVE_TMEM_COLUMNS) : "memory");
+            constexpr int tmem_group = [] {
+                if constexpr (requires { config::TMEM_CTA_GROUP; }) return config::TMEM_CTA_GROUP;
+                else return 1;
+            }();
+            if constexpr (tmem_group == 2) {
+                asm volatile("tcgen05.relinquish_alloc_permit.cta_group::2.sync.aligned;" ::: "memory");
+                asm volatile("tcgen05.dealloc.cta_group::2.sync.aligned.b32 %0, %1;"
+                             :: "r"(mks.native_tmem_base), "r"(config::NATIVE_TMEM_COLUMNS) : "memory");
+            } else {
+                asm volatile("tcgen05.relinquish_alloc_permit.cta_group::1.sync.aligned;" ::: "memory");
+                asm volatile("tcgen05.dealloc.cta_group::1.sync.aligned.b32 %0, %1;"
+                             :: "r"(mks.native_tmem_base), "r"(config::NATIVE_TMEM_COLUMNS) : "memory");
+            }
         }
     }
 
@@ -193,13 +224,31 @@ struct megakernel_wrapper {
     }
 };
 
+template <typename config> struct cluster_dimensions {
+    static constexpr int x = [] {
+        if constexpr (requires { config::CLUSTER_X; }) return config::CLUSTER_X;
+        else return config::CLUSTER_BLOCKS;
+    }();
+    static constexpr int y = [] {
+        if constexpr (requires { config::CLUSTER_Y; }) return config::CLUSTER_Y;
+        else return 1;
+    }();
+    static constexpr int z = [] {
+        if constexpr (requires { config::CLUSTER_Z; }) return config::CLUSTER_Z;
+        else return 1;
+    }();
+    static_assert(x * y * z == config::CLUSTER_BLOCKS);
+};
+
 template <typename config, typename globals, typename... ops>
 #ifdef MK_THOR
-__maxnreg__(96)
+__maxnreg__(MK_THOR_REGISTER_CAP)
 #else
 __launch_bounds__(config::NUM_THREADS, 1)
 #endif
-    __cluster_dims__(config::CLUSTER_BLOCKS) __global__
+    __cluster_dims__(cluster_dimensions<config>::x,
+                     cluster_dimensions<config>::y,
+                     cluster_dimensions<config>::z) __global__
     void mk(const __grid_constant__ globals g) {
     if constexpr (requires { config::COOPERATIVE_LAUNCH; }) {
         if constexpr (config::COOPERATIVE_LAUNCH)

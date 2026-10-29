@@ -133,6 +133,11 @@ __device__ void main_loop(const globals &g, ::megakernel::state<config> &kvms) {
         if (laneid < config::INSTRUCTION_BARRIER_PARTIES_PER_WARP) {
             arrive(kvms.instruction_arrived[kvms.instruction_ring], 1);
         }
+        // Full-CTA collectives assign work to every physical warp, including
+        // this one. Ordinary operators retain the prefetched controller path.
+        if constexpr (requires { config::collective_controller(g, kvms); }) {
+            config::collective_controller(g, kvms);
+        }
     }
 
     // invalidate remaining semaphores and write out remaining timings

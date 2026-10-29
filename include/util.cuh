@@ -28,7 +28,7 @@ __device__ inline unsigned int get_worker_id() {
 #ifdef MK_PHYSICAL_WORKER_IDS
     return get_smid();
 #else
-    return blockIdx.x;
+    return blockIdx.x + gridDim.x * (blockIdx.y + gridDim.y * blockIdx.z);
 #endif
 }
 
